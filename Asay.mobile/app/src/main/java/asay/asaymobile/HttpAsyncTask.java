@@ -78,7 +78,6 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
             JSONObject json = new JSONObject(result);
             listener.onTaskComplete(json);
             Log.d("JsonObject", "onPostExecute: " +json);
-
         } catch (Exception exc) {
             Log.d("OnPostExecute", "Exception: " + exc.getMessage());
         }

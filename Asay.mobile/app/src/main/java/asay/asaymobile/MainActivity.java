@@ -1,38 +1,30 @@
 package asay.asaymobile;
 
-import android.app.Activity;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     EditText etResponse;
-    TextView tvIsConnected;
-
+    private ArrayList<String> bills = new ArrayList<String>();
+    ArrayAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // get reference to the views
-        etResponse = (EditText) findViewById(R.id.etResponse);
-        tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
-
-        // check if you are connected or not
-//        if(isConnected()){
-//            tvIsConnected.setBackgroundColor(0xFF00CC00);
-//            tvIsConnected.setText("You are connected");
-//        }
-//        else{
-//            tvIsConnected.setText("You are NOT connected");
-//        }
 
         // call AsynTask to perform network operation on separate thread
         String baseUrl = "http://oda.ft.dk/api/";
@@ -41,21 +33,21 @@ public class MainActivity extends Activity {
         String call = baseUrl + "Sag?$orderby=id%20desc"+proposalExpand;
 //        String baseUrl ="http://hmkcode.appspot.com/rest/controller/get.json";
         new HttpAsyncTask(this, new AsyncTaskCompleteListener()).execute(call);
+
+        // get reference to the views
+        adapter = new ArrayAdapter(this, R.layout.bill_list_item,R.id.listeelem_header,bills);
+
+        ListView listview = new ListView(this);
+        listview.setOnItemClickListener(this);
+        listview.setAdapter(adapter);
+
+        setContentView(listview);
     }
 
-    public boolean isConnected(){
-        try {
-            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-
-            if (networkInfo != null && networkInfo.isConnected())
-                return true;
-            else
-                return false;
-        } catch (Exception exp) {
-            System.out.print("Exception: " + exp.getMessage());
-        }
-        return false;
+    @Override
+    public void onItemClick(AdapterView<?> list, View v, int position, long id){
+        Toast.makeText(this, "Click on" + position,Toast.LENGTH_SHORT).show();
+        //we are going to point at relative layout in the root of R.layout.bill_list_item
     }
 
     private class AsyncTaskCompleteListener implements asay.asaymobile.AsyncTaskCompleteListener<JSONObject> {
@@ -69,19 +61,12 @@ public class MainActivity extends Activity {
                 }
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
-
-                str += "articles length = "+result.getJSONArray("value").length();
-                str += "\n--------\n";
-                str += "names: "+articles.getJSONObject(0).names();
-//                str += "\n--------\n";
-//                str += "url: "+articles.getJSONObject(0).getString("url");
-
-                etResponse.setText(str);
-
-
+                for (int i = 0; i < articles.length(); i++){
+                    bills.add(articles.getJSONObject(i).getString("titelkort"));
+                }
+                adapter.notifyDataSetChanged();
             } catch (Exception excep){
-                etResponse.setText(excep.getMessage());
-
+                Log.d("JSON Exception", "onTaskComplete: " + excep.getMessage());
             }
             // do something with the result
         }
