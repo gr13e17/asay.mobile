@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
         String baseUrl = "http://oda.ft.dk/api/";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAktør,Sagstrin";
         String proposalFilter = "&$filter=(typeiSag?$orderby=id%20descd%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
-        String call = "Sag?$orderby=id%20desc";
+        String call = "Sag?$orderby=id%20desc"+proposalExpand;
 //        String baseUrl ="http://hmkcode.appspot.com/rest/controller/get.json";
         new HttpAsyncTask().execute(baseUrl + call);
     }
