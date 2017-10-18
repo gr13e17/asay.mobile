@@ -1,5 +1,6 @@
 package asay.asaymobile;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -7,7 +8,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -17,6 +17,14 @@ import java.io.InputStreamReader;
 
 
 public class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    private Context context;
+    private AsyncTaskCompleteListener<JSONObject> listener;
+
+    public  HttpAsyncTask(Context ctx, AsyncTaskCompleteListener<JSONObject> listener){
+        this.listener = listener;
+        this.context = ctx;
+    }
+
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
@@ -68,20 +76,11 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 //            Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
         try {
             JSONObject json = new JSONObject(result);
-            String str = "";
-
-            JSONArray articles = json.getJSONArray("value"); // get articles array
-
-            str += "articles length = " + json.getJSONArray("value").length();
-            str += "\n--------\n";
-            str += "names: " + articles.getJSONObject(0).names();
-//                str += "\n--------\n";
-//                str += "url: "+articles.getJSONObject(0).getString("url");
-
-//                etResponse.setText(str);
+            listener.onTaskComplete(json);
+            Log.d("JsonObject", "onPostExecute: " +json);
 
         } catch (Exception exc) {
-//                etResponse.setText("Exception: " + exc.getMessage());
+            Log.d("OnPostExecute", "Exception: " + exc.getMessage());
         }
     }
 }

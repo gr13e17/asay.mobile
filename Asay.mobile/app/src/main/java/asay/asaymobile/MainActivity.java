@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
@@ -34,11 +38,10 @@ public class MainActivity extends Activity {
         String baseUrl = "http://oda.ft.dk/api/";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAktør,Sagstrin";
         String proposalFilter = "&$filter=(typeiSag?$orderby=id%20descd%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
-        String call = "Sag?$orderby=id%20desc"+proposalExpand;
+        String call = baseUrl + "Sag?$orderby=id%20desc"+proposalExpand;
 //        String baseUrl ="http://hmkcode.appspot.com/rest/controller/get.json";
-        new HttpAsyncTask().execute(baseUrl + call);
+        new HttpAsyncTask(this, new AsyncTaskCompleteListener()).execute(call);
     }
-
 
     public boolean isConnected(){
         try {
@@ -53,6 +56,35 @@ public class MainActivity extends Activity {
             System.out.print("Exception: " + exp.getMessage());
         }
         return false;
+    }
+
+    private class AsyncTaskCompleteListener implements asay.asaymobile.AsyncTaskCompleteListener<JSONObject> {
+        @Override
+        public void onTaskComplete(JSONObject result)
+        {
+            try{
+                String str = "";
+                if (result == null){
+                    etResponse.setText("Result is null");
+                }
+                Log.d("OnTaskComplete", "onTaskComplete: " + result);
+                JSONArray articles = result.getJSONArray("value"); // get articles array
+
+                str += "articles length = "+result.getJSONArray("value").length();
+                str += "\n--------\n";
+                str += "names: "+articles.getJSONObject(0).names();
+//                str += "\n--------\n";
+//                str += "url: "+articles.getJSONObject(0).getString("url");
+
+                etResponse.setText(str);
+
+
+            } catch (Exception excep){
+                etResponse.setText(excep.getMessage());
+
+            }
+            // do something with the result
+        }
     }
 
  }
