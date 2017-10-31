@@ -1,22 +1,81 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="asay.asaymobile.BillActivity$PlaceholderFragment">
 
     <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:id="@+id/nameView"
+        android:layout_width="357dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/name"
+        android:gravity="center"
+        android:text="Hanne Olsen"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="350dp"
+        android:layout_height="76dp"
+        android:layout_marginLeft="16dp"
+
+        android:autoSizeMaxTextSize="1000dp"
+        android:autoSizeMinTextSize="20dp"
+        android:autoSizeStepGranularity="2dp"
+        android:autoSizeTextType="uniform"
+        android:paddingStart="5dp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ac malesuada neque. Maecenas non tempor est, luctus egestas risus. Fusce in convallis lectus. Pellentesque auctor scelerisque dignissim. Fusce eget leo ut lectus viverra eleifend at vel risus."
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameView" />
+
+    <Button
+        android:id="@+id/reply"
+        android:layout_width="61dp"
+        android:layout_height="29dp"
+        android:text="Reply"
+        android:background="@drawable/button"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/comment"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/report"
+        android:layout_width="68dp"
+        android:layout_height="30dp"
+        android:text="Report"
+        android:background="@drawable/button"
+        app:layout_constraintLeft_toRightOf="@+id/reply"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/comment" />
+
+    <Button
+        android:id="@+id/up"
+        android:layout_width="28dp"
+        android:layout_height="29dp"
+        android:layout_marginLeft="148dp"
+        android:background="@drawable/logo"
+        android:text=""
+        app:layout_constraintLeft_toRightOf="@+id/report"
+        app:layout_constraintTop_toBottomOf="@+id/comment" />
+
+    <Button
+        android:id="@+id/down"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:text=""
+        android:background="@drawable/logo"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/comment"
+        app:layout_constraintLeft_toRightOf="@+id/up"
+        android:layout_marginLeft="23dp" />
 
 </android.support.constraint.ConstraintLayout>
