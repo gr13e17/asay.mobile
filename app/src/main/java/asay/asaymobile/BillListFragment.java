@@ -1,5 +1,6 @@
 package asay.asaymobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -61,6 +62,8 @@ public class BillListFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent switchview = new Intent(getActivity(), BillActivity.class);
+        startActivity(switchview);
         Toast.makeText(getActivity() , "Click on" + position,Toast.LENGTH_SHORT).show();
 
     }
