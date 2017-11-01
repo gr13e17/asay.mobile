@@ -81,13 +81,13 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch(menuItem.getItemId()) {
             case R.id.nav_first_fragment:
-                fragmentClass = BillListFragment.class;
+                fragmentClass = ActiveBills.class;
                 break;
             case R.id.nav_second_fragment:
                 fragmentClass = BillOverview.class;
                 break;
             default:
-                fragmentClass = BillListFragment.class;
+                fragmentClass = ActiveBills.class;
         }
 
         try {
