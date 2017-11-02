@@ -66,8 +66,6 @@ public class BillOverview extends Fragment implements OnClickListener{
         popup.setOnClickListener(this);
         popup.setVerticalScrollBarEnabled(true);
 
-        Scroll = (View) rootView.findViewById(R.id.RLScroll);
-        Scroll.setVerticalScrollBarEnabled(true);
 
         return rootView;
 

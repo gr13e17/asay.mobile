@@ -43,82 +43,114 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="122dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/textArg1"
-            android:layout_width="0dp"
-            android:layout_height="85dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:ems="10"
-            android:inputType="textMultiLine"
-            android:text="@string/dummy_arg1"
-            android:textAlignment="viewStart"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textArg2" />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:text="Om Lovforslaget"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textSize="10sp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.369"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:text="Om Lovforslaget"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textSize="10sp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.369"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/textViewAboutBill"
+                    android:layout_width="356dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/dummy_description_short"
+                    android:textAlignment="viewStart"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-        <AutoCompleteTextView
-            android:id="@+id/textViewAboutBill"
-            android:layout_width="356dp"
-            android:layout_height="100dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:text="@string/dummy_description_short"
-            android:textAlignment="viewStart"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            </LinearLayout>
 
-        <AutoCompleteTextView
-            android:id="@+id/textArg2"
-            android:layout_width="0dp"
-            android:layout_height="85dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:text="@string/dummy_arg1"
-            android:textAlignment="textStart"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="228dp"
+            android:layout_marginTop="130dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:text="Top  Argumenter"
-            android:textAlignment="center"
-            android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAboutBill" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="Top  Argumenter"
+                android:textAlignment="center"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewAboutBill" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="Kommentar fra: John doe"
+                android:textSize="8sp"
+                android:textStyle="italic" />
 
+            <TextView
+                android:id="@+id/textArg1"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:text="@string/dummy_arg1"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textArg2" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="Kommentar fra: John doe"
+                android:textSize="8sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/textArg2"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:text="@string/dummy_arg1"
+                android:textAlignment="textStart"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 
     <EditText
