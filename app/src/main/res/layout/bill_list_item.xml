@@ -3,33 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp">
-
-    <ImageView
-        android:id="@+id/listeelem_image"
-        android:layout_width="60dip"
-        android:layout_height="40dip"
-        android:layout_margin="5dip"
-        android:scaleType="centerCrop"
-        android:src="@drawable/logo"/>
-
     <TextView
         android:id="@+id/listeelem_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/listeelem_image"
-        android:layout_toEndOf="@+id/listeelem_image"
-        android:layout_toRightOf="@+id/listeelem_image"
         android:text="overskrift"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/listeelem_description"
+    <LinearLayout
+        android:layout_below="@id/listeelem_header"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listeelem_header"
-        android:layout_toRightOf="@+id/listeelem_image"
-        android:text="beskrivelse"
-        android:textSize="12sp"/>
+        android:layout_weight="1"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/listeelem_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:layout_below="@+id/listeelem_header"
+            android:text="beskrivelse"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/listeelem_date"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="date"
+            android:textSize="12sp" />
+    </LinearLayout>
 </RelativeLayout>
