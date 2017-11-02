@@ -20,6 +20,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="VotingBooth"
+        ></activity>
+        <activity
             android:name=".BillActivity"
             android:label="@string/title_activity_bill"
             android:theme="@style/AppTheme.NoActionBar" />

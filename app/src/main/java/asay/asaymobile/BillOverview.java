@@ -1,6 +1,7 @@
 package asay.asaymobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,6 +39,7 @@ public class BillOverview extends Fragment implements OnClickListener{
     TextView arg2;
     TextView popup;
     View Scroll;
+    Button vote;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +49,9 @@ public class BillOverview extends Fragment implements OnClickListener{
 
 
         sub = (ToggleButton) rootView.findViewById(R.id.toggleButton);
+
+        vote = (Button) rootView.findViewById(R.id.buttonVote);
+        vote.setOnClickListener(this);
 
         BillDesc = (TextView) rootView.findViewById(R.id.textViewAboutBill);
         BillDesc.setKeyListener(null);
@@ -99,6 +104,12 @@ public class BillOverview extends Fragment implements OnClickListener{
                 popup.setVisibility(View.INVISIBLE);
                 sub.setVisibility(View.VISIBLE);
                 break;
+
+            case R.id.buttonVote:
+                Intent voteIntent = new Intent(this.getActivity(), VotingBooth.class);
+                startActivity(voteIntent);
+                break;
+
             default:
                 popup.setVisibility(View.INVISIBLE);
                 sub.setVisibility(View.VISIBLE);
