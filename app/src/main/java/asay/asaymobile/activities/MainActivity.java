@@ -1,4 +1,4 @@
-package asay.asaymobile;
+package asay.asaymobile.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,6 +10,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import asay.asaymobile.R;
+import asay.asaymobile.fragments.BillsFragment;
+import asay.asaymobile.fragments.BillOverviewFragment;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
@@ -81,13 +85,13 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch(menuItem.getItemId()) {
             case R.id.nav_first_fragment:
-                fragmentClass = ActiveBills.class;
+                fragmentClass = BillsFragment.class;
                 break;
             case R.id.nav_second_fragment:
-                fragmentClass = BillOverview.class;
+                fragmentClass = BillOverviewFragment.class;
                 break;
             default:
-                fragmentClass = ActiveBills.class;
+                fragmentClass = BillsFragment.class;
         }
 
         try {

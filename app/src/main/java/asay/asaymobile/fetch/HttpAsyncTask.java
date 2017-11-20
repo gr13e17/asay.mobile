@@ -1,4 +1,4 @@
-package asay.asaymobile;
+package asay.asaymobile.fetch;
 
 import android.content.Context;
 import android.os.AsyncTask;

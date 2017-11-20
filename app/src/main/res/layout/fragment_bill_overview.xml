@@ -4,7 +4,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="asay.asaymobile.BillActivity$PlaceholderFragment">
+    tools:context="asay.asaymobile.activities.BillActivity$PlaceholderFragment">
 
     <TextView
         android:id="@+id/headerBill"

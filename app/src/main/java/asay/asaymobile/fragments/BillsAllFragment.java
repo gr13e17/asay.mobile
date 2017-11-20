@@ -1,4 +1,4 @@
-package asay.asaymobile;
+package asay.asaymobile.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,14 +19,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import asay.asaymobile.R;
+import asay.asaymobile.activities.BillActivity;
+import asay.asaymobile.fetch.HttpAsyncTask;
 
-public class BillListFragment extends Fragment implements AdapterView.OnItemClickListener{
+
+public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener{
 
     EditText etResponse;
     private ArrayList<String> bills = new ArrayList<String>();
     ArrayAdapter adapter;
 
-    public BillListFragment() {
+    public BillsAllFragment() {
         // Required empty public constructor
     }
 
@@ -34,7 +38,7 @@ public class BillListFragment extends Fragment implements AdapterView.OnItemClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_bill_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
         return view;    }
 
     @Override
@@ -52,7 +56,7 @@ public class BillListFragment extends Fragment implements AdapterView.OnItemClic
         // String baseUrl ="http://hmkcode.appspot.com/rest/controller/get.json";
 
         // get reference to the views
-        adapter = new ArrayAdapter(getActivity(), R.layout.bill_list_item,R.id.listeelem_header,bills);
+        adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills);
 
         ListView listview = new ListView(getActivity());
         listview.setOnItemClickListener(this);
@@ -70,7 +74,7 @@ public class BillListFragment extends Fragment implements AdapterView.OnItemClic
 
     }
 
-    private class AsyncTaskCompleteListener implements asay.asaymobile.AsyncTaskCompleteListener<JSONObject> {
+    private class AsyncTaskCompleteListener implements asay.asaymobile.fetch.AsyncTaskCompleteListener<JSONObject> {
 
 
         @Override

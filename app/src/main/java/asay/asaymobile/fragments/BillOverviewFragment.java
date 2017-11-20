@@ -1,37 +1,25 @@
-package asay.asaymobile;
+package asay.asaymobile.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupWindow;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import org.w3c.dom.Text;
 import android.view.View.OnClickListener;
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Gravity;
-import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.view.ViewGroup.LayoutParams;
+
+import asay.asaymobile.R;
+import asay.asaymobile.activities.VoteActivity;
 
 /**
  * Created by Soelberg on 31-10-2017.
  */
 
-public class BillOverview extends Fragment implements OnClickListener{
+public class BillOverviewFragment extends Fragment implements OnClickListener{
 
     ToggleButton sub;
     TextView BillDesc;
@@ -45,7 +33,7 @@ public class BillOverview extends Fragment implements OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final View rootView = inflater.inflate(R.layout.bill_overview_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_bill_overview, container, false);
 
 
         sub = (ToggleButton) rootView.findViewById(R.id.toggleButton);
@@ -108,7 +96,7 @@ public class BillOverview extends Fragment implements OnClickListener{
                 break;
 
             case R.id.buttonVote:
-                Intent voteIntent = new Intent(this.getActivity(), VotingBooth.class);
+                Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
                 startActivity(voteIntent);
                 break;
 
