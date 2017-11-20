@@ -42,12 +42,14 @@ public class BillListFragment extends Fragment implements AdapterView.OnItemClic
         super.onViewCreated(view, savedInstanceState);
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
-        String baseUrl = "http://oda.ft.dk/api/";
-        String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAktør,Sagstrin";
-        String proposalFilter = "&$filter=(typeiSag?$orderby=id%20descd%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
-        String call = baseUrl + "Sag?$orderby=id%20desc"+proposalExpand;
+        String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
+        String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
+        String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
+        String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
+        System.out.println("my url: " + urlAsString);
+        new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
+
         // String baseUrl ="http://hmkcode.appspot.com/rest/controller/get.json";
-        new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(call);
 
         // get reference to the views
         adapter = new ArrayAdapter(getActivity(), R.layout.bill_list_item,R.id.listeelem_header,bills);
@@ -69,6 +71,8 @@ public class BillListFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     private class AsyncTaskCompleteListener implements asay.asaymobile.AsyncTaskCompleteListener<JSONObject> {
+
+
         @Override
         public void onTaskComplete(JSONObject result)
         {

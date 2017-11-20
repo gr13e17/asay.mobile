@@ -44,7 +44,6 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
             // create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
-
             // make GET request to the given URL
             HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
 
