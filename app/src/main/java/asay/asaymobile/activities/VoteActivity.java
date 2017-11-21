@@ -1,4 +1,4 @@
-package asay.asaymobile;
+package asay.asaymobile.activities;
 
 /**
  * Created by Ber on 02/11/2017.
@@ -14,8 +14,10 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import asay.asaymobile.R;
 
-public class VotingBooth extends AppCompatActivity implements View.OnClickListener {
+
+public class VoteActivity extends AppCompatActivity implements View.OnClickListener {
 
     PopupWindow votedWindow;
     PopupWindow cancelWindow;
@@ -26,19 +28,19 @@ public class VotingBooth extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_votingbooth);
+        setContentView(R.layout.activity_vote);
 
         mainLayout = (ConstraintLayout) findViewById(R.id.activity_stemmeboks);
 
         //Creates 2 popup windows
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View votedView = inflater.inflate(R.layout.popup_voted, null);
+        View votedView = inflater.inflate(R.layout.dialog_vote_complete, null);
 
         votedWindow = new PopupWindow(votedView, 800, 450, true);
         votedWindow.setElevation(15);
 
-        View cancelView = inflater.inflate(R.layout.popup_cancel, null);
+        View cancelView = inflater.inflate(R.layout.dialog_cancel_vote, null);
 
         cancelWindow = new PopupWindow(cancelView, 800, 450, true);
         cancelWindow.setElevation(15);

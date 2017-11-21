@@ -1,4 +1,4 @@
-package asay.asaymobile;
+package asay.asaymobile.fetch;
 
 /**
  * Created by s123725 on 18/10/2017.
