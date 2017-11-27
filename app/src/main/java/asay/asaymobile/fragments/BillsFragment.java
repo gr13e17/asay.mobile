@@ -1,4 +1,4 @@
-package asay.asaymobile;
+package asay.asaymobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import asay.asaymobile.R;
 
-public class ActiveBills extends Fragment {
-    public ActiveBills() {
+
+public class BillsFragment extends Fragment {
+    public BillsFragment() {
         // Required empty public constructor
     }
     private FragmentTabHost mTabHost;
@@ -21,9 +23,9 @@ public class ActiveBills extends Fragment {
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator("Alle"),
-                BillListFragment.class, null);
+                BillsAllFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator("Mine"),
-                BillListFragment.class, null);
+                BillsAllFragment.class, null);
 
         // Inflate the layout for this fragment
         return mTabHost;

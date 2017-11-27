@@ -1,6 +1,4 @@
-package asay.asaymobile;
-
-import static android.R.attr.fragment;
+package asay.asaymobile.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,11 +13,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import asay.asaymobile.R;
+
 /**
  * Created by Soelberg on 31-10-2017.
  */
 
-public class BillDebat extends Fragment {
+public class BillForumFragment extends Fragment {
     //contains names of the one who wrote the comment. must be populated from database
     ArrayList<String> nameArray = new ArrayList<String>();
     ArrayList<String> commentArray = new ArrayList<String>();
@@ -30,7 +30,7 @@ public class BillDebat extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.bill_debat_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_bill_forum, container, false);
         return rootView;
     }
 
@@ -44,7 +44,7 @@ public class BillDebat extends Fragment {
         commentPlaceholder();
         colorPlaceholder();
         // get reference to the views
-        arrayAdapter = new ArrayAdapter(getActivity(), R.layout.comment_layout,R.id.nameView,nameArray){
+        arrayAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_comment,R.id.nameView,nameArray){
             @Override
             public View getView(int position, View cachedView, ViewGroup parent){
                 View view = super.getView(position, cachedView, parent);
