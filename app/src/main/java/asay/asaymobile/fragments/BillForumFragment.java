@@ -86,11 +86,11 @@ public class BillForumFragment extends Fragment {
     }
 
     private void colorPlaceholder(){
-        colorArray.add(getResources().getColor(R.color.tempAgainstColor));
-        colorArray.add(getResources().getColor(R.color.tempForColor));
-        colorArray.add(getResources().getColor(R.color.tempAgainstColor));
-        colorArray.add(getResources().getColor(R.color.tempAgainstColor));
-        colorArray.add(getResources().getColor(R.color.tempForColor));
-        colorArray.add(getResources().getColor(R.color.tempAgainstColor));
+        colorArray.add(getResources().getColor(R.color.againstColor));
+        colorArray.add(getResources().getColor(R.color.forColor));
+        colorArray.add(getResources().getColor(R.color.againstColor));
+        colorArray.add(getResources().getColor(R.color.againstColor));
+        colorArray.add(getResources().getColor(R.color.forColor));
+        colorArray.add(getResources().getColor(R.color.againstColor));
     }
 }
