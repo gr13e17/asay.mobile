@@ -11,4 +11,6 @@
   <color name="secondaryTextColor">#ffffff</color>
   <color name="forColor">#cccccc</color>
   <color name="againstColor">#8e8e8e</color>
+  <color name="tempForColor">#42bfb4</color>
+  <color name="tempAgainstColor">#008e84</color>
 </resources>

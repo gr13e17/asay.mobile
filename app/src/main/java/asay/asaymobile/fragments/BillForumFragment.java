@@ -23,7 +23,7 @@ public class BillForumFragment extends Fragment {
     //contains names of the one who wrote the comment. must be populated from database
     ArrayList<String> nameArray = new ArrayList<String>();
     ArrayList<String> commentArray = new ArrayList<String>();
-    ArrayList<String> colorArray = new ArrayList<String>();
+    ArrayList<Integer> colorArray = new ArrayList<Integer>();
     ArrayAdapter arrayAdapter;
 
 
@@ -53,7 +53,7 @@ public class BillForumFragment extends Fragment {
                 commentText.setText(commentArray.get(position));
 
                 TextView nameView = view.findViewById(R.id.nameView);
-                nameView.setBackgroundColor(Color.parseColor(colorArray.get(position)));
+                nameView.setBackgroundColor(colorArray.get(position));
                 return view;
             }
         };
@@ -86,11 +86,11 @@ public class BillForumFragment extends Fragment {
     }
 
     private void colorPlaceholder(){
-        colorArray.add("#ff00ff");
-        colorArray.add("#ff00ff");
-        colorArray.add("#0080ff");
-        colorArray.add("#ff00ff");
-        colorArray.add("#ff00ff");
-        colorArray.add("#0080ff");
+        colorArray.add(getResources().getColor(R.color.tempAgainstColor));
+        colorArray.add(getResources().getColor(R.color.tempForColor));
+        colorArray.add(getResources().getColor(R.color.tempAgainstColor));
+        colorArray.add(getResources().getColor(R.color.tempAgainstColor));
+        colorArray.add(getResources().getColor(R.color.tempForColor));
+        colorArray.add(getResources().getColor(R.color.tempAgainstColor));
     }
 }
