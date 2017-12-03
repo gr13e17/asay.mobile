@@ -1,19 +1,21 @@
 package asay.asaymobile.fragments;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.ToggleButton;
-
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
 import asay.asaymobile.R;
 import asay.asaymobile.activities.VoteActivity;
+
+import static android.text.TextUtils.TruncateAt.END;
 
 /**
  * Created by Soelberg on 31-10-2017.
@@ -21,13 +23,26 @@ import asay.asaymobile.activities.VoteActivity;
 
 public class BillOverviewFragment extends Fragment implements OnClickListener{
 
-    ToggleButton sub;
+
+    ImageButton sub;
     TextView BillDesc;
+    int BillDescOrg;
+    TextView expBillDesc;
     TextView arg1;
+    int arg1Org;
+    TextView expArg1;
     TextView arg2;
+    int arg2Org;
+    TextView expArg2;
     TextView popup;
     View Scroll;
     Button vote;
+    boolean isSub = false;
+    boolean isExpandedBillDesc  = false;
+    boolean isExpandedFor  = false;
+    boolean isExpandedAgainst  = false;
+
+
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,134 +50,130 @@ public class BillOverviewFragment extends Fragment implements OnClickListener{
         super.onCreate(savedInstanceState);
         final View rootView = inflater.inflate(R.layout.fragment_bill_overview, container, false);
 
-
-        sub = (ToggleButton) rootView.findViewById(R.id.toggleButton);
+        sub = (ImageButton) rootView.findViewById(R.id.subbtn);
+        sub.setOnClickListener(this);
 
         vote = (Button) rootView.findViewById(R.id.buttonVote);
         vote.setOnClickListener(this);
 
-        BillDesc = (TextView) rootView.findViewById(R.id.textViewAboutBill);
-        BillDesc.setKeyListener(null);
+        BillDesc = (TextView) rootView.findViewById(R.id.billDesc);
+        BillDescOrg = R.string.dummy_description_short;
+        BillDesc.setText(BillDescOrg);
         BillDesc.setOnClickListener(this);
+        BillDesc.setMaxLines(3);
 
-        arg1 = (TextView) rootView.findViewById(R.id.textArg1);
-        arg1.setKeyListener(null);
+
+
+        arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
+        arg1Org = R.string.dummy_arg2;
+        arg1.setText(arg1Org);
         arg1.setOnClickListener(this);
+        arg1.setMaxLines(3);
 
-        arg2 = (TextView) rootView.findViewById(R.id.textArg2);
-        arg2.setKeyListener(null);
+
+
+        arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
+        arg2Org = R.string.dummy_arg1;
+        arg2.setText(arg2Org);
         arg2.setOnClickListener(this);
+        arg2.setMaxLines(3);
 
-        popup = (TextView) rootView.findViewById(R.id.popup);
-        popup.setKeyListener(null);
-        popup.setVisibility(View.INVISIBLE);
-        popup.setOnClickListener(this);
-        popup.setVerticalScrollBarEnabled(true);
-
-        Scroll = (View) rootView.findViewById(R.id.RLScroll);
-        Scroll.setVerticalScrollBarEnabled(true);
+        expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
+        expBillDesc.setOnClickListener(this);
+        expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
+        expArg1.setOnClickListener(this);
+        expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
+        expArg2.setOnClickListener(this);
 
         return rootView;
-
-
 }
+
     @Override
     public void onClick(View v){
         switch(v.getId()){
-            case R.id.textViewAboutBill:
-                popup.setVisibility(View.VISIBLE);
-                popup.setText(getResources().getString(R.string.dummy_description) + getResources().getString(R.string.dummy_description));
-                popup.bringToFront();
-                sub.setVisibility(View.INVISIBLE);
-                break;
-
-            case R.id.textArg1:
-                popup.setVisibility(View.VISIBLE);
-                popup.setText(getResources().getString(R.string.dummy_arg1));
-                popup.bringToFront();
-                sub.setVisibility(View.INVISIBLE);
-                break;
-
-            case R.id.textArg2:
-                popup.setVisibility(View.VISIBLE);
-                popup.setText(getResources().getString(R.string.dummy_arg2));
-                popup.bringToFront();
-                sub.setVisibility(View.INVISIBLE);
-                break;
-
-            case R.id.popup:
-                popup.setVisibility(View.INVISIBLE);
-                sub.setVisibility(View.VISIBLE);
-                break;
 
             case R.id.buttonVote:
                 Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
                 startActivity(voteIntent);
                 break;
 
-            default:
-                popup.setVisibility(View.INVISIBLE);
-                sub.setVisibility(View.VISIBLE);
+            case R.id.subbtn :
+               if(isSub == false){
+                    sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+                   isSub = true;
+                   break;
+                }
+                if(isSub == true) {
+                   sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+                    isSub = false;
+                    break;
+                }
+
+                //BIll Description expanding
+            case R.id.billDesc :
+            case R.id.expandBillDesc :
+                if(isExpandedBillDesc == true){
+                    collapseTextView(BillDesc, 3);
+                    expBillDesc.setText("Se mere");
+                    isExpandedBillDesc = false;
+                }
+                else {
+                    expandTextView(BillDesc, BillDescOrg);
+                    expBillDesc.setText("Se mindre");
+                    isExpandedBillDesc = true;
+                }
+                break;
+
+                // Top Argument Against Expanding
+            case R.id.argAgainstTxt :
+            case R.id.expandArgAgainst :
+                if(isExpandedAgainst == true){
+                    expArg2.setText("Se mere");
+                    collapseTextView(arg2, 3);
+                    isExpandedAgainst = false;
+                }
+                else {
+                    expandTextView(arg2, arg2Org);
+                    expArg2.setText("Se mindre");
+                    isExpandedAgainst = true;
+                }
+                break;
+
+             // Top Argument For Expanding
+            case R.id.argForTxt :
+            case R.id.expandArgFor :
+                if(isExpandedAgainst == true){
+                    expArg1.setText("Se mere");
+                    collapseTextView(arg1, 3);
+                    isExpandedAgainst = false;
+                }
+                else {
+                    expandTextView(arg1, arg1Org);
+                    expArg1.setText("Se mindre");
+                    isExpandedAgainst = true;
+                }
                 break;
         }
 
     }
+
+    private void expandTextView(TextView billDesc, int orgTxt){
+
+       billDesc.setText(orgTxt);
+        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
+        animation.setDuration(80).start();
+
+    }
+
+    private void collapseTextView(TextView billDesc, int numLines){
+
+        int lineEndIndex = billDesc.getLayout().getLineEnd(2);
+        String text = billDesc.getText().subSequence(0, lineEndIndex - 3) + "...";
+        billDesc.setText(text);
+        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", numLines);
+        animation.setDuration(80).start();
+    }
 }
 
-//Method to create expandable textview (not implemented in asay prototype 1.0)
-//public class ExpandableTextView extends TextView implements View.OnClickListener {
-//
-//    private static final int MaxLines = 4;
-//    private int currentMaxLines = Integer.MAX_VALUE;
-//
-//    public ExpandableTextView(Context text){
-//        super(text);
-//        setOnClickListener(this);
-//    }
-//
-//    public ExpandableTextView(Context text, AttributeSet att, int dStyle){
-//    super(text, att, dStyle);
-//    setOnClickListener(this);
-//    }
-//
-//    public ExpandableTextView(Context text, AttributeSet att){
-//        super(text, att);
-//        setOnClickListener(this);
-//    }
-//@Override
-//protected void onTextChanged(CharSequence text, int start, int lengthBf, int lengthAft){
-//        post(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (getLineCount()>MaxLines)
-//                    setCompoundDrawablesWithIntrinsicBounds(0,0,0, R.drawable.icon_more_text;
-//                else
-//                    setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-//            setMaxLines(MaxLines);
-//            }
-//
-//        });
-//}
-//@Override
-//    public void setMaxLines(int maxLines){
-//    currentMaxLines = maxLines;
-//    super.setMaxLines(maxLines);
-//
-//}
-//
-//    public int getMyMaxLines()
-//    {
-//        return currentMaxLines;
-//    }
-//
-//    @Override
-//    public void onClick(View v)
-//    {
-//        /* Toggle between expanded collapsed states */
-//        if (getMyMaxLines() == Integer.MAX_VALUE)
-//            setMaxLines(MaxLines);
-//        else
-//            setMaxLines(Integer.MAX_VALUE);
-//    }
-//
-//}
+
+

@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import asay.asaymobile.R;
+import asay.asaymobile.fragments.BillDetailFragment;
 import asay.asaymobile.fragments.BillForumFragment;
 import asay.asaymobile.fragments.BillOverviewFragment;
 
@@ -53,37 +54,25 @@ public class BillActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
+        mViewPager.setCurrentItem(1, true);
 
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_bill, menu);
-        return true;
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -93,12 +82,15 @@ public class BillActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
+                case 1:
                     BillOverviewFragment overview = new BillOverviewFragment();
                     return overview;
-                case 1:
+                case 2:
                     BillForumFragment debat = new BillForumFragment();
                     return debat;
+                case 0:
+                    BillDetailFragment details  = new BillDetailFragment();
+                    return details;
                 default:
                     return null;
             }
@@ -107,17 +99,18 @@ public class BillActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0:
-                    return "Lovforslag";
                 case 1:
+                    return "Lovforslag";
+                case 2:
                     return "Debat";
-
+                case 0:
+                    return "Detaljer";
             }
             return null;
         }
