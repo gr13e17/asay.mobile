@@ -61,7 +61,7 @@ public class VoteActivity extends AppCompatActivity implements View.OnClickListe
         b6.setOnClickListener(this);
 
         title = (TextView) findViewById(R.id.textView2);
-        voted = (TextView) findViewById(R.id.textView3);
+        voted = (TextView) findViewById(R.id.argForHead);
 
     }
 

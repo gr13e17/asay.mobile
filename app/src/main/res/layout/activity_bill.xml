@@ -23,7 +23,7 @@
             android:background="@color/secondaryDarkColor"
             app:layout_scrollFlags="enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name">
+            app:title="@string/BillExampleHead">
 
         </android.support.v7.widget.Toolbar>
 
@@ -34,6 +34,12 @@
             android:background="@color/primaryLightColor"
             app:tabSelectedTextColor="@color/primaryTextColor"
             app:tabTextColor="@color/primaryTextColor">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detaljer" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem"
