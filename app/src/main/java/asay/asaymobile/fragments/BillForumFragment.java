@@ -1,6 +1,5 @@
 package asay.asaymobile.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,24 +12,41 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
+import asay.asaymobile.model.ArgumentType;
+import asay.asaymobile.model.CommentDTO;
+import asay.asaymobile.presenter.ForumPresenter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Soelberg on 31-10-2017.
  */
 
-public class BillForumFragment extends Fragment {
+public class BillForumFragment extends Fragment implements ForumContract.View {
     //contains names of the one who wrote the comment. must be populated from database
+    @BindView(R.id.forum_list_view)
+    ListView listView;
+
+    ForumPresenter presenter;
     ArrayList<String> nameArray = new ArrayList<String>();
     ArrayList<String> commentArray = new ArrayList<String>();
     ArrayList<Integer> colorArray = new ArrayList<Integer>();
     ArrayAdapter arrayAdapter;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = new ForumPresenter(this, 1);
+    }
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_bill_forum, container, false);
+        ButterKnife.bind(this, rootView);
         return rootView;
     }
 
@@ -40,29 +56,7 @@ public class BillForumFragment extends Fragment {
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
 
-        namePlaceholder();
-        commentPlaceholder();
-        colorPlaceholder();
         // get reference to the views
-        arrayAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_comment,R.id.nameView,nameArray){
-            @Override
-            public View getView(int position, View cachedView, ViewGroup parent){
-                View view = super.getView(position, cachedView, parent);
-
-                TextView commentText = view.findViewById(R.id.comment);
-                commentText.setText(commentArray.get(position));
-
-                TextView nameView = view.findViewById(R.id.nameView);
-                nameView.setBackgroundColor(colorArray.get(position));
-                return view;
-            }
-        };
-
-
-        ListView listview = new ListView(getActivity());
-        listview.setAdapter(arrayAdapter);
-        ViewGroup viewGroup = (ViewGroup) rootView;
-        viewGroup.addView(listview);
 
     }
 
@@ -85,12 +79,45 @@ public class BillForumFragment extends Fragment {
         commentArray.add("Nullam placerat magna metus, id tincidunt nunc vestibulum at. Donec ut ligula sagittis, posuere purus sollicitudin, tristique leo. Integer et ultrices risus, et cursus augue. ");
     }
 
-    private void colorPlaceholder(){
-        colorArray.add(getResources().getColor(R.color.againstColor));
-        colorArray.add(getResources().getColor(R.color.forColor));
-        colorArray.add(getResources().getColor(R.color.againstColor));
-        colorArray.add(getResources().getColor(R.color.againstColor));
-        colorArray.add(getResources().getColor(R.color.forColor));
-        colorArray.add(getResources().getColor(R.color.againstColor));
+    private Integer getColor(ArgumentType argumentType){
+        switch (argumentType) {
+            case FOR:
+                return getResources().getColor(R.color.forColor);
+            case AGAINST:
+                return getResources().getColor(R.color.againstColor);
+            case NEUTRAL:
+                return getResources().getColor(R.color.neutralColor);
+            default:
+                return getResources().getColor(R.color.neutralColor);
+        }
+    }
+
+    @Override
+    public void closeForum() {
+    }
+
+    @Override
+    public void showUnloggedUserError() {
+
+    }
+
+    @Override
+    public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
+        namePlaceholder();
+        ArrayAdapter commentArrayAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_comment,R.id.nameView,currentComment){
+            @Override
+            public View getView(int position, View cachedView, ViewGroup parent){
+                View view = super.getView(position, cachedView, parent);
+
+                TextView commentText = view.findViewById(R.id.comment);
+                commentText.setText(currentComment.get(position).getText());
+                TextView nameView = view.findViewById(R.id.nameView);
+                nameView.setText(nameArray.get(position));
+                nameView.setBackgroundColor(getColor(currentComment.get(position).getArgumentType()));
+                return view;
+            }
+        };
+        listView.setAdapter(commentArrayAdapter);
+        System.out.println("");
     }
 }
