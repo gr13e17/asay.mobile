@@ -1,4 +1,4 @@
-package asay.asaymobile;
+package asay.asaymobile.fetch;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -44,7 +44,6 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
             // create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
-
             // make GET request to the given URL
             HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
 

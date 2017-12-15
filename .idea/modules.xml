@@ -3,13 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\Soelberg\StudioProjects\asay\app\app.iml" filepath="C:\Users\Soelberg\StudioProjects\asay\app\app.iml" />
-      <module fileurl="file://C:\Users\freya\Dropbox\DTU\62550_Brugerinteraktion\Asay\asay.mobile\app\app.iml" filepath="C:\Users\freya\Dropbox\DTU\62550_Brugerinteraktion\Asay\asay.mobile\app\app.iml" />
-      <module fileurl="file://C:\Users\Ber\AndroidStudioProjects\asay.mobile\asay.iml" filepath="C:\Users\Ber\AndroidStudioProjects\asay.mobile\asay.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/asay.mobile.iml" filepath="$PROJECT_DIR$/.idea/asay.mobile.iml" />
-      <module fileurl="file://C:\Users\Soelberg\StudioProjects\asay\asay.mobile.iml" filepath="C:\Users\Soelberg\StudioProjects\asay\asay.mobile.iml" />
-      <module fileurl="file://C:\Users\freya\Dropbox\DTU\62550_Brugerinteraktion\Asay\asay.mobile\asay.mobile.iml" filepath="C:\Users\freya\Dropbox\DTU\62550_Brugerinteraktion\Asay\asay.mobile\asay.mobile.iml" />
-      <module fileurl="file://C:\Users\Matt\AndroidStudioProjects\asay.mobile\.idea\asay.mobile.iml" filepath="C:\Users\Matt\AndroidStudioProjects\asay.mobile\.idea\asay.mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/asay.mobile.iml" filepath="$PROJECT_DIR$/asay.mobile.iml" />
     </modules>
   </component>
 </project>
