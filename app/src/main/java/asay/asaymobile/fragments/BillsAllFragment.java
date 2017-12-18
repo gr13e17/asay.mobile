@@ -25,7 +25,6 @@ import asay.asaymobile.fetch.HttpAsyncTask;
 
 
 public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener{
-
     EditText etResponse;
     private ArrayList<String> bills = new ArrayList<String>();
     ArrayAdapter adapter;
