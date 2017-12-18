@@ -51,8 +51,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
         new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
 
-        // String baseUrl ="http://hmkcode.appspot.com/rest/controller/get.json";
-
         // get reference to the views
         adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills);
 
