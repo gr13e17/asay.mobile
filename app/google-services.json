@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1071456535202",
+    "firebase_url": "https://asay-gr13.firebaseio.com",
+    "project_id": "asay-gr13",
+    "storage_bucket": "asay-gr13.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071456535202:android:6f0bb718609deccc",
+        "android_client_info": {
+          "package_name": "asay.asaymobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071456535202-mk3paqctn2b8rkm6fkvmlt1r1ud80fs9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "asay.asaymobile",
+            "certificate_hash": "f231817cddeed9e1214cdf38d9c14ed37dcb663a"
+          }
+        },
+        {
+          "client_id": "1071456535202-9uojc5cd278gs6oooc90cdu9v5jcj1h3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2fIs7KLupkjtp6XfSQg31af3GOjp6TSg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071456535202-9uojc5cd278gs6oooc90cdu9v5jcj1h3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
