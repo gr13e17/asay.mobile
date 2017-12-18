@@ -16,6 +16,7 @@ import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
 import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.CommentDTO;
+import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.ForumPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,17 +29,16 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
     //contains names of the one who wrote the comment. must be populated from database
     @BindView(R.id.forum_list_view)
     ListView listView;
-
-    ForumPresenter presenter;
-    ArrayList<String> nameArray = new ArrayList<String>();
+    ForumPresenter forumPresenter;
+    ArrayList<UserDTO> nameArray = new ArrayList<UserDTO>();
     ArrayList<String> commentArray = new ArrayList<String>();
     ArrayList<Integer> colorArray = new ArrayList<Integer>();
     ArrayAdapter arrayAdapter;
+    UserDTO userDTO;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new ForumPresenter(this, 1);
     }
 
     @Override
@@ -55,19 +55,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
         super.onViewCreated(rootView, savedInstanceState);
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
-
+        forumPresenter = new ForumPresenter(this, 1);
         // get reference to the views
 
-    }
-
-    //placeholder to populate the name arreylise
-    private void namePlaceholder(){
-        nameArray.add("Ole Hansen");
-        nameArray.add("Gitte Andersen");
-        nameArray.add("Anne Larsen");
-        nameArray.add("Ulla Nilsen");
-        nameArray.add("Allan Sønder");
-        nameArray.add("Sonja Rasmussen");
     }
 
     private void commentPlaceholder(){
@@ -103,21 +93,28 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
 
     @Override
     public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
-        namePlaceholder();
         ArrayAdapter commentArrayAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_comment,R.id.nameView,currentComment){
             @Override
             public View getView(int position, View cachedView, ViewGroup parent){
                 View view = super.getView(position, cachedView, parent);
-
                 TextView commentText = view.findViewById(R.id.comment);
                 commentText.setText(currentComment.get(position).getText());
                 TextView nameView = view.findViewById(R.id.nameView);
-                nameView.setText(nameArray.get(position));
-                nameView.setBackgroundColor(getColor(currentComment.get(position).getArgumentType()));
+                for (UserDTO user: nameArray ){
+                    if(user.getid() == currentComment.get(position).getUserid()){
+                        nameView.setText(user.getname());
+                        nameView.setBackgroundColor(getColor(currentComment.get(position).getArgumentType()));
+                    }
+                }
+
                 return view;
             }
         };
         listView.setAdapter(commentArrayAdapter);
-        System.out.println("");
+    }
+
+    @Override
+    public void refreshUsers(ArrayList<UserDTO> users) {
+        this.nameArray = users;
     }
 }

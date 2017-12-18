@@ -6,10 +6,10 @@ package asay.asaymobile.model;
 
 public class CommentDTO {
     ArgumentType argumentType;
-    int id;
+    double id;
     int score;
     String text;
-    int userid;
+    double userid;
 
     public CommentDTO(){
         //empty contsructor
@@ -39,11 +39,11 @@ public class CommentDTO {
         this.argumentType = argumentType;
     }
 
-    public int getId() {
+    public double getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(double id) {
         this.id = id;
     }
 
@@ -63,11 +63,11 @@ public class CommentDTO {
         this.text = text;
     }
 
-    public int getUserid() {
+    public double getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(double userid) {
         this.userid = userid;
     }
 

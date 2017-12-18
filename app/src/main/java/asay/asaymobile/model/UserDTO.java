@@ -7,9 +7,9 @@ import java.util.ArrayList;
  */
 
 public class UserDTO {
-    private int mid;
+    private double mid;
     private String mname;
-    private ArrayList<String> msavedBills;
+    private ArrayList<Long> msavedBills;
 
     public UserDTO(){
         //empty constructor
@@ -17,25 +17,25 @@ public class UserDTO {
     public UserDTO(final UserDTO userDTO){
         mid = userDTO.getid();
         mname = userDTO.getname();
-        msavedBills = userDTO.getsavedBills();
+        msavedBills = userDTO.getbillsSaved();
     }
 
-    public UserDTO(final int id, final String name, ArrayList<String> savedBills){
+    public UserDTO(final int id, final String name, ArrayList<Long> savedBills){
         this.mid = id;
         this.mname = name;
         this.msavedBills = savedBills;
     }
 
-    public int getid() { return mid;}
+    public double getid() { return mid;}
 
-    public void setid(int id) { this.mid = id; }
+    public void setid(double id) { this.mid = id; }
 
     public String getname() { return mname; }
 
     public void setname(String name) { this.mname = name; }
 
-    public ArrayList<String> getsavedBills() { return msavedBills; }
+    public ArrayList<Long> getbillsSaved() { return msavedBills; }
 
-    public void setsavedBills(ArrayList<String> savedBills) { this.msavedBills = savedBills; }
+    public void setbillsSaved(ArrayList<Long> savedBills) { this.msavedBills = savedBills; }
 
 }
