@@ -91,12 +91,14 @@ public class BillActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+            Bundle bundle = new Bundle();
             switch (position) {
                 case 1:
+                    bundle.putString("bill", bill.toString());
                     BillOverviewFragment overview = new BillOverviewFragment();
+                    overview.setArguments(bundle);
                     return overview;
                 case 2:
-                    Bundle bundle = new Bundle();
                     try {
                         bundle.putInt("billId", Integer.parseInt(bill.getString("id")));
                     } catch (JSONException e) {
@@ -106,7 +108,9 @@ public class BillActivity extends AppCompatActivity {
                     debat.setArguments(bundle);
                     return debat;
                 case 0:
+                    bundle.putString("bill", bill.toString());
                     BillDetailFragment details  = new BillDetailFragment();
+                    details.setArguments(bundle);
                     return details;
                 default:
                     return null;

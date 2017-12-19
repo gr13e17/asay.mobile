@@ -4,18 +4,19 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import asay.asaymobile.R;
 import asay.asaymobile.activities.VoteActivity;
-
-import static android.text.TextUtils.TruncateAt.END;
 
 /**
  * Created by Soelberg on 31-10-2017.
@@ -23,10 +24,10 @@ import static android.text.TextUtils.TruncateAt.END;
 
 public class BillOverviewFragment extends Fragment implements OnClickListener{
 
-
+    private JSONObject bill;
     ImageButton sub;
     TextView BillDesc;
-    int BillDescOrg;
+    String BillDescOrg;
     TextView expBillDesc;
     TextView arg1;
     int arg1Org;
@@ -42,49 +43,53 @@ public class BillOverviewFragment extends Fragment implements OnClickListener{
     boolean isExpandedFor  = false;
     boolean isExpandedAgainst  = false;
 
-
-
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final View rootView = inflater.inflate(R.layout.fragment_bill_overview, container, false);
 
-        sub = (ImageButton) rootView.findViewById(R.id.subbtn);
-        sub.setOnClickListener(this);
+        try {
+            bill = new JSONObject(getArguments().getString("bill"));
 
-        vote = (Button) rootView.findViewById(R.id.buttonVote);
-        vote.setOnClickListener(this);
+            sub = (ImageButton) rootView.findViewById(R.id.subbtn);
+            sub.setOnClickListener(this);
 
-        BillDesc = (TextView) rootView.findViewById(R.id.billDesc);
-        BillDescOrg = R.string.dummy_description_short;
-        BillDesc.setText(BillDescOrg);
-        BillDesc.setOnClickListener(this);
-        BillDesc.setMaxLines(3);
+            TextView header = (TextView) rootView.findViewById(R.id.headerBill);
+            header.setText(bill.getString("nummer").concat(": ").concat(bill.getString("titelkort")));
+            vote = (Button) rootView.findViewById(R.id.buttonVote);
+            vote.setOnClickListener(this);
 
-
-
-        arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
-        arg1Org = R.string.dummy_arg2;
-        arg1.setText(arg1Org);
-        arg1.setOnClickListener(this);
-        arg1.setMaxLines(3);
+            BillDesc = (TextView) rootView.findViewById(R.id.billDesc);
+            BillDescOrg = bill.getString("resume");
+            BillDesc.setText(BillDescOrg);
+            BillDesc.setOnClickListener(this);
+            BillDesc.setMaxLines(3);
 
 
 
-        arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
-        arg2Org = R.string.dummy_arg1;
-        arg2.setText(arg2Org);
-        arg2.setOnClickListener(this);
-        arg2.setMaxLines(3);
+            arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
+            arg1Org = R.string.dummy_arg2;
+            arg1.setText(arg1Org);
+            arg1.setOnClickListener(this);
+            arg1.setMaxLines(3);
 
-        expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
-        expBillDesc.setOnClickListener(this);
-        expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
-        expArg1.setOnClickListener(this);
-        expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
-        expArg2.setOnClickListener(this);
 
+
+            arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
+            arg2Org = R.string.dummy_arg1;
+            arg2.setText(arg2Org);
+            arg2.setOnClickListener(this);
+            arg2.setMaxLines(3);
+
+            expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
+            expBillDesc.setOnClickListener(this);
+            expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
+            expArg1.setOnClickListener(this);
+            expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
+            expArg2.setOnClickListener(this);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return rootView;
 }
 
@@ -158,11 +163,14 @@ public class BillOverviewFragment extends Fragment implements OnClickListener{
     }
 
     private void expandTextView(TextView billDesc, int orgTxt){
-
-       billDesc.setText(orgTxt);
+        billDesc.setText(orgTxt);
         ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
         animation.setDuration(80).start();
-
+    }
+    private void expandTextView(TextView billDesc, String orgTxt){
+        billDesc.setText(orgTxt);
+        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
+        animation.setDuration(80).start();
     }
 
     private void collapseTextView(TextView billDesc, int numLines){
