@@ -29,6 +29,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
     //contains names of the one who wrote the comment. must be populated from database
     @BindView(R.id.forum_list_view)
     ListView listView;
+    int billId;
     ForumPresenter forumPresenter;
     ArrayList<UserDTO> nameArray = new ArrayList<UserDTO>();
     ArrayList<String> commentArray = new ArrayList<String>();
@@ -46,6 +47,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_bill_forum, container, false);
+        billId = getArguments().getInt("billId");
         ButterKnife.bind(this, rootView);
         return rootView;
     }
@@ -55,7 +57,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
         super.onViewCreated(rootView, savedInstanceState);
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
-        forumPresenter = new ForumPresenter(this, 1);
+        forumPresenter = new ForumPresenter(this, billId);
         // get reference to the views
 
     }

@@ -12,12 +12,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import asay.asaymobile.R;
 import asay.asaymobile.activities.BillActivity;
@@ -26,7 +30,7 @@ import asay.asaymobile.fetch.HttpAsyncTask;
 
 public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener{
     EditText etResponse;
-    private ArrayList<String> bills = new ArrayList<String>();
+    private ArrayList<JSONObject> bills = new ArrayList<JSONObject>();
     ArrayAdapter adapter;
 
     public BillsAllFragment() {
@@ -52,7 +56,21 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
 
         // get reference to the views
-        adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills);
+        adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
+            @Override
+            public View getView(int position, View cachedView, ViewGroup parent){
+                View view = super.getView(position, cachedView, parent);
+                try {
+                    TextView title = view.findViewById(R.id.listeelem_header);
+                    title.setText(bills.get(position).getString("titelkort"));
+                    TextView date = view.findViewById(R.id.listeelem_date);
+                    date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getJSONObject("Periode").getString("slutdato"))));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return view;
+            }
+        };
 
         ListView listview = new ListView(getActivity());
         listview.setOnItemClickListener(this);
@@ -64,15 +82,14 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent switchview = new Intent(getActivity(), BillActivity.class);
+        JSONObject item = bills.get(position);
+        Intent switchview = new Intent(getContext(), BillActivity.class);
+        switchview.putExtra("bill",item.toString());
         startActivity(switchview);
-        Toast.makeText(getActivity() , "Click on" + position,Toast.LENGTH_SHORT).show();
 
     }
 
     private class AsyncTaskCompleteListener implements asay.asaymobile.fetch.AsyncTaskCompleteListener<JSONObject> {
-
-
         @Override
         public void onTaskComplete(JSONObject result)
         {
@@ -84,13 +101,30 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
                 for (int i = 0; i < articles.length(); i++){
-                    bills.add(articles.getJSONObject(i).getString("titelkort"));
+                    bills.add(articles.getJSONObject(i));
                 }
                 adapter.notifyDataSetChanged();
             } catch (Exception excep){
                 Log.d("JSON Exception", "onTaskComplete: " + excep.getMessage());
             }
-            // do something with the result
         }
+    }
+
+    private long CalcDateFromToday(String date) {
+        long diffDays = 0;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date d = sdf.parse(date);
+            Date today = new Date();
+            long diff = Math.abs(d.getTime() - today.getTime());
+            diffDays = diff / (24 * 60 * 60 * 1000);
+            System.out.println("diff days: " + diffDays);
+            String formattedTime = output.format(d);
+        } catch (ParseException ex){
+            System.out.println(ex.getMessage());
+        }
+
+        return diffDays;
     }
 }

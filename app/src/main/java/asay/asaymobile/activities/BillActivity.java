@@ -1,16 +1,17 @@
 package asay.asaymobile.activities;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.Menu;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import asay.asaymobile.R;
 import asay.asaymobile.fragments.BillDetailFragment;
@@ -33,11 +34,20 @@ public class BillActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-
+    private  JSONObject bill;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null){
+        }
         setContentView(R.layout.activity_bill);
+
+        try {
+            bill = new JSONObject(getIntent().getStringExtra("bill"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,7 +96,14 @@ public class BillActivity extends AppCompatActivity {
                     BillOverviewFragment overview = new BillOverviewFragment();
                     return overview;
                 case 2:
+                    Bundle bundle = new Bundle();
+                    try {
+                        bundle.putInt("billId", Integer.parseInt(bill.getString("id")));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     BillForumFragment debat = new BillForumFragment();
+                    debat.setArguments(bundle);
                     return debat;
                 case 0:
                     BillDetailFragment details  = new BillDetailFragment();
