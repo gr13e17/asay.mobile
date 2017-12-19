@@ -48,6 +48,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
 
         View rootView = inflater.inflate(R.layout.fragment_bill_forum, container, false);
         billId = getArguments().getInt("billId");
+        System.out.println("bill id: " + billId);
         ButterKnife.bind(this, rootView);
         return rootView;
     }
