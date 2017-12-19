@@ -1,5 +1,6 @@
 package asay.asaymobile.presenter;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,17 +58,16 @@ public class ForumInteractor {
     }
 
     private void retrieveCurrentForum(double billId) {
-        Query query = forumElementReference.child("").orderByChild("billId").equalTo(billId);
+        Query query = forumElementReference.child("comments").orderByChild("billId").equalTo(billId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mCurrentForumList.clear();
                 if(dataSnapshot.exists()){
                     for (DataSnapshot forumSnapshot : dataSnapshot.getChildren()) {
-                        for (DataSnapshot commentsSnapshot : forumSnapshot.child("comments").getChildren()){
-                            CommentDTO comment = commentsSnapshot.getValue(CommentDTO.class);
-                            mCurrentForumList.add(comment);
-                        }
+                        CommentDTO comment = forumSnapshot.getValue(CommentDTO.class);
+                        mCurrentForumList.add(comment);
+
                     }
                 }
                 presenter.refreshCurrentCommentList(mCurrentForumList);
@@ -81,6 +81,8 @@ public class ForumInteractor {
     }
 
     void addNewComment(CommentDTO comment) {
-        forumElementReference.child(toString().valueOf(comment.getId())).setValue(comment);
+        DatabaseReference key = forumElementReference.child("comments");
+        Task<Void> postRef = key.getRef().child("").push().setValue(comment);
+
     }
 }

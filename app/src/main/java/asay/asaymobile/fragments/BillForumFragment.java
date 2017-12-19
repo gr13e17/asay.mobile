@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -54,13 +56,30 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
     }
 
     @Override
-    public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
         forumPresenter = new ForumPresenter(this, billId);
         // get reference to the views
 
+        ImageButton submit = (ImageButton) rootView.findViewById(R.id.reply_button);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editText = (EditText) rootView.findViewById(R.id.content);
+                final String content = editText.getText().toString();
+                CommentDTO comment = new CommentDTO(
+                        ArgumentType.FOR,
+                        billId,
+                        0,
+                        0,
+                        content,
+                        1
+                );
+                forumPresenter.addNewComment(comment);
+            }
+        });
     }
 
     private void commentPlaceholder(){
