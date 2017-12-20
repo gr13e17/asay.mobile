@@ -71,7 +71,7 @@ public class BillsFragment extends Fragment {
                     BillsAllFragment billsAllFragment = new BillsAllFragment();
                     return billsAllFragment;
                 case 1:
-                    //TODO: return billsMineFragment
+                    //TODO: return billsFavoriterFragment
                     BillsAllFragment billsAllFragment2 = new BillsAllFragment();
                     return billsAllFragment2;
                 default:

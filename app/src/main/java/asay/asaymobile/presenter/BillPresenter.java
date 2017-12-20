@@ -11,15 +11,46 @@ import asay.asaymobile.model.BillDTO;
 
 public class BillPresenter implements BillContract.Presenter {
     private BillInteractor interactor;
+    private BillContract.View mView;
+
+    public BillPresenter(final BillContract.View view) {
+        mView = view;
+        interactor = new BillInteractor(this);
+    }
 
     @Override
     public void refreshCurrentBillDTO(ArrayList<BillDTO> bills) {
+        mView.refreshCurrentBills(bills);
+    }
 
+    @Override
+    public void getSavedBills(ArrayList<Integer> ids) {
+        interactor.retriveSavedBills(ids);
+    }
+
+    @Override
+    public void getAllBills() {
+        interactor.retrieveAllBills();
+    }
+
+    @Override
+    public void getEndedBills() {
+        interactor.retriveEndedBills();
     }
 
     @Override
     public void addNewBill(BillDTO billDTO) {
         BillDTO bill = new BillDTO(billDTO);
         interactor.addNewBill(bill);
+    }
+
+    @Override
+    public void getBill(int id) {
+        interactor.retriveCurrentBill(id);
+    }
+
+    @Override
+    public void refreshBill(BillDTO bill) {
+        mView.refreshBill(bill);
     }
 }

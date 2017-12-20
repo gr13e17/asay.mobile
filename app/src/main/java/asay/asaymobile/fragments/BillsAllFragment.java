@@ -23,13 +23,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
 import asay.asaymobile.activities.BillActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
+import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.presenter.BillPresenter;
 
 
-public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View{
     EditText etResponse;
+    private BillPresenter presenter;
     private ArrayList<JSONObject> bills = new ArrayList<JSONObject>();
     ArrayAdapter adapter;
 
@@ -42,6 +46,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
+        presenter = new BillPresenter(this);
         return view;    }
 
     @Override
@@ -89,6 +94,16 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     }
 
+    @Override
+    public void refreshCurrentBills(ArrayList<BillDTO> bills) {
+
+    }
+
+    @Override
+    public void refreshBill(BillDTO bill) {
+
+    }
+
     private class AsyncTaskCompleteListener implements asay.asaymobile.fetch.AsyncTaskCompleteListener<JSONObject> {
         @Override
         public void onTaskComplete(JSONObject result)
@@ -102,6 +117,19 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 JSONArray articles = result.getJSONArray("value"); // get articles array
                 for (int i = 0; i < articles.length(); i++){
                     bills.add(articles.getJSONObject(i));
+                    BillDTO bill = new BillDTO(
+                            null,
+                            articles.getJSONObject(i).getJSONObject("Periode").getString("slutdato"),
+                            null,
+                            0,
+                            Integer.valueOf(articles.getJSONObject(i).getString("id")),
+                            articles.getJSONObject(i).getString("nummer"),
+                            articles.getJSONObject(i).getString("titel"),
+                            articles.getJSONObject(i).getString("titelkort"),
+                            articles.getJSONObject(i).getString("resume"),
+                            null
+                    );
+                    presenter.addNewBill(bill);
                 }
                 adapter.notifyDataSetChanged();
             } catch (Exception excep){
