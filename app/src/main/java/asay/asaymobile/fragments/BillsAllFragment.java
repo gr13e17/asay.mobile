@@ -27,6 +27,7 @@ import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
 import asay.asaymobile.activities.BillActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
+import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.presenter.BillPresenter;
 
@@ -118,16 +119,16 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 for (int i = 0; i < articles.length(); i++){
                     bills.add(articles.getJSONObject(i));
                     BillDTO bill = new BillDTO(
-                            null,
+                            " ",
                             articles.getJSONObject(i).getJSONObject("Periode").getString("slutdato"),
-                            null,
+                            " ",
                             0,
                             Integer.valueOf(articles.getJSONObject(i).getString("id")),
                             articles.getJSONObject(i).getString("nummer"),
                             articles.getJSONObject(i).getString("titel"),
                             articles.getJSONObject(i).getString("titelkort"),
                             articles.getJSONObject(i).getString("resume"),
-                            null
+                            new ArrayList<BillDTO.Vote>(){{add(new BillDTO.Vote(0,"", ArgumentType.NEUTRAL ));}}
                     );
                     presenter.addNewBill(bill);
                 }

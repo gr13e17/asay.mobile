@@ -130,10 +130,17 @@ public class BillDTO {
 
 
 
-    public class Vote{
+    public static class Vote{
         public int id;
         public String userHash;
         public ArgumentType vote;
+        public Vote(){}
+
+        public Vote(int id, String userhash, ArgumentType argumentType){
+            this.id = id;
+            this.userHash = userhash;
+            this.vote = argumentType;
+        }
 
         public int getId() {
             return id;
