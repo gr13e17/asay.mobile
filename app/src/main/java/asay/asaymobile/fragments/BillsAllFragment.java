@@ -36,7 +36,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     EditText etResponse;
     private BillPresenter presenter;
     private ArrayList<JSONObject> bills = new ArrayList<JSONObject>();
-    private int userId;
+    private ArrayList<Integer> savedbills = new ArrayList<>();
     ArrayAdapter adapter;
 
     public BillsAllFragment() {
@@ -51,7 +51,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         System.out.println("pre current user");
         presenter = new BillPresenter(this);
         if(getArguments() != null){
-            userId = getArguments().getInt("userId");
+            savedbills = getArguments().getIntegerArrayList("savedBills");
         }
         return view;
     }
@@ -66,7 +66,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
         new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
-        if(userId == 0){
+        if(savedbills.size() == 0){
             // get reference to the views
             adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
                 @Override
@@ -88,6 +88,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             listview.setAdapter(adapter);
             ViewGroup viewGroup = (ViewGroup) view;
             viewGroup.addView(listview);
+        } else{
+            presenter.getSavedBills(savedbills);
         }
     }
 
@@ -102,7 +104,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void refreshCurrentBills(ArrayList<BillDTO> bills) {
-
+        System.out.println(bills);
     }
 
     @Override

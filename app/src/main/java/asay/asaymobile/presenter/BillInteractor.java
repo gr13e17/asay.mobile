@@ -26,17 +26,18 @@ public class BillInteractor {
     }
 
     void retriveSavedBills(ArrayList<Integer> savedbills){
+        mbillList.clear();
         for (int billId : savedbills){
-            Query query = billElementReference.child("bills").orderByChild("id").equalTo(billId);
+            Query query = billElementReference.child("").orderByChild("id").equalTo(billId);
             query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    mbillList.clear();
+                    BillDTO billDTO = new BillDTO();
                     for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
-                        BillDTO billDTO = messagesSnapshot.getValue(BillDTO.class);
+                        billDTO = messagesSnapshot.getValue(BillDTO.class);
+                        System.out.println(billDTO.getId());
                         mbillList.add(billDTO);
                     }
-                    presenter.refreshCurrentBillDTO(mbillList);
                 }
 
                 @Override
@@ -45,6 +46,7 @@ public class BillInteractor {
                 }
             });
         }
+        presenter.refreshCurrentBillDTO(mbillList);
     }
 
     void retriveEndedBills(){
@@ -95,12 +97,14 @@ public class BillInteractor {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean exist = false;
                 for(DataSnapshot data: dataSnapshot.getChildren()){
-                    if (data.child("id").equals(billDTO.id)) {
+                    Object result = data.child("id").getValue();
+                    if (data.child("id").getValue().toString().equals(String.valueOf(billDTO.id))) {
                         exist = true;
                         System.out.println("billDTO all ready exist");
                         //do ur stuff
 
                     } else {
+                        System.out.println("Bill DTO does not exist");
                         //do something
                     }
                 }
