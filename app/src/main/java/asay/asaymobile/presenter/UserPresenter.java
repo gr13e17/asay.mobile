@@ -18,17 +18,6 @@ public class UserPresenter implements UserContract.Presenter{
         interactor = new UserInteractor(this);
     }
 
-
-    @Override
-    public void getUser(double id) {
-        interactor.retrieveUser(id);
-    }
-
-    @Override
-    public void refreshUser(UserDTO user) {
-        mView.refreshUser(user);
-    }
-
     @Override
     public void addUser(UserDTO user) {
         interactor.addUser(user);

@@ -36,7 +36,6 @@ public class UserInteractor {
                 for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
                     userDTO = messagesSnapshot.getValue(UserDTO.class);
                 }
-                presenter.refreshUser(userDTO);
             }
 
             @Override

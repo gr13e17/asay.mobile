@@ -10,12 +10,9 @@ import asay.asaymobile.model.UserDTO;
 
 public interface UserContract {
     interface View{
-        void refreshUser(UserDTO currentUsers);
-
     }
+
     interface Presenter{
-        void getUser(double id);
-        void refreshUser(UserDTO user);
         void addUser(UserDTO user);
         void UpdateFavorites(int id, ArrayList<Integer> savedBills);
     }
