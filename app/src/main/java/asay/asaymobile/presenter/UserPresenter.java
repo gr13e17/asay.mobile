@@ -1,7 +1,5 @@
 package asay.asaymobile.presenter;
 
-import java.util.ArrayList;
-
 import asay.asaymobile.UserContract;
 import asay.asaymobile.model.UserDTO;
 
@@ -18,8 +16,23 @@ public class UserPresenter implements UserContract.Presenter{
         interactor = new UserInteractor(this);
     }
 
+
     @Override
-    public void refreshCurrentUsersList(ArrayList<UserDTO> currentUsers) {
-        mView.refreshCurrentUserList(currentUsers);
+    public void getUser(double id) {
+        interactor.retrieveUser(id);
+    }
+
+    @Override
+    public void refreshUser(UserDTO user) {
+        mView.refreshUser(user);
+    }
+
+    @Override
+    public void addUser(UserDTO user) {
+        interactor.addUser(user);
+    }
+
+    @Override
+    public void UpdateFavorites(UserDTO user) {
     }
 }

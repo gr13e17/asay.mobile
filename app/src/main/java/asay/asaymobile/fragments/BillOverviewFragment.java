@@ -104,7 +104,7 @@ public class BillOverviewFragment extends Fragment implements OnClickListener{
 
             case R.id.subbtn :
                if(isSub == false){
-                    sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+                   sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
                    isSub = true;
                    break;
                 }

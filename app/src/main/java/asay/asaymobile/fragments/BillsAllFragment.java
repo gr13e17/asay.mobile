@@ -36,6 +36,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     EditText etResponse;
     private BillPresenter presenter;
     private ArrayList<JSONObject> bills = new ArrayList<JSONObject>();
+    private int userId;
     ArrayAdapter adapter;
 
     public BillsAllFragment() {
@@ -47,8 +48,13 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
+        System.out.println("pre current user");
         presenter = new BillPresenter(this);
-        return view;    }
+        if(getArguments() != null){
+            userId = getArguments().getInt("userId");
+        }
+        return view;
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -60,30 +66,29 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
         new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
-
-        // get reference to the views
-        adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
-            @Override
-            public View getView(int position, View cachedView, ViewGroup parent){
-                View view = super.getView(position, cachedView, parent);
-                try {
-                    TextView title = view.findViewById(R.id.listeelem_header);
-                    title.setText(bills.get(position).getString("titelkort"));
-                    TextView date = view.findViewById(R.id.listeelem_date);
-                    date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getJSONObject("Periode").getString("slutdato"))));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(userId == 0){
+            // get reference to the views
+            adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
+                @Override
+                public View getView(int position, View cachedView, ViewGroup parent){
+                    View view = super.getView(position, cachedView, parent);
+                    try {
+                        TextView title = view.findViewById(R.id.listeelem_header);
+                        title.setText(bills.get(position).getString("titelkort"));
+                        TextView date = view.findViewById(R.id.listeelem_date);
+                        date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getJSONObject("Periode").getString("slutdato"))));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return view;
                 }
-                return view;
-            }
-        };
-
-        ListView listview = new ListView(getActivity());
-        listview.setOnItemClickListener(this);
-        listview.setAdapter(adapter);
-        ViewGroup viewGroup = (ViewGroup) view;
-        viewGroup.addView(listview);
-
+            };
+            ListView listview = new ListView(getActivity());
+            listview.setOnItemClickListener(this);
+            listview.setAdapter(adapter);
+            ViewGroup viewGroup = (ViewGroup) view;
+            viewGroup.addView(listview);
+        }
     }
 
     @Override

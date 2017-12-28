@@ -1,7 +1,5 @@
 package asay.asaymobile;
 
-import java.util.ArrayList;
-
 import asay.asaymobile.model.UserDTO;
 
 /**
@@ -10,10 +8,13 @@ import asay.asaymobile.model.UserDTO;
 
 public interface UserContract {
     interface View{
-        void refreshCurrentUserList(ArrayList<UserDTO> currentUsers);
+        void refreshUser(UserDTO currentUsers);
 
     }
     interface Presenter{
-        void refreshCurrentUsersList(ArrayList<UserDTO> currentUsers);
+        void getUser(double id);
+        void refreshUser(UserDTO user);
+        void addUser(UserDTO user);
+        void UpdateFavorites(UserDTO user);
     }
 }
