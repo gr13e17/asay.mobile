@@ -1,12 +1,15 @@
 package asay.asaymobile.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * Created by s123725 on 15/12/2017.
  */
 
-public class BillDTO {
+public class BillDTO implements Parcelable{
     public String createdBy;
     public String deadline;
     public String department;
@@ -46,6 +49,18 @@ public class BillDTO {
         this.titleShort = billDTO.titleShort;
         this.resume = billDTO.resume;
         this.votes = billDTO.votes;
+    }
+
+    protected BillDTO(Parcel in){
+        this.createdBy = in.readString();
+        this.deadline = in.readString();
+        this.department = in.readString();
+        this.forumId = in.readInt();
+        this.id = in.readInt();
+        this.number = in.readString();
+        this.title = in.readString();
+        this.titleShort = in.readString();
+        this.resume = in.readString();
     }
 
     public String getCreatedBy() {
@@ -128,7 +143,37 @@ public class BillDTO {
         this.votes = votes;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.createdBy);
+        dest.writeString(this.deadline);
+        dest.writeString(this.department);
+        dest.writeInt(this.forumId);
+        dest.writeInt(this.id);
+        dest.writeString(this.number);
+        dest.writeString(this.title);
+        dest.writeString(this.titleShort);
+        dest.writeString(this.resume);
+    }
+
+    public static final Creator<BillDTO> CREATOR = new BillDTOCreator();
+
+    private static class BillDTOCreator implements Creator<BillDTO> {
+        @Override
+        public BillDTO createFromParcel(final Parcel source) {
+            return new BillDTO(source);
+        }
+
+        @Override
+        public BillDTO[] newArray(final int size) {
+            return new BillDTO[size];
+        }
+    }
 
     public static class Vote{
         public int id;

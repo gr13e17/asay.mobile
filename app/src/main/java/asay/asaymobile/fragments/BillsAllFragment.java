@@ -2,6 +2,7 @@ package asay.asaymobile.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
@@ -30,14 +30,17 @@ import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.presenter.BillPresenter;
+import butterknife.ButterKnife;
 
 
 public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View{
+    //@BindView(R.id.allBillsListView)
     EditText etResponse;
     private BillPresenter presenter;
-    private ArrayList<JSONObject> bills = new ArrayList<JSONObject>();
+    private ArrayList<BillDTO> bills = new ArrayList<>();
     private ArrayList<Integer> savedbills = new ArrayList<>();
     ArrayAdapter adapter;
+    ListView listview;
 
     public BillsAllFragment() {
         // Required empty public constructor
@@ -49,6 +52,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
         System.out.println("pre current user");
+        ButterKnife.bind(this, view);
+
         presenter = new BillPresenter(this);
         if(getArguments() != null){
             savedbills = getArguments().getIntegerArrayList("savedBills");
@@ -65,47 +70,46 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
-        new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
         if(savedbills.size() == 0){
-            // get reference to the views
-            adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
-                @Override
-                public View getView(int position, View cachedView, ViewGroup parent){
-                    View view = super.getView(position, cachedView, parent);
-                    try {
-                        TextView title = view.findViewById(R.id.listeelem_header);
-                        title.setText(bills.get(position).getString("titelkort"));
-                        TextView date = view.findViewById(R.id.listeelem_date);
-                        date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getJSONObject("Periode").getString("slutdato"))));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    return view;
-                }
-            };
-            ListView listview = new ListView(getActivity());
-            listview.setOnItemClickListener(this);
-            listview.setAdapter(adapter);
-            ViewGroup viewGroup = (ViewGroup) view;
-            viewGroup.addView(listview);
+            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
         } else{
             presenter.getSavedBills(savedbills);
         }
+            // get reference to the views
+        adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
+            @Override
+            public View getView(int position, View cachedView, ViewGroup parent){
+                View view = super.getView(position, cachedView, parent);
+                    TextView title = view.findViewById(R.id.listeelem_header);
+                    title.setText(bills.get(position).getTitleShort());
+                    TextView date = view.findViewById(R.id.listeelem_date);
+                    date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getDeadline())));
+                return view;
+            }
+        };
+        listview = new ListView(getActivity());
+        listview.setOnItemClickListener(this);
+        listview.setAdapter(adapter);
+        ViewGroup viewGroup = (ViewGroup) view;
+        viewGroup.addView(listview);
+
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        JSONObject item = bills.get(position);
+        BillDTO item = bills.get(position);
         Intent switchview = new Intent(getContext(), BillActivity.class);
-        switchview.putExtra("bill",item.toString());
+        switchview.putExtra("bill", (Parcelable) item);
         startActivity(switchview);
 
     }
 
     @Override
-    public void refreshCurrentBills(ArrayList<BillDTO> bills) {
-
-        System.out.println(bills);
+    public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
+        for(BillDTO bill : bills){
+            this.bills.add(bill);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -125,7 +129,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
                 for (int i = 0; i < articles.length(); i++){
-                    bills.add(articles.getJSONObject(i));
                     BillDTO bill = new BillDTO(
                             " ",
                             articles.getJSONObject(i).getJSONObject("Periode").getString("slutdato"),
@@ -138,6 +141,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("resume"),
                             new ArrayList<BillDTO.Vote>(){{add(new BillDTO.Vote(0,"", ArgumentType.NEUTRAL ));}}
                     );
+                    bills.add(bill);
                     presenter.addNewBill(bill);
                 }
                 adapter.notifyDataSetChanged();

@@ -10,13 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import asay.asaymobile.R;
 import asay.asaymobile.fragments.BillDetailFragment;
 import asay.asaymobile.fragments.BillForumFragment;
 import asay.asaymobile.fragments.BillOverviewFragment;
+import asay.asaymobile.model.BillDTO;
 
 public class BillActivity extends AppCompatActivity {
 
@@ -34,7 +32,7 @@ public class BillActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private  JSONObject bill;
+    private BillDTO bill;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +41,8 @@ public class BillActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_bill);
 
-        try {
-            bill = new JSONObject(getIntent().getStringExtra("bill"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        bill = getIntent().getParcelableExtra("bill");
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,21 +89,17 @@ public class BillActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             switch (position) {
                 case 1:
-                    bundle.putString("bill", bill.toString());
+                    bundle.putParcelable("bill", bill);
                     BillOverviewFragment overview = new BillOverviewFragment();
                     overview.setArguments(bundle);
                     return overview;
                 case 2:
-                    try {
-                        bundle.putInt("billId", Integer.parseInt(bill.getString("id")));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    bundle.putInt("billId", bill.getId());
                     BillForumFragment debat = new BillForumFragment();
                     debat.setArguments(bundle);
                     return debat;
                 case 0:
-                    bundle.putString("bill", bill.toString());
+                    bundle.putParcelable("bill", bill);
                     BillDetailFragment details  = new BillDetailFragment();
                     details.setArguments(bundle);
                     return details;
