@@ -4,7 +4,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -50,20 +52,17 @@ public class UserInteractor {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean exist = false;
                 for(DataSnapshot data: dataSnapshot.getChildren()){
-                    if (data.child("id").equals(userDTO.getid())) {
+                    if (data.child("id").getValue().toString().equals(String.valueOf(userDTO.getid()))) {
                         exist = true;
                         System.out.println("userDTO all ready exist");
                         //do ur stuff
-
                     } else {
                         //do something
                     }
                 }
                 if(!exist)
                     userElement.getRef().push().setValue(userDTO);
-
             }
-
             @Override
             public void onCancelled(DatabaseError firebaseError) {
 
@@ -71,8 +70,43 @@ public class UserInteractor {
         });
     }
 
-    private void updateUser(UserDTO userDTO){
+    void updateFavorites(int userid, final ArrayList<Integer> savedBills){
+        userElement.child("").orderByChild("id").equalTo(userid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    // update count for child: child.getKey()
+                    DatabaseReference Userref = userElement.child(child.getKey());
+                    System.out.println(Userref);
+                    // run your transaction here
+                    Userref.runTransaction(new Transaction.Handler() {
 
+                        @Override
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+                            UserDTO user = mutableData.getValue(UserDTO.class);
+                            if(user == null){
+                                return Transaction.success(mutableData);
+                            }
+                            user.setbillsSaved(savedBills);
+                            // Set value and report transaction success
+                            mutableData.setValue(user);
+                            return Transaction.success(mutableData);
+
+                        }
+
+                        @Override
+                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                            System.out.println("Transaction completed");
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     void retriveCurrentUsers(){

@@ -12,17 +12,23 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import asay.asaymobile.R;
+import asay.asaymobile.UserContract;
 import asay.asaymobile.activities.VoteActivity;
 import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.model.UserDTO;
+import asay.asaymobile.presenter.UserPresenter;
+import butterknife.ButterKnife;
 
 /**
  * Created by Soelberg on 31-10-2017.
  */
 
-public class BillOverviewFragment extends Fragment implements OnClickListener{
+public class BillOverviewFragment extends Fragment implements OnClickListener, UserContract.View{
 
-    ImageButton sub;
+    ImageButton subbtn;
     TextView BillDesc;
     String BillDescOrg;
     TextView expBillDesc;
@@ -40,50 +46,58 @@ public class BillOverviewFragment extends Fragment implements OnClickListener{
     boolean isExpandedFor  = false;
     boolean isExpandedAgainst  = false;
     private BillDTO bill;
+    private int userid = 1;
+    private UserPresenter presenter;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final View rootView = inflater.inflate(R.layout.fragment_bill_overview, container, false);
 
-                bill = getArguments().getParcelable("bill");
+        presenter = new UserPresenter(this);
+        ButterKnife.bind(this, rootView);
+        subbtn = (ImageButton) rootView.findViewById(R.id.subbtn);
+        subbtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.getUser(userid);
+                if(isSub)
+                    subbtn.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+                else
+                    subbtn.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+            }
+        });
+        bill = getArguments().getParcelable("bill");
 
-            sub = (ImageButton) rootView.findViewById(R.id.subbtn);
-            sub.setOnClickListener(this);
+        TextView header = (TextView) rootView.findViewById(R.id.headerBill);
+        header.setText(bill.getNumber().concat(": ").concat(bill.getTitleShort()));
+        vote = (Button) rootView.findViewById(R.id.buttonVote);
+        vote.setOnClickListener(this);
 
-            TextView header = (TextView) rootView.findViewById(R.id.headerBill);
-            header.setText(bill.getNumber().concat(": ").concat(bill.getTitleShort()));
-            vote = (Button) rootView.findViewById(R.id.buttonVote);
-            vote.setOnClickListener(this);
+        BillDesc = (TextView) rootView.findViewById(R.id.billDesc);
+        BillDescOrg = bill.getResume();
+        BillDesc.setText(BillDescOrg);
+        BillDesc.setOnClickListener(this);
+        BillDesc.setMaxLines(3);
 
-            BillDesc = (TextView) rootView.findViewById(R.id.billDesc);
-            BillDescOrg = bill.getResume();
-            BillDesc.setText(BillDescOrg);
-            BillDesc.setOnClickListener(this);
-            BillDesc.setMaxLines(3);
+        arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
+        arg1Org = R.string.dummy_arg2;
+        arg1.setText(arg1Org);
+        arg1.setOnClickListener(this);
+        arg1.setMaxLines(3);
 
+        arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
+        arg2Org = R.string.dummy_arg1;
+        arg2.setText(arg2Org);
+        arg2.setOnClickListener(this);
+        arg2.setMaxLines(3);
 
-
-            arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
-            arg1Org = R.string.dummy_arg2;
-            arg1.setText(arg1Org);
-            arg1.setOnClickListener(this);
-            arg1.setMaxLines(3);
-
-
-
-            arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
-            arg2Org = R.string.dummy_arg1;
-            arg2.setText(arg2Org);
-            arg2.setOnClickListener(this);
-            arg2.setMaxLines(3);
-
-            expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
-            expBillDesc.setOnClickListener(this);
-            expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
-            expArg1.setOnClickListener(this);
-            expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
-            expArg2.setOnClickListener(this);
+        expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
+        expBillDesc.setOnClickListener(this);
+        expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
+        expArg1.setOnClickListener(this);
+        expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
+        expArg2.setOnClickListener(this);
 
         return rootView;
 }
@@ -91,24 +105,10 @@ public class BillOverviewFragment extends Fragment implements OnClickListener{
     @Override
     public void onClick(View v){
         switch(v.getId()){
-
             case R.id.buttonVote:
                 Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
                 startActivity(voteIntent);
                 break;
-
-            case R.id.subbtn :
-               if(isSub == false){
-                   sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
-                   isSub = true;
-                   break;
-                }
-                if(isSub == true) {
-                   sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
-                    isSub = false;
-                    break;
-                }
-
                 //BIll Description expanding
             case R.id.billDesc :
             case R.id.expandBillDesc :
@@ -175,6 +175,19 @@ public class BillOverviewFragment extends Fragment implements OnClickListener{
         billDesc.setText(text);
         ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", numLines);
         animation.setDuration(80).start();
+    }
+
+    @Override
+    public void refreshUser(UserDTO currentUsers) {
+        System.out.println("finding current user: " + currentUsers.getname());
+        ArrayList<Integer> savedBills = currentUsers.getbillsSaved();
+        if(isSub = false){
+            savedBills.add(bill.getId());
+        }else if(isSub){
+            Integer billId = (Integer) bill.getId();
+            savedBills.remove(billId);
+        }
+        presenter.UpdateFavorites(userid, savedBills);
     }
 }
 

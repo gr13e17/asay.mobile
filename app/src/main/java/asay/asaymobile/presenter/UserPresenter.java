@@ -1,5 +1,7 @@
 package asay.asaymobile.presenter;
 
+import java.util.ArrayList;
+
 import asay.asaymobile.UserContract;
 import asay.asaymobile.model.UserDTO;
 
@@ -33,6 +35,8 @@ public class UserPresenter implements UserContract.Presenter{
     }
 
     @Override
-    public void UpdateFavorites(UserDTO user) {
+    public void UpdateFavorites(int billId, ArrayList<Integer> savedBills) {
+        interactor.updateFavorites(billId, savedBills);
     }
+
 }
