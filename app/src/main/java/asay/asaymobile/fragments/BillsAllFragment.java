@@ -104,6 +104,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void refreshCurrentBills(ArrayList<BillDTO> bills) {
+
         System.out.println(bills);
     }
 

@@ -19,41 +19,42 @@ public class BillInteractor {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private BillPresenter presenter;
     private DatabaseReference billElementReference = database.getReference("bills");
-    private ArrayList<BillDTO> mbillList = new ArrayList<>();
+    private final ArrayList<BillDTO> mbillList = new ArrayList<>();
 
     BillInteractor(BillPresenter presenter) {
         this.presenter = presenter;
     }
 
-    void retriveSavedBills(ArrayList<Integer> savedbills){
-        mbillList.clear();
-        for (int billId : savedbills){
-            Query query = billElementReference.child("").orderByChild("id").equalTo(billId);
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    BillDTO billDTO = new BillDTO();
-                    for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
-                        billDTO = messagesSnapshot.getValue(BillDTO.class);
-                        System.out.println(billDTO.getId());
-                        mbillList.add(billDTO);
+    void retriveSavedBills(final ArrayList<Integer> savedbills) {
+        //mbillList.clear();
+        billElementReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                BillDTO billDTO = new BillDTO();
+                for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
+                    billDTO = messagesSnapshot.getValue(BillDTO.class);
+                    for (int billId : savedbills) {
+                        if (billDTO.getId() == billId) {
+                            System.out.println(billDTO.getId());
+                            mbillList.add(billDTO);
+                        }
                     }
                 }
+                presenter.refreshCurrentBillDTO(mbillList);
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TODO: Handle error on presenter here.
-                }
-            });
-        }
-        presenter.refreshCurrentBillDTO(mbillList);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TODO: Handle error on presenter here.
+            }
+        });
     }
 
-    void retriveEndedBills(){
+    void retriveEndedBills() {
 
     }
 
-    void retriveCurrentBill(int billid){
+    void retriveCurrentBill(int billid) {
         Query query = billElementReference.child("bills").orderByChild("id").equalTo(billid);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -72,7 +73,7 @@ public class BillInteractor {
         });
     }
 
-    void retrieveAllBills(){
+    void retrieveAllBills() {
         billElementReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,12 +92,12 @@ public class BillInteractor {
         });
     }
 
-    void addNewBill(final BillDTO billDTO){
+    void addNewBill(final BillDTO billDTO) {
         billElementReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean exist = false;
-                for(DataSnapshot data: dataSnapshot.getChildren()){
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Object result = data.child("id").getValue();
                     if (data.child("id").getValue().toString().equals(String.valueOf(billDTO.id))) {
                         exist = true;
@@ -104,11 +105,10 @@ public class BillInteractor {
                         //do ur stuff
 
                     } else {
-                        System.out.println("Bill DTO does not exist");
                         //do something
                     }
                 }
-                if(!exist)
+                if (!exist)
                     billElementReference.getRef().push().setValue(billDTO);
 
             }
