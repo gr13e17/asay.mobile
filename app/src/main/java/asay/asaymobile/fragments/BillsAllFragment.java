@@ -75,6 +75,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         userPresenter = new UserPresenter(this);
         if(!isFavorite){
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
+            billPresenter.getAllBills();
         } else{
             userPresenter.getUser(userId);
         }
@@ -134,7 +135,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 }
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
-                bills.clear();
                 for (int i = 0; i < articles.length(); i++){
                     BillDTO bill = new BillDTO(
                             " ",
@@ -147,10 +147,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("titelkort"),
                             articles.getJSONObject(i).getString("resume")
                     );
-                    bills.add(bill);
                     billPresenter.addNewBill(bill);
                 }
-                adapter.notifyDataSetChanged();
             } catch (Exception excep){
                 Log.d("JSON Exception", "onTaskComplete: " + excep.getMessage());
             }
