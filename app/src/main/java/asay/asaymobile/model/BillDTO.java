@@ -1,22 +1,67 @@
 package asay.asaymobile.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by s123725 on 15/12/2017.
  */
 
-public class BillDTO {
+public class BillDTO implements Parcelable{
     public String createdBy;
-    public Date deadline;
+    public String deadline;
     public String department;
     public int forumId;
     public int id;
     public String number;
     public String title;
     public String titleShort;
+    public String resume;
     public ArrayList<Vote> votes;
+
+    public BillDTO(){
+
+    }
+
+    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume,ArrayList<Vote> votes){
+        this.createdBy = createdBy;
+        this.deadline = deadline;
+        this.department = department;
+        this.forumId = forumId;
+        this.id = id;
+        this.number = number;
+        this.title = title;
+        this.titleShort = titleShort;
+        this.resume = resume;
+        this.votes = votes;
+    }
+
+    public BillDTO(BillDTO billDTO){
+        this.createdBy = billDTO.createdBy;
+        this.deadline = billDTO.deadline;
+        this.department = billDTO.department;
+        this.forumId = billDTO.forumId;
+        this.id = billDTO.id;
+        this.number = billDTO.number;
+        this.title = billDTO.title;
+        this.titleShort = billDTO.titleShort;
+        this.resume = billDTO.resume;
+        this.votes = billDTO.votes;
+    }
+
+    protected BillDTO(Parcel in){
+        this.createdBy = in.readString();
+        this.deadline = in.readString();
+        this.department = in.readString();
+        this.forumId = in.readInt();
+        this.id = in.readInt();
+        this.number = in.readString();
+        this.title = in.readString();
+        this.titleShort = in.readString();
+        this.resume = in.readString();
+    }
 
     public String getCreatedBy() {
         return createdBy;
@@ -26,11 +71,11 @@ public class BillDTO {
         this.createdBy = createdBy;
     }
 
-    public Date getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
 
@@ -82,6 +127,14 @@ public class BillDTO {
         this.titleShort = titleShort;
     }
 
+    public String getResume(){
+        return resume;
+    }
+
+    public void setResume(String resume){
+        this.resume = resume;
+    }
+
     public ArrayList<Vote> getVotes() {
         return votes;
     }
@@ -90,12 +143,49 @@ public class BillDTO {
         this.votes = votes;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.createdBy);
+        dest.writeString(this.deadline);
+        dest.writeString(this.department);
+        dest.writeInt(this.forumId);
+        dest.writeInt(this.id);
+        dest.writeString(this.number);
+        dest.writeString(this.title);
+        dest.writeString(this.titleShort);
+        dest.writeString(this.resume);
+    }
 
-    public class Vote{
+    public static final Creator<BillDTO> CREATOR = new BillDTOCreator();
+
+    private static class BillDTOCreator implements Creator<BillDTO> {
+        @Override
+        public BillDTO createFromParcel(final Parcel source) {
+            return new BillDTO(source);
+        }
+
+        @Override
+        public BillDTO[] newArray(final int size) {
+            return new BillDTO[size];
+        }
+    }
+
+    public static class Vote{
         public int id;
         public String userHash;
         public ArgumentType vote;
+        public Vote(){}
+
+        public Vote(int id, String userhash, ArgumentType argumentType){
+            this.id = id;
+            this.userHash = userhash;
+            this.vote = argumentType;
+        }
 
         public int getId() {
             return id;

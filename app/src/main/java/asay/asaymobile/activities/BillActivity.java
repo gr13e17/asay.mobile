@@ -1,21 +1,20 @@
 package asay.asaymobile.activities;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.Menu;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import asay.asaymobile.R;
 import asay.asaymobile.fragments.BillDetailFragment;
 import asay.asaymobile.fragments.BillForumFragment;
 import asay.asaymobile.fragments.BillOverviewFragment;
+import asay.asaymobile.model.BillDTO;
 
 public class BillActivity extends AppCompatActivity {
 
@@ -33,11 +32,17 @@ public class BillActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-
+    private BillDTO bill;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null){
+        }
         setContentView(R.layout.activity_bill);
+
+        bill = getIntent().getParcelableExtra("bill");
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,15 +86,22 @@ public class BillActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+            Bundle bundle = new Bundle();
             switch (position) {
                 case 1:
+                    bundle.putParcelable("bill", bill);
                     BillOverviewFragment overview = new BillOverviewFragment();
+                    overview.setArguments(bundle);
                     return overview;
                 case 2:
+                    bundle.putInt("billId", bill.getId());
                     BillForumFragment debat = new BillForumFragment();
+                    debat.setArguments(bundle);
                     return debat;
                 case 0:
+                    bundle.putParcelable("bill", bill);
                     BillDetailFragment details  = new BillDetailFragment();
+                    details.setArguments(bundle);
                     return details;
                 default:
                     return null;

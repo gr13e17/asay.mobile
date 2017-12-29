@@ -5,6 +5,15 @@ package asay.asaymobile.model;
  */
 
 public class CommentDTO {
+    public double getBillId() {
+        return billId;
+    }
+
+    public void setBillId(double billId) {
+        this.billId = billId;
+    }
+
+    double billId;
     ArgumentType argumentType;
     double id;
     int score;
@@ -17,14 +26,16 @@ public class CommentDTO {
 
     public CommentDTO(final CommentDTO commentDTO){
         argumentType = commentDTO.getArgumentType();
+        billId = commentDTO.billId;
         id = commentDTO.getId();
         score = commentDTO.getScore();
         text = commentDTO.getText();
         userid = commentDTO.getUserid();
     }
 
-    public CommentDTO(final ArgumentType argument, final int id, final int score, final String text, final int userId ){
+    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId ){
         this.argumentType = argument;
+        this.billId = billId;
         this.id = id;
         this.score = score;
         this.text = text;
