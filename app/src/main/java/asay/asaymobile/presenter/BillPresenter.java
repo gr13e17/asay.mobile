@@ -45,12 +45,7 @@ public class BillPresenter implements BillContract.Presenter {
     }
 
     @Override
-    public void getBill(int id) {
-        interactor.retriveCurrentBill(id);
-    }
-
-    @Override
-    public void refreshBill(BillDTO bill) {
-        mView.refreshBill(bill);
+    public void updateBill(BillDTO bill) {
+        interactor.updateBill(bill);
     }
 }

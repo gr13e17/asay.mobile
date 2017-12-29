@@ -103,6 +103,7 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
 
             case R.id.buttonVote:
                 Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
+                voteIntent.putExtra("bill", bill);
                 startActivity(voteIntent);
                 break;
 

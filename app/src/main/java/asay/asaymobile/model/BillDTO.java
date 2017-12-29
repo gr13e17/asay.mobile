@@ -19,7 +19,7 @@ public class BillDTO implements Parcelable{
     public String title;
     public String titleShort;
     public String resume;
-    public ArrayList<Vote> votes;
+    public ArrayList<Vote> votes = new ArrayList<>();
 
     public BillDTO(){
 
@@ -36,6 +36,17 @@ public class BillDTO implements Parcelable{
         this.titleShort = titleShort;
         this.resume = resume;
         this.votes = votes;
+    }
+    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume){
+        this.createdBy = createdBy;
+        this.deadline = deadline;
+        this.department = department;
+        this.forumId = forumId;
+        this.id = id;
+        this.number = number;
+        this.title = title;
+        this.titleShort = titleShort;
+        this.resume = resume;
     }
 
     public BillDTO(BillDTO billDTO){
@@ -61,6 +72,7 @@ public class BillDTO implements Parcelable{
         this.title = in.readString();
         this.titleShort = in.readString();
         this.resume = in.readString();
+        in.readTypedList(this.votes, Vote.CREATOR);
     }
 
     public String getCreatedBy() {
@@ -143,6 +155,16 @@ public class BillDTO implements Parcelable{
         this.votes = votes;
     }
 
+    public void addVote(Vote vote){
+        this.votes.add(vote);
+    }
+    public void removeVote(String userHash){
+        for(int i = this.votes.size() -1 ; i>=0; i--){
+            if (votes.get(i).getUserHash().equals(userHash) )
+                votes.remove(i);
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -159,6 +181,7 @@ public class BillDTO implements Parcelable{
         dest.writeString(this.title);
         dest.writeString(this.titleShort);
         dest.writeString(this.resume);
+        dest.writeTypedList(this.votes);
     }
 
     public static final Creator<BillDTO> CREATOR = new BillDTOCreator();
@@ -175,10 +198,11 @@ public class BillDTO implements Parcelable{
         }
     }
 
-    public static class Vote{
+    public static class Vote implements Parcelable{
         public int id;
         public String userHash;
         public ArgumentType vote;
+
         public Vote(){}
 
         public Vote(int id, String userhash, ArgumentType argumentType){
@@ -186,6 +210,24 @@ public class BillDTO implements Parcelable{
             this.userHash = userhash;
             this.vote = argumentType;
         }
+
+        private Vote(Parcel in){
+            this.id = in.readInt();
+            this.userHash = in.readString();
+            this.vote = ArgumentType.valueOf(in.readString());
+        }
+
+        public static final Creator<Vote> CREATOR = new Creator<Vote>() {
+            @Override
+            public Vote createFromParcel(Parcel in) {
+                return new Vote(in);
+            }
+
+            @Override
+            public Vote[] newArray(int size) {
+                return new Vote[size];
+            }
+        };
 
         public int getId() {
             return id;
@@ -211,6 +253,18 @@ public class BillDTO implements Parcelable{
             this.vote = vote;
         }
 
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.id);
+            dest.writeString(this.userHash);
+            dest.writeString(this.vote.name());
+        }
 
     }
 }

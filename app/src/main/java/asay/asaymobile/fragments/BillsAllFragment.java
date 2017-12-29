@@ -28,7 +28,6 @@ import asay.asaymobile.R;
 import asay.asaymobile.UserContract;
 import asay.asaymobile.activities.BillActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
-import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.BillPresenter;
@@ -76,6 +75,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         userPresenter = new UserPresenter(this);
         if(!isFavorite){
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
+            billPresenter.getAllBills();
         } else{
             userPresenter.getUser(userId);
         }
@@ -87,7 +87,10 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                     TextView title = view.findViewById(R.id.listeelem_header);
                     title.setText(bills.get(position).getTitleShort());
                     TextView date = view.findViewById(R.id.listeelem_date);
-                    date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getDeadline())));
+                    date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getDeadline()))+" dage til deadline");
+                    TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
+                    if(bills.get(position).votes.size() > 0)
+                        numberOfVotes.setText(bills.get(position).votes.size()+ " personer har allerede stemt");
                 return view;
             }
         };
@@ -118,11 +121,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     @Override
-    public void refreshBill(BillDTO bill) {
-
-    }
-
-    @Override
     public void refreshUser(UserDTO user) {
         savedbills = user.getbillsSaved();
         System.out.println("number of savedbills userRefresh :" + savedbills.size());
@@ -140,7 +138,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 }
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
-                bills.clear();
                 for (int i = 0; i < articles.length(); i++){
                     BillDTO bill = new BillDTO(
                             " ",
@@ -151,13 +148,10 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("nummer"),
                             articles.getJSONObject(i).getString("titel"),
                             articles.getJSONObject(i).getString("titelkort"),
-                            articles.getJSONObject(i).getString("resume"),
-                            new ArrayList<BillDTO.Vote>(){{add(new BillDTO.Vote(0,"", ArgumentType.NEUTRAL ));}}
+                            articles.getJSONObject(i).getString("resume")
                     );
-                    bills.add(bill);
                     billPresenter.addNewBill(bill);
                 }
-                adapter.notifyDataSetChanged();
             } catch (Exception excep){
                 Log.d("JSON Exception", "onTaskComplete: " + excep.getMessage());
             }

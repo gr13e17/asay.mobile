@@ -4,9 +4,11 @@ package asay.asaymobile.activities;
  * Created by Ber on 02/11/2017.
  */
 
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,22 +16,33 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
+import asay.asaymobile.model.ArgumentType;
+import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.presenter.BillPresenter;
 
 
-public class VoteActivity extends AppCompatActivity implements View.OnClickListener {
+public class VoteActivity extends AppCompatActivity implements View.OnClickListener, BillContract.View {
 
     PopupWindow votedWindow;
     PopupWindow cancelWindow;
     ConstraintLayout mainLayout;
+    BillPresenter presenter;
+    BillDTO bill;
+    BillDTO.Vote vote = new BillDTO.Vote();
     TextView title;
     TextView voted;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote);
-
+        bill = getIntent().getExtras().getParcelable("bill");
+        presenter = new BillPresenter(this);
         mainLayout = (ConstraintLayout) findViewById(R.id.activity_stemmeboks);
 
         //Creates 2 popup windows
@@ -61,13 +74,13 @@ public class VoteActivity extends AppCompatActivity implements View.OnClickListe
         b6.setOnClickListener(this);
 
         title = (TextView) findViewById(R.id.textView2);
+        ((TextView) findViewById(R.id.textView)).setText(bill.getNumber() + ": " + bill.getTitleShort());
         voted = (TextView) findViewById(R.id.argForHead);
 
     }
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()) {
 
             case R.id.buttonCancel:
@@ -76,6 +89,8 @@ public class VoteActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.buttonVoted:
                 votedWindow.dismiss();
+                bill.addVote(vote);
+                presenter.updateBill(bill);
                 finish();
                 break;
 
@@ -89,15 +104,22 @@ public class VoteActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.buttonAgainst:
+                vote.setVote(ArgumentType.AGAINST);
                 votedWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
                 break;
 
             case R.id.buttonFor:
+                vote.setVote(ArgumentType.FOR);
                 votedWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
                 break;
 
             default:
                 break;
         }
+    }
+
+    @Override
+    public void refreshCurrentBills(ArrayList<BillDTO> bills) {
+
     }
 }
