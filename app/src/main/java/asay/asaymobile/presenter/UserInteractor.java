@@ -21,10 +21,15 @@ public class UserInteractor {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference userElement = database.getReference("users");
     private UserPresenter presenter;
-    private ArrayList<UserDTO> mCurrentUsers = new ArrayList<UserDTO>();
+    private ArrayList<UserDTO> mUsersList = new ArrayList<UserDTO>();
 
     public UserInteractor(UserPresenter presenter){
         this.presenter = presenter;
+
+    }
+    public UserInteractor(UserPresenter presenter, double id){
+        this.presenter = presenter;
+        retrieveUser(id);
     }
 
     void retrieveUser(double id){
@@ -36,6 +41,7 @@ public class UserInteractor {
                 for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
                     userDTO = messagesSnapshot.getValue(UserDTO.class);
                 }
+                presenter.refreshUser(userDTO);
             }
 
             @Override
@@ -69,8 +75,8 @@ public class UserInteractor {
         });
     }
 
-    void updateFavorites(int userid, final ArrayList<Integer> savedBills){
-        userElement.child("").orderByChild("id").equalTo(userid).addValueEventListener(new ValueEventListener() {
+    void updateFavorites(double userid, final ArrayList<Integer> savedBills){
+        userElement.child("").orderByChild("id").equalTo(userid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
@@ -99,25 +105,6 @@ public class UserInteractor {
                         }
                     });
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    void retriveCurrentUsers(){
-        userElement.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mCurrentUsers.clear();
-                for (DataSnapshot usersSnapShot : dataSnapshot.getChildren()){
-                    UserDTO user = usersSnapShot.getValue(UserDTO.class);
-                    mCurrentUsers.add(user);
-                }
-
             }
 
             @Override
