@@ -34,6 +34,7 @@ public class BillsFragment extends Fragment implements UserContract.View{
     private int userId = 1;
     private ArrayList<Integer> savedBills = new ArrayList<>();
     private boolean loggedIn = true;
+    private UserPresenter presenter;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -46,8 +47,7 @@ public class BillsFragment extends Fragment implements UserContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        UserPresenter presenter = new UserPresenter(this);
-        presenter.getUser(userId);
+        presenter = new UserPresenter(this);
         View rootView = inflater.inflate(R.layout.fragment_bills,container,false);
         ButterKnife.bind(this, rootView);
         return rootView;
@@ -55,12 +55,15 @@ public class BillsFragment extends Fragment implements UserContract.View{
     @Override
     public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
+        presenter.getUser(userId);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
             }
 
     @Override
     public void refreshUser(UserDTO currentUsers) {
+        System.out.println("outer saved bills");
         savedBills = currentUsers.getbillsSaved();
         TabLayout tabLayout = getActivity().findViewById(R.id.tabs);
 

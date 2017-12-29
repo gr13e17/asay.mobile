@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 
 
 public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View{
-    //@BindView(R.id.allBillsListView)
     EditText etResponse;
     private BillPresenter presenter;
     private ArrayList<BillDTO> bills = new ArrayList<>();
@@ -51,10 +50,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
-        System.out.println("pre current user");
         ButterKnife.bind(this, view);
 
-        presenter = new BillPresenter(this);
         if(getArguments() != null){
             savedbills = getArguments().getIntegerArrayList("savedBills");
         }
@@ -70,6 +67,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
+        presenter = new BillPresenter(this);
+
         if(savedbills.size() == 0){
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
         } else{
@@ -106,6 +105,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
+        this.bills.clear();
         for(BillDTO bill : bills){
             this.bills.add(bill);
         }
@@ -128,6 +128,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 }
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
+                bills.clear();
                 for (int i = 0; i < articles.length(); i++){
                     BillDTO bill = new BillDTO(
                             " ",

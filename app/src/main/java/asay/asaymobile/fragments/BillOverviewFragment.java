@@ -21,6 +21,7 @@ import asay.asaymobile.activities.VoteActivity;
 import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.UserPresenter;
+import butterknife.ButterKnife;
 
 /**
  * Created by Soelberg on 31-10-2017.
@@ -54,18 +55,16 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final View rootView = inflater.inflate(R.layout.fragment_bill_overview, container, false);
-
+        ButterKnife.bind(this, rootView);
         bill = getArguments().getParcelable("bill");
-        presenter = new UserPresenter(this, userId);
         return rootView;
     }
 
     @Override
     public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
-
         sub = (ImageButton) rootView.findViewById(R.id.subbtn);
         sub.setOnClickListener(this);
-
+        presenter = new UserPresenter(this, userId);
 
         TextView header = (TextView) rootView.findViewById(R.id.headerBill);
         header.setText(bill.getNumber().concat(": ").concat(bill.getTitleShort()));
@@ -78,15 +77,11 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
         BillDesc.setOnClickListener(this);
         BillDesc.setMaxLines(3);
 
-
-
         arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
         arg1Org = R.string.dummy_arg2;
         arg1.setText(arg1Org);
         arg1.setOnClickListener(this);
         arg1.setMaxLines(3);
-
-
 
         arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
         arg2Org = R.string.dummy_arg1;
@@ -201,11 +196,16 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
 
     @Override
     public void refreshUser(UserDTO user) {
+        System.out.println("bill id: " + bill.getId());
         isSub = user.getbillsSaved().contains(bill.getId());
-        if (isSub)
-            sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
-        else{
-            sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+        try{
+            if (isSub)
+                sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+            else{
+                sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
         }
         this.user = user;
     }
