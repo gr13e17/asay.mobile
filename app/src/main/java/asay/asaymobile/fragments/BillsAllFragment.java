@@ -87,7 +87,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                     TextView title = view.findViewById(R.id.listeelem_header);
                     title.setText(bills.get(position).getTitleShort());
                     TextView date = view.findViewById(R.id.listeelem_date);
-                    date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getDeadline())));
+                    date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getDeadline()))+" Dage");
                 return view;
             }
         };
