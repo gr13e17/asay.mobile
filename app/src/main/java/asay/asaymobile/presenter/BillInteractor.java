@@ -26,7 +26,6 @@ public class BillInteractor {
     }
 
     void retriveSavedBills(final ArrayList<Integer> savedbills) {
-        //mbillList.clear();
         billElementReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
