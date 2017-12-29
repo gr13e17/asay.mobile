@@ -63,8 +63,6 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
     @Override
     public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
 
-
-
         sub = (ImageButton) rootView.findViewById(R.id.subbtn);
         sub.setOnClickListener(this);
 
@@ -204,6 +202,11 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
     @Override
     public void refreshUser(UserDTO user) {
         isSub = user.getbillsSaved().contains(bill.getId());
+        if (isSub)
+            sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+        else{
+            sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+        }
         this.user = user;
     }
 }
