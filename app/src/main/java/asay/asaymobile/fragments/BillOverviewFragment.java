@@ -64,8 +64,8 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
     public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
         sub = (ImageButton) rootView.findViewById(R.id.subbtn);
         sub.setOnClickListener(this);
-        presenter = new UserPresenter(this, userId);
-
+        presenter = new UserPresenter(this);
+        presenter.getUser(userId);
         TextView header = (TextView) rootView.findViewById(R.id.headerBill);
         header.setText(bill.getNumber().concat(": ").concat(bill.getTitleShort()));
         vote = (Button) rootView.findViewById(R.id.buttonVote);
@@ -185,18 +185,17 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
                 if(billSaved.get(i).equals(bill.getId()))
                     billSaved.remove(i);
             }
-            presenter.UpdateFavorites(userId, billSaved);
             sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
         }else {
             billSaved.add(bill.getId());
-            presenter.UpdateFavorites(userId,billSaved);
             sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
         }
+        presenter.UpdateFavorites(userId,billSaved);
     }
 
     @Override
     public void refreshUser(UserDTO user) {
-        System.out.println("bill id: " + bill.getId());
+        System.out.println("number of bills saved: " + user.getbillsSaved().size());
         isSub = user.getbillsSaved().contains(bill.getId());
         try{
             if (isSub)

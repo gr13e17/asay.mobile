@@ -35,7 +35,6 @@ public class BillInteractor {
                     billDTO = messagesSnapshot.getValue(BillDTO.class);
                     for (int billId : savedbills) {
                         if (billDTO.getId() == billId) {
-                            System.out.println(billDTO.getId());
                             mbillList.add(billDTO);
                         }
                     }
@@ -101,9 +100,6 @@ public class BillInteractor {
                     Object result = data.child("id").getValue();
                     if (data.child("id").getValue().toString().equals(String.valueOf(billDTO.id))) {
                         exist = true;
-                        System.out.println("billDTO all ready exist");
-                        //do ur stuff
-
                     } else {
                         //do something
                     }

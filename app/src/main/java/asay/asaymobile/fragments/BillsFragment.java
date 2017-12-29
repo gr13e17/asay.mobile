@@ -35,6 +35,7 @@ public class BillsFragment extends Fragment implements UserContract.View{
     private ArrayList<Integer> savedBills = new ArrayList<>();
     private boolean loggedIn = true;
     private UserPresenter presenter;
+    private Bundle bundle;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -62,11 +63,12 @@ public class BillsFragment extends Fragment implements UserContract.View{
             }
 
     @Override
-    public void refreshUser(UserDTO currentUsers) {
+    public void refreshUser(UserDTO currentUser) {
         System.out.println("outer saved bills");
-        savedBills = currentUsers.getbillsSaved();
+        savedBills = currentUser.getbillsSaved();
+        bundle = new Bundle();
+        bundle.putIntegerArrayList("savedBills",savedBills);
         TabLayout tabLayout = getActivity().findViewById(R.id.tabs);
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -75,7 +77,7 @@ public class BillsFragment extends Fragment implements UserContract.View{
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
+        mSectionsPagerAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -96,10 +98,8 @@ public class BillsFragment extends Fragment implements UserContract.View{
                     return billsAllFragment;
                 case 1:
                     //TODO: return billsFavoriterFragment
+                    System.out.println("fragment bundle is set");
                     if(loggedIn){
-
-                        Bundle bundle = new Bundle();
-                        bundle.putIntegerArrayList("savedBills",savedBills);
                         BillsAllFragment billsAllFragmentFavorite = new BillsAllFragment();
                         billsAllFragmentFavorite.setArguments(bundle);
                         return billsAllFragmentFavorite;

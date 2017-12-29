@@ -51,10 +51,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
         ButterKnife.bind(this, view);
-
-        if(getArguments() != null){
-            savedbills = getArguments().getIntegerArrayList("savedBills");
-        }
         return view;
     }
 
@@ -63,6 +59,9 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         super.onViewCreated(view, savedInstanceState);
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
+        if(getArguments() != null){
+            savedbills = getArguments().getIntegerArrayList("savedBills");
+        }
         String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
@@ -161,7 +160,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             Date today = new Date();
             long diff = Math.abs(d.getTime() - today.getTime());
             diffDays = diff / (24 * 60 * 60 * 1000);
-            System.out.println("diff days: " + diffDays);
             String formattedTime = output.format(d);
         } catch (ParseException ex){
             System.out.println(ex.getMessage());
