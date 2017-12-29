@@ -29,5 +29,14 @@
             android:maxLines="1"
             android:text="date"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/listeelem_number_of_votes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="14sp" />
     </LinearLayout>
 </RelativeLayout>
