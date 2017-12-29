@@ -37,6 +37,17 @@ public class BillDTO implements Parcelable{
         this.resume = resume;
         this.votes = votes;
     }
+    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume){
+        this.createdBy = createdBy;
+        this.deadline = deadline;
+        this.department = department;
+        this.forumId = forumId;
+        this.id = id;
+        this.number = number;
+        this.title = title;
+        this.titleShort = titleShort;
+        this.resume = resume;
+    }
 
     public BillDTO(BillDTO billDTO){
         this.createdBy = billDTO.createdBy;
