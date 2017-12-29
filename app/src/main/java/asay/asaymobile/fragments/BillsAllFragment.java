@@ -91,6 +91,9 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                     TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
                     if(bills.get(position).votes.size() > 0)
                         numberOfVotes.setText(bills.get(position).votes.size()+ " personer har allerede stemt");
+                    else{
+                        numberOfVotes.setText("");
+                    }
                 return view;
             }
         };
