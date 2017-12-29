@@ -144,6 +144,16 @@ public class BillDTO implements Parcelable{
         this.votes = votes;
     }
 
+    public void addVote(Vote vote){
+        this.votes.add(vote);
+    }
+    public void removeVote(String userHash){
+        for(int i = this.votes.size() -1 ; i>=0; i--){
+            if (votes.get(i).getUserHash().equals(userHash) )
+                votes.remove(i);
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -118,11 +118,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     @Override
-    public void refreshBill(BillDTO bill) {
-
-    }
-
-    @Override
     public void refreshUser(UserDTO user) {
         savedbills = user.getbillsSaved();
         System.out.println("number of savedbills userRefresh :" + savedbills.size());

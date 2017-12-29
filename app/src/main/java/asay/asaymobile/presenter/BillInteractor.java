@@ -4,7 +4,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -53,25 +52,6 @@ public class BillInteractor {
 
     }
 
-    void retriveCurrentBill(int billid) {
-        Query query = billElementReference.child("bills").orderByChild("id").equalTo(billid);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                BillDTO billDTO = new BillDTO();
-                for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
-                    billDTO = messagesSnapshot.getValue(BillDTO.class);
-                }
-                presenter.refreshBill(billDTO);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TODO: Handle error on presenter here.
-            }
-        });
-    }
-
     void retrieveAllBills() {
         billElementReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -111,6 +91,24 @@ public class BillInteractor {
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
+
+            }
+        });
+    }
+
+    public void updateBill(final BillDTO bill){
+        billElementReference.orderByChild("id").equalTo(bill.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    // update count for child: child.getKey()
+                    DatabaseReference billref = billElementReference.child(child.getKey());
+                    billref.setValue(bill);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

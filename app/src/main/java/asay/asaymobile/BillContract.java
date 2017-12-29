@@ -11,7 +11,6 @@ import asay.asaymobile.model.BillDTO;
 public interface BillContract {
     interface View {
         void refreshCurrentBills(ArrayList<BillDTO> bills);
-        void refreshBill(BillDTO bill);
     }
 
     interface Presenter{
@@ -20,7 +19,6 @@ public interface BillContract {
         void getAllBills();
         void getEndedBills();
         void addNewBill(BillDTO bill);
-        void getBill(int id);
-        void refreshBill(BillDTO bill);
+        void updateBill(BillDTO bill);
     }
 }
