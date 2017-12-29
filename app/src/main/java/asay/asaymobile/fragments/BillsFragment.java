@@ -11,16 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import asay.asaymobile.R;
-import asay.asaymobile.UserContract;
-import asay.asaymobile.model.UserDTO;
-import asay.asaymobile.presenter.UserPresenter;
-import butterknife.ButterKnife;
 
 
-public class BillsFragment extends Fragment implements UserContract.View{
+public class BillsFragment extends Fragment{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -32,9 +26,7 @@ public class BillsFragment extends Fragment implements UserContract.View{
      */
     private BillsFragment.SectionsPagerAdapter mSectionsPagerAdapter;
     private int userId = 1;
-    private ArrayList<Integer> savedBills = new ArrayList<>();
     private boolean loggedIn = true;
-    private UserPresenter presenter;
     private Bundle bundle;
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -48,26 +40,15 @@ public class BillsFragment extends Fragment implements UserContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        presenter = new UserPresenter(this);
         View rootView = inflater.inflate(R.layout.fragment_bills,container,false);
-        ButterKnife.bind(this, rootView);
         return rootView;
     }
     @Override
     public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
-        presenter.getUser(userId);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-            }
-
-    @Override
-    public void refreshUser(UserDTO currentUser) {
-        System.out.println("outer saved bills");
-        savedBills = currentUser.getbillsSaved();
-        bundle = new Bundle();
-        bundle.putIntegerArrayList("savedBills",savedBills);
         TabLayout tabLayout = getActivity().findViewById(R.id.tabs);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
@@ -79,6 +60,7 @@ public class BillsFragment extends Fragment implements UserContract.View{
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
         mSectionsPagerAdapter.notifyDataSetChanged();
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -98,8 +80,9 @@ public class BillsFragment extends Fragment implements UserContract.View{
                     return billsAllFragment;
                 case 1:
                     //TODO: return billsFavoriterFragment
-                    System.out.println("fragment bundle is set");
                     if(loggedIn){
+                        bundle = new Bundle();
+                        bundle.putBoolean("isFavorite",true);
                         BillsAllFragment billsAllFragmentFavorite = new BillsAllFragment();
                         billsAllFragmentFavorite.setArguments(bundle);
                         return billsAllFragmentFavorite;

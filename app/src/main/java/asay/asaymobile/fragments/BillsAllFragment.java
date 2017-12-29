@@ -25,17 +25,22 @@ import java.util.Date;
 
 import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
+import asay.asaymobile.UserContract;
 import asay.asaymobile.activities.BillActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.BillPresenter;
+import asay.asaymobile.presenter.UserPresenter;
 import butterknife.ButterKnife;
 
 
-public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View{
+public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View, UserContract.View{
     EditText etResponse;
-    private BillPresenter presenter;
+    private BillPresenter billPresenter;
+    private UserPresenter userPresenter;
+    double userId = 1;
     private ArrayList<BillDTO> bills = new ArrayList<>();
     private ArrayList<Integer> savedbills = new ArrayList<>();
     ArrayAdapter adapter;
@@ -59,19 +64,20 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         super.onViewCreated(view, savedInstanceState);
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
+        boolean isFavorite = false;
         if(getArguments() != null){
-            savedbills = getArguments().getIntegerArrayList("savedBills");
+            isFavorite = getArguments().getBoolean("isFavorite");
         }
         String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
-        presenter = new BillPresenter(this);
-
-        if(savedbills.size() == 0){
+        billPresenter = new BillPresenter(this);
+        userPresenter = new UserPresenter(this);
+        if(!isFavorite){
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
         } else{
-            presenter.getSavedBills(savedbills);
+            userPresenter.getUser(userId);
         }
             // get reference to the views
         adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
@@ -116,6 +122,13 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     }
 
+    @Override
+    public void refreshUser(UserDTO user) {
+        savedbills = user.getbillsSaved();
+        System.out.println("number of savedbills userRefresh :" + savedbills.size());
+        billPresenter.getSavedBills(savedbills);
+    }
+
     private class AsyncTaskCompleteListener implements asay.asaymobile.fetch.AsyncTaskCompleteListener<JSONObject> {
         @Override
         public void onTaskComplete(JSONObject result)
@@ -142,7 +155,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             new ArrayList<BillDTO.Vote>(){{add(new BillDTO.Vote(0,"", ArgumentType.NEUTRAL ));}}
                     );
                     bills.add(bill);
-                    presenter.addNewBill(bill);
+                    billPresenter.addNewBill(bill);
                 }
                 adapter.notifyDataSetChanged();
             } catch (Exception excep){

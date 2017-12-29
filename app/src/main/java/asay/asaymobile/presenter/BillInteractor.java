@@ -31,6 +31,7 @@ public class BillInteractor {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 BillDTO billDTO = new BillDTO();
+                mbillList.clear();
                 for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
                     billDTO = messagesSnapshot.getValue(BillDTO.class);
                     for (int billId : savedbills) {
