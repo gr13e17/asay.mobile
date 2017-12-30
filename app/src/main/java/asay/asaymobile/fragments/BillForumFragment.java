@@ -10,12 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
+import asay.asaymobile.adapters.ForumAdapter;
 import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.CommentDTO;
 import asay.asaymobile.model.UserDTO;
@@ -90,19 +90,6 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
         commentArray.add("Nullam placerat magna metus, id tincidunt nunc vestibulum at. Donec ut ligula sagittis, posuere purus sollicitudin, tristique leo. Integer et ultrices risus, et cursus augue. ");
     }
 
-    private Integer getColor(ArgumentType argumentType){
-        switch (argumentType) {
-            case FOR:
-                return getResources().getColor(R.color.forColor);
-            case AGAINST:
-                return getResources().getColor(R.color.againstColor);
-            case NEUTRAL:
-                return getResources().getColor(R.color.neutralColor);
-            default:
-                return getResources().getColor(R.color.neutralColor);
-        }
-    }
-
     @Override
     public void closeForum() {
     }
@@ -114,23 +101,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
 
     @Override
     public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
-        ArrayAdapter commentArrayAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_comment,R.id.nameView,currentComment){
-            @Override
-            public View getView(int position, View cachedView, ViewGroup parent){
-                View view = super.getView(position, cachedView, parent);
-                TextView commentText = view.findViewById(R.id.comment);
-                commentText.setText(currentComment.get(position).getText());
-                TextView nameView = view.findViewById(R.id.nameView);
-                for (UserDTO user: nameArray ){
-                    if(user.getid() == currentComment.get(position).getUserid()){
-                        nameView.setText(user.getname());
-                        nameView.setBackgroundColor(getColor(currentComment.get(position).getArgumentType()));
-                    }
-                }
+        ForumAdapter commentArrayAdapter = new ForumAdapter(currentComment,nameArray,getContext(), forumPresenter);
 
-                return view;
-            }
-        };
         listView.setAdapter(commentArrayAdapter);
     }
 
@@ -138,4 +110,5 @@ public class BillForumFragment extends Fragment implements ForumContract.View {
     public void refreshUsers(ArrayList<UserDTO> users) {
         this.nameArray = users;
     }
+
 }
