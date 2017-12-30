@@ -102,7 +102,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         listview.setAdapter(adapter);
         ViewGroup viewGroup = (ViewGroup) view;
         viewGroup.addView(listview);
-
     }
 
     @Override
