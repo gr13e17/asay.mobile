@@ -24,6 +24,8 @@ public interface ForumContract {
     interface Presenter{
         void addNewComment(CommentDTO comment);
 
+        void updateComment(CommentDTO commentDTO);
+
         void refreshCurrentCommentList(ArrayList<CommentDTO> currentComment);
 
         void refreshUser(ArrayList<UserDTO> users);

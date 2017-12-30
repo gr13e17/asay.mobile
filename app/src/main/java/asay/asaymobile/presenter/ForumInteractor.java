@@ -85,4 +85,22 @@ public class ForumInteractor {
         Task<Void> postRef = key.getRef().child("").push().setValue(comment);
 
     }
+
+    public void updateComment(final CommentDTO comment) {
+        forumElementReference.orderByChild("id").equalTo(comment.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    // update count for child: child.getKey()
+                    DatabaseReference commentref = forumElementReference.child(child.getKey());
+                    commentref.setValue(comment);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("ERROR" + databaseError.getMessage());
+            }
+        });
+    }
 }

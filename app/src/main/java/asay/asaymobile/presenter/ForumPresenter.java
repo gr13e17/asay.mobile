@@ -29,6 +29,11 @@ public class ForumPresenter implements ForumContract.Presenter {
     }
 
     @Override
+    public void updateComment(CommentDTO commentDTO) {
+        interactor.updateComment(commentDTO);
+    }
+
+    @Override
     public void refreshCurrentCommentList(ArrayList<CommentDTO> currentcomment) {
         mView.refreshCurrentCommentList(currentcomment);
     }
