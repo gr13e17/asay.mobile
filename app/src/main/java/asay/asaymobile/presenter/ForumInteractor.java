@@ -1,6 +1,5 @@
 package asay.asaymobile.presenter;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,18 +80,22 @@ public class ForumInteractor {
     }
 
     void addNewComment(CommentDTO comment) {
-        DatabaseReference key = forumElementReference.child("comments");
-        Task<Void> postRef = key.getRef().child("").push().setValue(comment);
+        DatabaseReference postRef = forumElementReference.child("comments");
+        String key = postRef.push().getKey();
+        comment.setId((double) key.hashCode());;
+        postRef.push().setValue(comment);
 
     }
 
     public void updateComment(final CommentDTO comment) {
-        forumElementReference.orderByChild("id").equalTo(comment.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Query postref = forumElementReference.child("comments").orderByChild("id").equalTo(comment.getId());
+        postref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println(dataSnapshot);
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     // update count for child: child.getKey()
-                    DatabaseReference commentref = forumElementReference.child(child.getKey());
+                    DatabaseReference commentref = forumElementReference.child("comments").child(child.getKey());
                     commentref.setValue(comment);
                 }
             }
@@ -103,4 +106,6 @@ public class ForumInteractor {
             }
         });
     }
+
+
 }
