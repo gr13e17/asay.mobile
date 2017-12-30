@@ -9,10 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import asay.asaymobile.R;
-import asay.asaymobile.model.BillDTO;
+import java.util.ArrayList;
 
-public class BillCommentsFragment extends Fragment implements View.OnClickListener{
+import asay.asaymobile.ForumContract;
+import asay.asaymobile.R;
+import asay.asaymobile.model.ArgumentType;
+import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.model.CommentDTO;
+import asay.asaymobile.model.UserDTO;
+import asay.asaymobile.presenter.ForumPresenter;
+
+public class BillCommentsFragment extends Fragment implements View.OnClickListener, ForumContract.View{
 
     TextView BillDesc;
     String BillDescOrg;
@@ -30,6 +37,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     boolean isExpandedAgainst  = false;
     private BillDTO bill;
     private double userId = 1;
+    ForumPresenter presenter;
 
     public BillCommentsFragment() {
         // Required empty public constructor
@@ -40,7 +48,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bill = getArguments().getParcelable("bill");
-
+        presenter = new ForumPresenter(this, bill.getId());
     }
 
     @Override
@@ -149,4 +157,35 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
         animation.setDuration(80).start();
     }
 
+    @Override
+    public void closeForum() {
+
+    }
+
+    @Override
+    public void showUnloggedUserError() {
+
+    }
+
+    @Override
+    public void refreshCurrentCommentList(ArrayList<CommentDTO> currentComment) {
+        int maxFor = 0, maxAgainst = 0, posistionFor = 0, positionAgainst = 0, counter = 0;
+        for(CommentDTO comment : currentComment){
+            if(maxFor < comment.getScore() && comment.getArgumentType().equals(ArgumentType.FOR)){
+                maxFor = comment.getScore();
+                posistionFor = counter;
+            } else if (maxAgainst < comment.getScore() && comment.getArgumentType().equals(ArgumentType.AGAINST)) {
+                maxAgainst = comment.getScore();
+                positionAgainst = counter;
+            }
+            counter++;
+        }
+        arg1.setText(currentComment.get(posistionFor).getText());
+        arg2.setText(currentComment.get(positionAgainst).getText());
+    }
+
+    @Override
+    public void refreshUsers(ArrayList<UserDTO> users) {
+
+    }
 }
