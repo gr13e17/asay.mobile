@@ -169,19 +169,25 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void refreshCurrentCommentList(ArrayList<CommentDTO> currentComment) {
-        int maxFor = 0, maxAgainst = 0, posistionFor = 0, positionAgainst = 0, counter = 0;
-        for(CommentDTO comment : currentComment){
-            if(maxFor < comment.getScore() && comment.getArgumentType().equals(ArgumentType.FOR)){
-                maxFor = comment.getScore();
-                posistionFor = counter;
-            } else if (maxAgainst < comment.getScore() && comment.getArgumentType().equals(ArgumentType.AGAINST)) {
-                maxAgainst = comment.getScore();
-                positionAgainst = counter;
+        if(currentComment.size() != 0){
+            int maxFor = 0, maxAgainst = 0, posistionFor = 0, positionAgainst = 0, counter = 0;
+            for(CommentDTO comment : currentComment){
+                if(maxFor < comment.getScore() && comment.getArgumentType().equals(ArgumentType.FOR)){
+                    maxFor = comment.getScore();
+                    posistionFor = counter;
+                } else if (maxAgainst < comment.getScore() && comment.getArgumentType().equals(ArgumentType.AGAINST)) {
+                    maxAgainst = comment.getScore();
+                    positionAgainst = counter;
+                }
+                counter++;
             }
-            counter++;
+            arg1.setText(currentComment.get(posistionFor).getText());
+            arg2.setText(currentComment.get(positionAgainst).getText());
+        } else{
+            arg1.setText("Der er ingen kommentarer til dette forum endnu");
+            arg2.setText("Der er ingen kommentarer til dette forum endnu");
         }
-        arg1.setText(currentComment.get(posistionFor).getText());
-        arg2.setText(currentComment.get(positionAgainst).getText());
+
     }
 
     @Override
