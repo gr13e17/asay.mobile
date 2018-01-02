@@ -25,4 +25,7 @@
     <string name="showMore">Se mere</string>
     <string name="showLess">Se mindre</string>
     <string name="noComments">Der er ingen kommentarer til dette forum endnu</string>
+    <string name="number_of_votes">Deltagelse: %d personer</string>
+    <string name="days_until_deadline">Deadline: %d dage</string>
+
 </resources>
