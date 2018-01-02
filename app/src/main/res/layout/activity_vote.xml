@@ -2,37 +2,39 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_vote"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_stemmeboks"
     tools:context="asay.asaymobile.activities.VoteActivity">
 
     <Button
         android:id="@+id/buttonCancel"
-        android:layout_width="148dp"
-        android:layout_height="51dp"
-        android:layout_marginBottom="27dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@color/secondaryDarkColor"
         android:text="Fortryd stemme"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="381dp"
-        android:layout_height="45dp"
-        android:text="Vil du stemme for eller imod?"
-        android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Vil du stemme for eller imod?"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/argForHead"
@@ -48,44 +50,60 @@
 
     <Button
         android:id="@+id/buttonAgainst"
-        android:layout_width="250dp"
-        android:layout_height="64dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@color/againstColor"
         android:text="IMOD"
         android:textColor="@color/primaryTextColor"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonFor" />
+        app:layout_constraintBottom_toTopOf="@+id/argForHead"
+        app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
 
     <Button
         android:id="@+id/buttonFor"
-        android:layout_width="250dp"
-        android:layout_height="64dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@color/forColor"
         android:text="FOR"
         android:textColor="@color/primaryTextColor"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonAgainst"
+        app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
+        app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="385dp"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Titel på lovforslaget man stemmer på"
-        android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toTopOf="@+id/buttonFor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/verticalguideline0.25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/verticalguideline0.75"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
 </android.support.constraint.ConstraintLayout>

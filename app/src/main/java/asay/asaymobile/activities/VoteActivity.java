@@ -43,7 +43,7 @@ public class VoteActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_vote);
         bill = getIntent().getExtras().getParcelable("bill");
         presenter = new BillPresenter(this);
-        mainLayout = (ConstraintLayout) findViewById(R.id.activity_stemmeboks);
+        mainLayout = (ConstraintLayout) findViewById(R.id.activity_vote);
 
         //Creates 2 popup windows
 
