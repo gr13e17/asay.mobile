@@ -25,13 +25,11 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     String BillDescOrg;
     TextView expBillDesc;
     TextView arg1;
-    int arg1Org;
+    String arg1Org;
     TextView expArg1;
     TextView arg2;
-    int arg2Org;
+    String arg2Org;
     TextView expArg2;
-    TextView popup;
-    View Scroll;
     boolean isExpandedBillDesc  = false;
     boolean isExpandedFor  = false;
     boolean isExpandedAgainst  = false;
@@ -67,23 +65,20 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
         BillDesc.setMaxLines(3);
 
         arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
-        arg1Org = R.string.dummy_arg2;
-        arg1.setText(arg1Org);
-        arg1.setOnClickListener(this);
-        arg1.setMaxLines(3);
+       arg1.setMaxLines(3);
 
         arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
-        arg2Org = R.string.dummy_arg1;
-        arg2.setText(arg2Org);
-        arg2.setOnClickListener(this);
-        arg2.setMaxLines(3);
+       arg2.setMaxLines(3);
 
         expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
         expBillDesc.setOnClickListener(this);
         expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
         expArg1.setOnClickListener(this);
+        expArg1.setVisibility(View.INVISIBLE);
         expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
         expArg2.setOnClickListener(this);
+        expArg2.setVisibility(View.INVISIBLE);
+
         super.onViewCreated(rootView, savedInstanceState);
     }
 
@@ -94,14 +89,14 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
             //BIll Description expanding
             case R.id.billDesc :
             case R.id.expandBillDesc :
-                if(isExpandedBillDesc == true){
+                if(isExpandedBillDesc){
                     collapseTextView(BillDesc, 3);
-                    expBillDesc.setText("Se mere");
+                    expBillDesc.setText(R.string.showMore);
                     isExpandedBillDesc = false;
                 }
                 else {
                     expandTextView(BillDesc, BillDescOrg);
-                    expBillDesc.setText("Se mindre");
+                    expBillDesc.setText(R.string.showLess);
                     isExpandedBillDesc = true;
                 }
                 break;
@@ -109,14 +104,14 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
             // Top Argument Against Expanding
             case R.id.argAgainstTxt :
             case R.id.expandArgAgainst :
-                if(isExpandedAgainst == true){
-                    expArg2.setText("Se mere");
+                if(isExpandedAgainst){
+                    expArg2.setText(R.string.showMore);
                     collapseTextView(arg2, 3);
                     isExpandedAgainst = false;
                 }
                 else {
                     expandTextView(arg2, arg2Org);
-                    expArg2.setText("Se mindre");
+                    expArg2.setText(R.string.showLess);
                     isExpandedAgainst = true;
                 }
                 break;
@@ -124,36 +119,32 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
             // Top Argument For Expanding
             case R.id.argForTxt :
             case R.id.expandArgFor :
-                if(isExpandedAgainst == true){
-                    expArg1.setText("Se mere");
+
+                if(isExpandedFor){
+                    expArg1.setText(R.string.showMore);
                     collapseTextView(arg1, 3);
-                    isExpandedAgainst = false;
+                    isExpandedFor = false;
                 }
                 else {
                     expandTextView(arg1, arg1Org);
-                    expArg1.setText("Se mindre");
-                    isExpandedAgainst = true;
+                    expArg1.setText(R.string.showLess);
+                    isExpandedFor = true;
                 }
                 break;
         }
     }
-    private void expandTextView(TextView billDesc, int orgTxt){
-        billDesc.setText(orgTxt);
-        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
-        animation.setDuration(80).start();
-    }
     private void expandTextView(TextView billDesc, String orgTxt){
-        billDesc.setText(orgTxt);
+       billDesc.setText(orgTxt);
         ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
         animation.setDuration(80).start();
     }
 
-    private void collapseTextView(TextView billDesc, int numLines){
+    private void collapseTextView(TextView txt, int numLines){
 
-        int lineEndIndex = billDesc.getLayout().getLineEnd(2);
-        String text = billDesc.getText().subSequence(0, lineEndIndex - 3) + "...";
-        billDesc.setText(text);
-        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", numLines);
+        int lineEndIndex = txt.getLayout().getLineEnd(2);
+        String text = txt.getText().subSequence(0, lineEndIndex - 3) + "...";
+        txt.setText(text);
+        ObjectAnimator animation = ObjectAnimator.ofInt(txt, "maxLines", numLines);
         animation.setDuration(80).start();
     }
 
@@ -170,22 +161,50 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     @Override
     public void refreshCurrentCommentList(ArrayList<CommentDTO> currentComment) {
         if(currentComment.size() != 0){
-            int maxFor = 0, maxAgainst = 0, posistionFor = 0, positionAgainst = 0, counter = 0;
+            int maxFor = 0, maxAgainst = 0, positionFor = 0, positionAgainst = 0, counter = 0;
             for(CommentDTO comment : currentComment){
                 if(maxFor < comment.getScore() && comment.getArgumentType().equals(ArgumentType.FOR)){
                     maxFor = comment.getScore();
-                    posistionFor = counter;
+                    positionFor = counter;
                 } else if (maxAgainst < comment.getScore() && comment.getArgumentType().equals(ArgumentType.AGAINST)) {
                     maxAgainst = comment.getScore();
                     positionAgainst = counter;
                 }
                 counter++;
             }
-            arg1.setText(currentComment.get(posistionFor).getText());
+            arg1.setText(currentComment.get(positionFor).getText());
+            arg1Org = arg1.getText().toString();
             arg2.setText(currentComment.get(positionAgainst).getText());
-        } else{
-            arg1.setText("Der er ingen kommentarer til dette forum endnu");
-            arg2.setText("Der er ingen kommentarer til dette forum endnu");
+            arg2Org = arg2.getText().toString();
+            if(arg1.getLineCount() > 3) {
+                arg1.setOnClickListener(this);
+
+                expArg1.setVisibility(View.VISIBLE);
+
+            }
+            else{
+                arg1.setOnClickListener(null);
+                expArg1.setVisibility(View.INVISIBLE);
+            }
+
+            if (arg2.getLineCount() > 3){
+                arg2.setOnClickListener(this);
+
+                expArg2.setVisibility(View.VISIBLE);
+
+            }
+
+            else{
+                arg2.setOnClickListener(null);
+                expArg2.setVisibility(View.INVISIBLE);
+            }
+            }
+
+         else{
+            arg1.setText(R.string.noComments);
+            arg2.setText(R.string.noComments);
+            expArg1.setVisibility(View.INVISIBLE);
+            expArg2.setVisibility(View.INVISIBLE);
         }
 
     }

@@ -28,4 +28,7 @@
     <string name="no">Nej</string>
     <string name="your_vote_is_registered">Din stemme er registreret</string>
     <string name="ok">OK</string>
+    <string name="showMore">Se mere</string>
+    <string name="showLess">Se mindre</string>
+    <string name="noComments">Der er ingen kommentarer til dette forum endnu</string>
 </resources>
