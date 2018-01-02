@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context="asay.asaymobile.activities.VoteActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_weight="1"
+        android:background="@color/primaryLightColor"
+        app:layout_scrollFlags="enterAlways"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:title="@string/voting_booth" />
+
     <Button
         android:id="@+id/buttonCancel"
         android:layout_width="0dp"
@@ -21,20 +31,6 @@
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Vil du stemme for eller imod?"
-        android:textAlignment="viewStart"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/argForHead"
@@ -84,13 +80,13 @@
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Titel på lovforslaget man stemmer på"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toTopOf="@+id/buttonFor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <android.support.constraint.Guideline
         android:id="@+id/verticalguideline0.25"

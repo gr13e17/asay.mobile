@@ -22,4 +22,5 @@
     <string name="reply_content">Tilføj ny kommentar</string>
     <string name="title_activity_reply">reply</string>
     <string name="vote">Gå til stemmeboks</string>
+    <string name="voting_booth">Stemmeboks</string>
 </resources>
