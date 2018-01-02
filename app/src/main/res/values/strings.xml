@@ -22,4 +22,7 @@
     <string name="reply_content">Tilføj ny kommentar</string>
     <string name="title_activity_reply">reply</string>
     <string name="vote">Gå til stemmeboks</string>
+    <string name="showMore">Se mere</string>
+    <string name="showLess">Se mindre</string>
+    <string name="noComments">Der er ingen kommentarer til dette forum endnu</string>
 </resources>
