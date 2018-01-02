@@ -23,4 +23,9 @@
     <string name="title_activity_reply">reply</string>
     <string name="vote">Gå til stemmeboks</string>
     <string name="voting_booth">Stemmeboks</string>
+    <string name="are_you_sure_you_want_to_cancel_vote">Er du sikker på at du vil fortryde din stemme?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+    <string name="your_vote_is_registered">Din stemme er registreret</string>
+    <string name="ok">OK</string>
 </resources>
