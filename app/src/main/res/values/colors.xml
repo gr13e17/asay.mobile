@@ -10,4 +10,5 @@
   <color name="secondaryTextColor">#ffffff</color>
   <color name="forColor">#7af2e6</color>
   <color name="againstColor">#41bfb4</color>
+  <color name="neutralColor">#DCDCDC</color>
 </resources>

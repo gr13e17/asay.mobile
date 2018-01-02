@@ -1,6 +1,7 @@
 package asay.asaymobile.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +14,7 @@ import android.view.ViewGroup;
 import asay.asaymobile.R;
 
 
-public class BillsFragment extends Fragment {
+public class BillsFragment extends Fragment{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -24,7 +25,9 @@ public class BillsFragment extends Fragment {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private BillsFragment.SectionsPagerAdapter mSectionsPagerAdapter;
-
+    private int userId = 1;
+    private boolean loggedIn = true;
+    private Bundle bundle;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -37,22 +40,27 @@ public class BillsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bills,container,false);
-        TabLayout tabLayout = view.findViewById(R.id.tabs);
+        View rootView = inflater.inflate(R.layout.fragment_bills,container,false);
+        return rootView;
+    }
+    @Override
+    public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(rootView, savedInstanceState);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+        TabLayout tabLayout = getActivity().findViewById(R.id.tabs);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = view.findViewById(R.id.container);
+        mViewPager = getActivity().findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        return view;
+        mSectionsPagerAdapter.notifyDataSetChanged();
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -71,9 +79,16 @@ public class BillsFragment extends Fragment {
                     BillsAllFragment billsAllFragment = new BillsAllFragment();
                     return billsAllFragment;
                 case 1:
-                    //TODO: return billsMineFragment
-                    BillsAllFragment billsAllFragment2 = new BillsAllFragment();
-                    return billsAllFragment2;
+                    //TODO: return billsFavoriterFragment
+                    if(loggedIn){
+                        bundle = new Bundle();
+                        bundle.putBoolean("isFavorite",true);
+                        BillsAllFragment billsAllFragmentFavorite = new BillsAllFragment();
+                        billsAllFragmentFavorite.setArguments(bundle);
+                        return billsAllFragmentFavorite;
+                    } else{
+                        return null;
+                    }
                 default:
                     return null;
             }
