@@ -17,7 +17,6 @@
             android:text="Om Lovforslaget"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
