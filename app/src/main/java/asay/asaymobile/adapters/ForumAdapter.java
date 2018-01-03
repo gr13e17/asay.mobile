@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
         TextView commentText = convertView.findViewById(R.id.comment);
         commentText.setText(currentComment.getText());
         TextView nameView = convertView.findViewById(R.id.nameView);
-        Button upvote = (Button) convertView.findViewById(R.id.up);
+        ImageButton upvote = (ImageButton) convertView.findViewById(R.id.up);
         upvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +75,7 @@ public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
                 presenter.updateComment(currentComment);
             }
         });
-        Button downvote = (Button) convertView.findViewById(R.id.down);
+        ImageButton downvote = (ImageButton) convertView.findViewById(R.id.down);
         downvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
