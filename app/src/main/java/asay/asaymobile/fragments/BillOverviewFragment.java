@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,10 +67,14 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
         sub.setOnClickListener(this);
         presenter = new UserPresenter(this);
         presenter.getUser(userId);
+        String billTitle = bill.getNumber().concat(": ").concat(bill.getTitleShort());
         TextView header = (TextView) rootView.findViewById(R.id.headerBill);
-        header.setText(bill.getNumber().concat(": ").concat(bill.getTitleShort()));
+        header.setText(billTitle);
         vote = (Button) rootView.findViewById(R.id.buttonVote);
         vote.setOnClickListener(this);
+
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(billTitle);
     }
 
     public void addChildFragment(Fragment fragment){
