@@ -19,9 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.VoteActivity"
-        ></activity>
+        <activity android:name=".activities.VoteActivity" />
         <activity
             android:name=".activities.BillActivity"
             android:label="@string/title_activity_bill"
