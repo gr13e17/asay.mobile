@@ -106,10 +106,10 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
                 if(billSaved.get(i).equals(bill.getId()))
                     billSaved.remove(i);
             }
-            sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+            sub.setImageResource(R.drawable.ic_star);
         }else {
             billSaved.add(bill.getId());
-            sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+            sub.setImageResource(R.drawable.ic_star_border);
         }
         presenter.UpdateFavorites(userId,billSaved);
     }
@@ -120,9 +120,9 @@ public class BillOverviewFragment extends Fragment implements OnClickListener,Us
         isSub = user.getbillsSaved().contains(bill.getId());
         try{
             if (isSub)
-                sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+                sub.setImageResource(R.drawable.ic_star);
             else{
-                sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+                sub.setImageResource(R.drawable.ic_star_border);
             }
         } catch (Exception e){
             System.out.println(e.getMessage());
