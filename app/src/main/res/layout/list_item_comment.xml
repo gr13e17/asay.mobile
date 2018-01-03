@@ -26,58 +26,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:singleLine="false"
         android:text="Jeg er enig i ovenstående kommentar, da jeg har oplevet lignende tidligere."
-        app:layout_constraintBottom_toTopOf="@+id/report"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameView" />
 
     <Button
         android:id="@+id/reply"
-        android:layout_width="103dp"
-        android:layout_height="40dp"
-        android:drawableLeft="@drawable/cornerdownleft"
-        android:drawablePadding="5dp"
-        android:drawableStart="@drawable/cornerdownleft"
-        android:gravity="start|center_vertical"
-        android:text="Reply"
+        android:layout_width="83dp"
+        android:layout_height="38dp"
+        android:background="@drawable/forum_button_background"
+        android:text="@string/reply"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/report"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:drawableLeft="@drawable/flag"
-        android:drawablePadding="5dp"
-        android:drawableStart="@drawable/flag"
-        android:gravity="start|center_vertical"
-        android:text="Report"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/reply" />
-
-    <Button
+    <ImageButton
         android:id="@+id/up"
-        android:layout_width="38dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:drawableLeft="@drawable/arrowup"
-        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/forum_button_background"
+        android:padding="10dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/arrowup"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/down" />
 
-    <Button
+    <ImageButton
         android:id="@+id/down"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:drawableLeft="@drawable/arrowdown"
-        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/forum_button_background"
+        android:padding="10dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/arrowdown"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/reply" />
 
 </android.support.constraint.ConstraintLayout>
