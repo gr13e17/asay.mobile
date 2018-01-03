@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp">
@@ -8,36 +9,35 @@
         android:id="@+id/listeelem_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="overskrift"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:text="@string/BillExampleHead"
+        android:textAppearance="@style/BillListTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/listeelem_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/listeelem_header"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/days_until_deadline"
+        android:textAppearance="@style/BillListSubTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listeelem_header" />
 
-        <TextView
-            android:id="@+id/listeelem_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="date"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/listeelem_number_of_votes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="left"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textSize="14sp" />
-    </LinearLayout>
-</RelativeLayout>
+    <TextView
+        android:id="@+id/listeelem_number_of_votes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/number_of_votes"
+        android:textAppearance="@style/BillListSubTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listeelem_header" />
+</android.support.constraint.ConstraintLayout>

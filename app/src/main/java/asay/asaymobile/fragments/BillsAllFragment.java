@@ -1,5 +1,6 @@
 package asay.asaymobile.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -42,7 +43,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     double userId = 1;
     private ArrayList<BillDTO> bills = new ArrayList<>();
     private ArrayList<Integer> savedbills = new ArrayList<>();
-    ArrayAdapter adapter;
+    ArrayAdapter<BillDTO> adapter;
     ListView listview;
 
     public BillsAllFragment() {
@@ -80,17 +81,20 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             userPresenter.getUser(userId);
         }
             // get reference to the views
-        adapter = new ArrayAdapter(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
+        adapter = new ArrayAdapter<BillDTO>(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
+            @SuppressLint("DefaultLocale")
             @Override
             public View getView(int position, View cachedView, ViewGroup parent){
                 View view = super.getView(position, cachedView, parent);
-                    TextView title = view.findViewById(R.id.listeelem_header);
-                    title.setText(bills.get(position).getTitleShort());
+                BillDTO bill = bills.get(position);
+                    TextView titleTextView = view.findViewById(R.id.listeelem_header);
+                    String title = bill.number + ": " + bill.getTitleShort();
+                    titleTextView.setText(title);
                     TextView date = view.findViewById(R.id.listeelem_date);
-                    date.setText(toString().valueOf(CalcDateFromToday(bills.get(position).getDeadline()))+" dage til deadline");
+                    date.setText(String.format(getResources().getString(R.string.days_until_deadline), CalcDateFromToday(bill.getDeadline())));
                     TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
-                    if(bills.get(position).votes.size() > 0)
-                        numberOfVotes.setText(bills.get(position).votes.size()+ " personer har allerede stemt");
+                    if(bill.votes.size() > 0)
+                        numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
                     else{
                         numberOfVotes.setText("");
                     }
