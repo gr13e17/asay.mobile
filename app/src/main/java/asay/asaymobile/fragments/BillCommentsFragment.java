@@ -134,7 +134,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
         }
     }
     private void expandTextView(TextView billDesc, String orgTxt){
-       billDesc.setText(orgTxt);
+        billDesc.setText(orgTxt);
         ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
         animation.setDuration(80).start();
     }
