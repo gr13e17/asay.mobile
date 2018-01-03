@@ -11,4 +11,7 @@
   <color name="forColor">#7af2e6</color>
   <color name="againstColor">#41bfb4</color>
   <color name="neutralColor">#DCDCDC</color>
+  <color name="buttonDefault">#000000ff</color>
+  <color name="buttonPressed">#eeeeee</color>
+  <color name="button_focused">#000000</color>
 </resources>
