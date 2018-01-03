@@ -108,11 +108,13 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     expArg2.setText(R.string.showMore);
                     collapseTextView(arg2, 3);
                     isExpandedAgainst = false;
+                    arg2.setOnClickListener(this);
                 }
                 else {
                     expandTextView(arg2, arg2Org);
                     expArg2.setText(R.string.showLess);
                     isExpandedAgainst = true;
+                    arg2.setOnClickListener(null);
                 }
                 break;
 
@@ -124,17 +126,19 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     expArg1.setText(R.string.showMore);
                     collapseTextView(arg1, 3);
                     isExpandedFor = false;
+                    arg1.setOnClickListener(this);
                 }
                 else {
                     expandTextView(arg1, arg1Org);
                     expArg1.setText(R.string.showLess);
                     isExpandedFor = true;
+                    arg1.setOnClickListener(null);
                 }
                 break;
         }
     }
     private void expandTextView(TextView billDesc, String orgTxt){
-       billDesc.setText(orgTxt);
+        billDesc.setText(orgTxt);
         ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
         animation.setDuration(80).start();
     }
