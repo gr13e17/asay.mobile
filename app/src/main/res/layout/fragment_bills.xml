@@ -17,20 +17,31 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryLightColor"
-            app:tabSelectedTextColor="@color/primaryTextColor"
-            app:tabTextColor="@color/primaryTextColor">
+            android:background="@color/secondaryLightColor"
+            app:tabIndicatorColor="@color/primaryColor" >
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Alle" />
+                android:icon="@drawable/ic_move_to_inbox"
+                android:scaleType="fitCenter"
+                android:text="Aktive" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_history_g"
+                android:scaleType="fitCenter"
+                android:text="Afsluttede" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:icon="@drawable/ic_stars"
+                android:scaleType="fitCenter"
                 android:text="Favoritter" />
 
         </android.support.design.widget.TabLayout>
