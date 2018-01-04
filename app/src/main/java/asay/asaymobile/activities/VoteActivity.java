@@ -58,11 +58,16 @@ public class VoteActivity extends AppCompatActivity implements View.OnClickListe
 
         View votedView = inflater.inflate(R.layout.dialog_vote_complete, null);
         votedWindow = new PopupWindow(votedView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        votedWindow.setElevation(15);
-
         View cancelView = inflater.inflate(R.layout.dialog_cancel_vote, null);
         cancelWindow = new PopupWindow(cancelView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        cancelWindow.setElevation(15);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            votedWindow.setElevation(15);
+            cancelWindow.setElevation(15);
+        } else {
+            votedWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.dialog_holo_light_frame));
+            cancelWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.dialog_holo_light_frame));
+        }
 
         //creates all buttons
 

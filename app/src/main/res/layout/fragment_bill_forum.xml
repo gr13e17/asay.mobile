@@ -6,11 +6,11 @@
     tools:context="asay.asaymobile.activities.BillActivity$PlaceholderFragment">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
+        android:id="@+id/commentButtonMain"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="36dp"
+        android:layout_marginEnd="32dp"
         android:layout_weight="1"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add"
@@ -20,88 +20,13 @@
     <ListView
         android:id="@+id/forum_list_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="572dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1" >
-
-    </ListView>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/forum_list_view"
         app:layout_constraintVertical_weight="1">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:theme="@style/AppTheme">
-
-            <android.support.v7.widget.Toolbar
-
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:gravity="end"
-                app:layout_scrollFlags="scroll|enterAlways">
-
-                <ImageButton
-                    android:id="@+id/reply_button"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="?selectableItemBackground"
-                    android:contentDescription="@string/title_activity_reply"
-                    android:src="@drawable/cornerdownleft" />
-
-                <LinearLayout
-                    android:id="@+id/reply_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    tools:context="com.lincanbin.carbonforum.ReplyActivity">
-
-                    <android.support.v4.widget.NestedScrollView
-                        android:id="@+id/reply_scroll_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_weight="1"
-                        android:fillViewport="true"
-                        android:scrollbars="none"
-
-                        app:behavior_overlapTop="64dp"
-
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="fill_parent">
-
-                            <EditText
-                                android:id="@+id/content"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
-                                android:layout_margin="@dimen/activity_vertical_margin"
-                                android:gravity="top|start"
-                                android:hint="@string/reply_content"
-                                android:inputType="textMultiLine"
-                                android:singleLine="false" />
-                        </android.support.design.widget.TextInputLayout>
-                    </android.support.v4.widget.NestedScrollView>
-                </LinearLayout>
-
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.AppBarLayout>
-    </RelativeLayout>
+    </ListView>
 
 </android.support.constraint.ConstraintLayout>
