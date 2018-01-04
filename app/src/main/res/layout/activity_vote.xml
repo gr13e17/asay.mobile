@@ -12,8 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_weight="1"
-        android:background="@color/primaryLightColor"
+        android:background="@android:color/white"
         app:layout_scrollFlags="enterAlways"
+        android:elevation="4dp"
         app:title="@string/voting_booth" />
 
     <Button
@@ -23,9 +24,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@color/secondaryDarkColor"
         android:text="Fortryd stemme"
-        android:textColor="@color/primaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -52,7 +51,6 @@
         android:layout_marginStart="8dp"
         android:background="@color/againstColor"
         android:text="IMOD"
-        android:textColor="@color/primaryTextColor"
         app:layout_constraintBottom_toTopOf="@+id/argForHead"
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintHorizontal_bias="0.0"
@@ -67,7 +65,6 @@
         android:layout_marginStart="8dp"
         android:background="@color/forColor"
         android:text="FOR"
-        android:textColor="@color/primaryTextColor"
         app:layout_constraintBottom_toTopOf="@+id/buttonAgainst"
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
