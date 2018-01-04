@@ -1,5 +1,6 @@
 package asay.asaymobile.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import asay.asaymobile.ProfileActivity;
 import asay.asaymobile.R;
 import asay.asaymobile.fragments.BillsFragment;
 
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Intent profileIntent = new Intent(this, ProfileActivity.class);
+                startActivity(profileIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
