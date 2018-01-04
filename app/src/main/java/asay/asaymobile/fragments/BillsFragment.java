@@ -1,5 +1,7 @@
 package asay.asaymobile.fragments;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -12,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import asay.asaymobile.R;
+
+import static asay.asaymobile.R2.id.tabItem;
+import static asay.asaymobile.R2.id.tabs;
 
 
 public class BillsFragment extends Fragment{
@@ -47,9 +52,10 @@ public class BillsFragment extends Fragment{
     public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
 
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        TabLayout tabLayout = getActivity().findViewById(R.id.tabs);
+        final TabLayout tabLayout = getActivity().findViewById(R.id.tabs);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -57,8 +63,31 @@ public class BillsFragment extends Fragment{
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        //set color filter to grey
+        tabLayout.getTabAt(0).getIcon().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        tabLayout.getTabAt(1).getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+        tabLayout.getTabAt(2).getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager){
+            //change the color on the selected tab icon to black
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.getIcon().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+
+        });
         mSectionsPagerAdapter.notifyDataSetChanged();
+
+
     }
 
 
@@ -77,9 +106,14 @@ public class BillsFragment extends Fragment{
             switch (position) {
                 case 0:
                     BillsAllFragment billsAllFragment = new BillsAllFragment();
+
                     return billsAllFragment;
                 case 1:
+                    BillsFinishAllFragment billsFinishAllFragment = new BillsFinishAllFragment();
+
+                case 2:
                     //TODO: return billsFavoriterFragment
+
                     if(loggedIn){
                         bundle = new Bundle();
                         bundle.putBoolean("isFavorite",true);
@@ -89,6 +123,7 @@ public class BillsFragment extends Fragment{
                     } else{
                         return null;
                     }
+
                 default:
                     return null;
             }
@@ -97,19 +132,7 @@ public class BillsFragment extends Fragment{
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Alle";
-                case 1:
-                    return "Mine";
-
-            }
-            return null;
+            return 3;
         }
     }
 }

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import asay.asaymobile.R;
 import asay.asaymobile.fragments.BillsAllFragment;
+import asay.asaymobile.fragments.BillsFragment;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
@@ -84,13 +85,13 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch(menuItem.getItemId()) {
             case R.id.nav_first_fragment:
-                fragmentClass = BillsAllFragment.class;
+                fragmentClass = BillsFragment.class;
                 break;
             case R.id.nav_second_fragment:
                 fragmentClass = BillsAllFragment.class;
                 break;
             default:
-                fragmentClass = BillsAllFragment.class;
+                fragmentClass = BillsFragment.class;
         }
 
         try {
