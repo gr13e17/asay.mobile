@@ -19,6 +19,7 @@ public class CommentDTO {
     int score;
     String text;
     double userid;
+    double parrentId;
 
     public CommentDTO(){
         //empty contsructor
@@ -31,15 +32,17 @@ public class CommentDTO {
         score = commentDTO.getScore();
         text = commentDTO.getText();
         userid = commentDTO.getUserid();
+        parrentId = commentDTO.getParrentId();
     }
 
-    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId ){
+    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId ){
         this.argumentType = argument;
         this.billId = billId;
         this.id = id;
         this.score = score;
         this.text = text;
         this.userid = userId;
+        this.parrentId = parrentId;
         }
 
     public ArgumentType getArgumentType() {
@@ -83,7 +86,9 @@ public class CommentDTO {
     }
 
 
-
+    public double getParrentId() {
+        return parrentId;
+    }
 }
 
 

@@ -136,7 +136,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     0,
                     0,
                     content,
-                    1
+                    1,
+                    0
             );
             forumPresenter.addNewComment(comment);
             mBottomSheetDialog.dismiss();
