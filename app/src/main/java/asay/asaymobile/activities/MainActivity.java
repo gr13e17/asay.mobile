@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
         // Set a Toolbar to replace the ActionBar.
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setHomeButtonEnabled(true);
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
 
         // Instantiate fragment
