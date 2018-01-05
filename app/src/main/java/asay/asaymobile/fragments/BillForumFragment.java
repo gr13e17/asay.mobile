@@ -51,6 +51,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private Button replyButton;
     private View bottomSheetView;
     private Dialog mBottomSheetDialog;
+    private Double parrentId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     @Override
     public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
-        ForumAdapter commentArrayAdapter = new ForumAdapter(currentComment,nameArray,getContext(), forumPresenter);
+        ForumAdapter commentArrayAdapter = new ForumAdapter(currentComment, nameArray, getContext(), forumPresenter);
 
         listView.setAdapter(commentArrayAdapter);
     }
@@ -102,53 +103,79 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     }
 
 
-    public void openBottomSheet (View v) {
+    public void openBottomSheet(View v, final Double parrentId) {
 
-        bottomSheetView = getLayoutInflater ().inflate (R.layout.fragment_new_comment_dialog, null);
 
-        mBottomSheetDialog = new Dialog (getContext(), R.style.MaterialDialogSheet);
-        mBottomSheetDialog.setContentView (bottomSheetView);
-        mBottomSheetDialog.setCancelable (true);
-        mBottomSheetDialog.getWindow ().setLayout (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        mBottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        bottomSheetView = getLayoutInflater().inflate(R.layout.fragment_new_comment_dialog, null);
 
-        mBottomSheetDialog.show ();
+        mBottomSheetDialog = new Dialog(getContext(), R.style.MaterialDialogSheet);
+        mBottomSheetDialog.setContentView(bottomSheetView);
+        mBottomSheetDialog.setCancelable(true);
+        mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        mBottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        mBottomSheetDialog.show();
 
         replyButton = bottomSheetView.findViewById(R.id.reply_button);
-        replyButton.setOnClickListener(this);
+        replyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view == replyButton) {
+                    EditText editText = bottomSheetView.findViewById(R.id.content);
+                    String content = editText.getText().toString();
+                    content = content.trim(); //trim string for trailing and leading whitespaces
+
+                    // Show error if no comment is written
+                    if (content.length() == 0) {
+                        editText.setError(getResources().getString(R.string.error_no_text));
+                        return;
+                    }
+
+                    CommentDTO comment = new CommentDTO(
+                            ArgumentType.FOR,
+                            billId,
+                            0,
+                            0,
+                            content,
+                            1,
+                            parrentId
+                    );
+                    forumPresenter.addNewComment(comment);
+                    mBottomSheetDialog.dismiss();
+                }
+            }
+        });
+
     }
 
     @Override
     public void onClick(View view) {
-        if (view == commentButtonMain){
-            openBottomSheet(rootView);
-        } else if (view == replyButton){
-            EditText editText = bottomSheetView.findViewById(R.id.content);
-            String content = editText.getText().toString();
-            content = content.trim(); //trim string for trailing and leading whitespaces
-
-            // Show error if no comment is written
-            if(content.length() == 0){
-                editText.setError(getResources().getString(R.string.error_no_text));
-                return;
-            }
-
-            CommentDTO comment = new CommentDTO(
-                    ArgumentType.FOR,
-                    billId,
-                    0,
-                    0,
-                    content,
-                    1,
-                    0
-            );
-            forumPresenter.addNewComment(comment);
-            mBottomSheetDialog.dismiss();
-        }
+        if (view == commentButtonMain) {
+            openBottomSheet(rootView, 0.0);
+        }// else if (view == replyButton) {
+         //   EditText editText = bottomSheetView.findViewById(R.id.content);
+         //   String content = editText.getText().toString();
+         //   content = content.trim(); //trim string for trailing and leading whitespaces
+//
+         //   // Show error if no comment is written
+         //   if (content.length() == 0) {
+         //       editText.setError(getResources().getString(R.string.error_no_text));
+         //       return;
+         //   }
+//
+         //   CommentDTO comment = new CommentDTO(
+         //           ArgumentType.FOR,
+         //           billId,
+         //           0,
+         //           0,
+         //           content,
+         //           1,
+         //           0
+         //   );
+         //   forumPresenter.addNewComment(comment);
+         //   mBottomSheetDialog.dismiss();
+        //}
     }
-
-
-
 
 
     public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
@@ -160,7 +187,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         ForumPresenter presenter;
 
 
-        public ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter){
+        public ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter) {
             this.currentComments = currentComments;
             this.currentUsers = currentUsers;
             this.context = context;
@@ -172,7 +199,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             this.listener = listener;
         }
 
-        private Integer getColor(ArgumentType argumentType){
+        private Integer getColor(ArgumentType argumentType) {
             switch (argumentType) {
                 case FOR:
                     return context.getResources().getColor(R.color.forColor);
@@ -201,7 +228,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 public void onClick(View v) {
                     System.out.println("you pressed upvote");
                     int score = currentComment.getScore();
-                    currentComment.setScore(score +1);
+                    currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
                 }
             });
@@ -211,12 +238,12 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 public void onClick(View v) {
                     System.out.println("you pressed downVote");
                     int score = currentComment.getScore();
-                    currentComment.setScore(score -1);
+                    currentComment.setScore(score - 1);
                     presenter.updateComment(currentComment);
                 }
             });
-            for (UserDTO user: currentUsers ){
-                if(user.getid() == currentComment.getUserid()){
+            for (UserDTO user : currentUsers) {
+                if (user.getid() == currentComment.getUserid()) {
                     nameView.setText(user.getname());
                     nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
                 }
@@ -225,7 +252,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             replyToComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openBottomSheet(rootView);
+                    openBottomSheet(rootView, currentComment.getId());
                 }
             });
 
