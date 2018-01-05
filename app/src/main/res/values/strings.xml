@@ -35,5 +35,6 @@
     <string name="number_of_votes">Deltagelse: %d personer</string>
     <string name="days_until_deadline">Deadline: %d dage</string>
     <string name="your_profile">Din profil</string>
+    <string name="error_no_text">Du har ikke indtastet tekst i feltet</string>
 
 </resources>

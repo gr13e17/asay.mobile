@@ -128,8 +128,16 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         if (view == commentButtonMain){
             openBottomSheet(rootView);
         } else if (view == replyButton){
-            EditText editText = (EditText) bottomSheetView.findViewById(R.id.content);
-            final String content = editText.getText().toString();
+            EditText editText = bottomSheetView.findViewById(R.id.content);
+            String content = editText.getText().toString();
+            content = content.trim(); //trim string for trailing and leading whitespaces
+
+            // Show error if no comment is written
+            if(content.length() == 0){
+                editText.setError(getResources().getString(R.string.error_no_text));
+                return;
+            }
+
             CommentDTO comment = new CommentDTO(
                     ArgumentType.FOR,
                     billId,
