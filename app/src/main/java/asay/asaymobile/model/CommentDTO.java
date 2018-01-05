@@ -20,7 +20,8 @@ public class CommentDTO {
     String text;
     double userid;
     double parrentId;
-
+    double commentDepth;
+    double childrentCount;
     public CommentDTO(){
         //empty contsructor
     }
@@ -33,9 +34,11 @@ public class CommentDTO {
         text = commentDTO.getText();
         userid = commentDTO.getUserid();
         parrentId = commentDTO.getParrentId();
+        childrentCount = commentDTO.getChildrentCount();
+        commentDepth = commentDTO.getCommentDepth();
     }
 
-    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId ){
+    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId, double childrentCount, double commentDepth ){
         this.argumentType = argument;
         this.billId = billId;
         this.id = id;
@@ -43,6 +46,8 @@ public class CommentDTO {
         this.text = text;
         this.userid = userId;
         this.parrentId = parrentId;
+        this.childrentCount = childrentCount;
+        this.commentDepth = commentDepth;
         }
 
     public ArgumentType getArgumentType() {
@@ -85,10 +90,17 @@ public class CommentDTO {
         this.userid = userid;
     }
 
-
     public double getParrentId() {
         return parrentId;
     }
+
+    public void setCommentDepth(double commentDepth) { this.commentDepth = commentDepth; }
+
+    public double getCommentDepth() { return commentDepth; }
+
+    public void setChildrentCount(double childrentCount) { this.childrentCount = childrentCount; }
+
+    public double getChildrentCount() { return childrentCount; }
 }
 
 

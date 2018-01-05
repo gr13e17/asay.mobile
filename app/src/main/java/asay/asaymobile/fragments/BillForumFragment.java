@@ -4,9 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
@@ -92,7 +93,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     @Override
     public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
-        ForumAdapter commentArrayAdapter = new ForumAdapter(currentComment, nameArray, getContext(), forumPresenter);
+        List<CommentDTO> threadedComments = toThreadedComments(currentComment);
+        ForumAdapter commentArrayAdapter = new ForumAdapter((ArrayList<CommentDTO>) threadedComments, nameArray, getContext(), forumPresenter);
 
         listView.setAdapter(commentArrayAdapter);
     }
@@ -138,7 +140,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                             0,
                             content,
                             1,
-                            parrentId
+                            parrentId,
+                            0,
+                            0
                     );
                     forumPresenter.addNewComment(comment);
                     mBottomSheetDialog.dismiss();
@@ -175,6 +179,61 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
          //   forumPresenter.addNewComment(comment);
          //   mBottomSheetDialog.dismiss();
         //}
+    }
+
+    public static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
+
+        //comments should be sorted by date first
+
+        //The resulting array of threaded comments
+        List<CommentDTO> threaded = new ArrayList<CommentDTO>();
+
+        //An array used to hold processed comments which should be removed at the end of the cycle
+        List<CommentDTO> removeComments = new ArrayList<CommentDTO>();
+
+        //get the root comments first (comments with no parent)
+        for(int i = 0; i < comments.size(); i++){
+            CommentDTO c = comments.get(i);
+            if(c.getParrentId() == 0){
+                c.setCommentDepth(0); //A property of Comment to hold its depth
+                c.setChildrentCount(0); //A property of Comment to hold its child count
+                threaded.add(c);
+                removeComments.add(c);
+            }
+        }
+
+        if(removeComments.size() > 0){
+            //clear processed comments
+            comments.removeAll(removeComments);
+            removeComments.clear();
+        }
+
+        int depth = 0;
+        //get the child comments up to a max depth of 10
+        while(comments.size() > 0 && depth <= 10){
+            depth++;
+            for(int j = 0; j< comments.size(); j++){
+                CommentDTO child = comments.get(j);
+                //check root comments for match
+                for(int i = 0; i < threaded.size(); i++){
+                    CommentDTO parent = threaded.get(i);
+                    if(parent.getId() == child.getParrentId()){
+                        parent.setChildrentCount(parent.getChildrentCount()+1);
+                        child.setCommentDepth(depth+parent.getCommentDepth());
+                        threaded.add((int) (i+parent.getChildrentCount()),child);
+                        removeComments.add(child);
+                        continue;
+                    }
+                }
+            }
+            if(removeComments.size() > 0){
+                //clear processed comments
+                comments.removeAll(removeComments);
+                removeComments.clear();
+            }
+        }
+
+        return threaded;
     }
 
 
@@ -219,6 +278,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 convertView = inflater.inflate(R.layout.list_item_comment, parent, false);
             }
             final CommentDTO currentComment = currentComments.get(position);
+            ConstraintLayout cl = (ConstraintLayout)convertView.findViewById(R.id.commentConstrain);
+            cl.setPadding((int) (currentComment.getCommentDepth()*100),0,0,0);
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
             TextView nameView = convertView.findViewById(R.id.nameView);
