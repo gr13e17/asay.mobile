@@ -73,15 +73,12 @@ public class BillsFragment extends Fragment{
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tab.getIcon().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                super.onTabSelected(tab);
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 tab.getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+                super.onTabUnselected(tab);
             }
 
         });
@@ -110,10 +107,9 @@ public class BillsFragment extends Fragment{
                     return billsAllFragment;
                 case 1:
                     BillsFinishAllFragment billsFinishAllFragment = new BillsFinishAllFragment();
-
+                    return billsFinishAllFragment;
                 case 2:
                     //TODO: return billsFavoriterFragment
-
                     if(loggedIn){
                         bundle = new Bundle();
                         bundle.putBoolean("isFavorite",true);
