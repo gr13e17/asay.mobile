@@ -57,12 +57,14 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
+        expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
+        expBillDesc.setOnClickListener(this);
+
         BillDesc = (TextView) rootView.findViewById(R.id.billDesc);
         BillDescOrg = bill.getResume();
         BillDesc.setText(BillDescOrg);
         BillDesc.setOnClickListener(this);
-        BillDesc.setMaxLines(3);
 
         arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
        arg1.setMaxLines(3);
@@ -70,17 +72,32 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
         arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
        arg2.setMaxLines(3);
 
-        expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
-        expBillDesc.setOnClickListener(this);
         expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
         expArg1.setOnClickListener(this);
         expArg1.setVisibility(View.INVISIBLE);
+
         expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
         expArg2.setOnClickListener(this);
         expArg2.setVisibility(View.INVISIBLE);
 
         super.onViewCreated(rootView, savedInstanceState);
+
+                BillDesc.post(new Runnable() {
+            @Override
+            public void run() {
+                if (BillDesc.length() <= 0) {
+                    BillDesc.setText(R.string.noDesc);
+                }
+                if (BillDesc.getLineCount() > 3) {
+                    expBillDesc.setVisibility(View.VISIBLE);
+                } else
+                    expBillDesc.setVisibility(View.INVISIBLE);
+                BillDesc.setOnClickListener(null);
+                BillDesc.setMaxLines(3);
+            }
+        });
     }
+
 
     @Override
     public void onClick(View v) {
@@ -93,11 +110,13 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     collapseTextView(BillDesc, 3);
                     expBillDesc.setText(R.string.showMore);
                     isExpandedBillDesc = false;
+                    BillDesc.setOnClickListener(this);
                 }
                 else {
                     expandTextView(BillDesc, BillDescOrg);
                     expBillDesc.setText(R.string.showLess);
                     isExpandedBillDesc = true;
+                    BillDesc.setOnClickListener(null);
                 }
                 break;
 
@@ -146,7 +165,11 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     private void collapseTextView(TextView txt, int numLines){
 
         int lineEndIndex = txt.getLayout().getLineEnd(2);
-        String text = txt.getText().subSequence(0, lineEndIndex - 3) + "...";
+        String text;
+        if(txt.getText().toString().length() >= 3) {
+          text  = txt.getText().subSequence(0, lineEndIndex - 3) + "...";
+        } else
+            text = "";
         txt.setText(text);
         ObjectAnimator animation = ObjectAnimator.ofInt(txt, "maxLines", numLines);
         animation.setDuration(80).start();
@@ -176,10 +199,16 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                 }
                 counter++;
             }
+
+
+
             arg1.setText(currentComment.get(positionFor).getText());
             arg1Org = arg1.getText().toString();
+
             arg2.setText(currentComment.get(positionAgainst).getText());
             arg2Org = arg2.getText().toString();
+
+
             if(arg1.getLineCount() > 3) {
                 arg1.setOnClickListener(this);
 
@@ -187,19 +216,16 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
 
             }
             else{
-                arg1.setOnClickListener(null);
                 expArg1.setVisibility(View.INVISIBLE);
             }
 
             if (arg2.getLineCount() > 3){
                 arg2.setOnClickListener(this);
-
                 expArg2.setVisibility(View.VISIBLE);
 
             }
 
             else{
-                arg2.setOnClickListener(null);
                 expArg2.setVisibility(View.INVISIBLE);
             }
             }
