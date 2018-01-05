@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="asay.asaymobile.ProfileActivity">
+    tools:context="asay.asaymobile.activities.ProfileActivity">
 
     <!-- The ActionBar displayed at the top -->
     <include
