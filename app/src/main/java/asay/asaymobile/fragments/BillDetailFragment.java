@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import asay.asaymobile.R;
+import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.presenter.ForumPresenter;
 
 
 public class BillDetailFragment extends Fragment implements OnClickListener {
@@ -40,9 +42,13 @@ public class BillDetailFragment extends Fragment implements OnClickListener {
     String dummy4 = "Miljø- og Fødevareministeriet";
     String dummy4Bold = "Ministerområde: ";
 
-    String pdfdummy = "<a href='http://www.folketingstidende.dk/RIpdf/samling/20171/lovforslag/L72/20171_L72_fremsaettelsestale.pdf'> Se fulde Lovforslag</a>";
-
+    private BillDTO bill;
     public BillDetailFragment() {
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bill = getArguments().getParcelable("bill");
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,10 +87,16 @@ public class BillDetailFragment extends Fragment implements OnClickListener {
         expList = (TextView) rootView.findViewById(R.id.expandSchedule);
         expList.setOnClickListener(this);
 
+        String billID = bill.getNumber().replaceAll("\\s+","");
+        String fthtml = "http://www.ft.dk/samling/20171/lovforslag/"+billID+"/index.htm";
+        String link = "<a href=\"" +fthtml+ "\"> Se fulde Lovforslag</a>";
+        System.out.println(fthtml);
+
+
         pdf = (TextView) rootView.findViewById(R.id.pdf);
         pdf.setClickable(true);
         pdf.setMovementMethod(LinkMovementMethod.getInstance());
-        pdf.setText(Html.fromHtml(pdfdummy));
+        pdf.setText(Html.fromHtml(link));
 
         return rootView;
 
