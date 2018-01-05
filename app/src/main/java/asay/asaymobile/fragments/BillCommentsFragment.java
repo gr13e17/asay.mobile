@@ -221,15 +221,6 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                 } else {
                     expArg2.setVisibility(View.INVISIBLE);
                 }
-            if (arg2.getLineCount() > 3){
-                arg2.setOnClickListener(this);
-                expArg2.setVisibility(View.VISIBLE);
-
-            }
-
-            else{
-                expArg2.setVisibility(View.INVISIBLE);
-            }
             }
         } else{
             if (arg1 != null)
@@ -241,7 +232,6 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
             if (expArg2 != null)
                 expArg2.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override
