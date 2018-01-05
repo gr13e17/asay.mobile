@@ -91,9 +91,10 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     @Override
     public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
-        ForumAdapter commentArrayAdapter = new ForumAdapter(currentComment,nameArray,getContext(), forumPresenter);
-
-        listView.setAdapter(commentArrayAdapter);
+        if (getContext() != null) {
+            ForumAdapter commentArrayAdapter = new ForumAdapter(currentComment, nameArray, getContext(), forumPresenter);
+            listView.setAdapter(commentArrayAdapter);
+        }
     }
 
     @Override
@@ -164,7 +165,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             this.currentComments = currentComments;
             this.currentUsers = currentUsers;
             this.context = context;
-            this.mInflater = LayoutInflater.from(this.context);
+            this.mInflater = LayoutInflater.from(context);
             this.presenter = presenter;
         }
 
