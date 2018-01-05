@@ -278,8 +278,10 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 convertView = inflater.inflate(R.layout.list_item_comment, parent, false);
             }
             final CommentDTO currentComment = currentComments.get(position);
+            View view2 = new View(getActivity());
+            view2.setBackgroundColor(0xFFC2BEBF);
             ConstraintLayout cl = (ConstraintLayout)convertView.findViewById(R.id.commentConstrain);
-            cl.setPadding((int) (currentComment.getCommentDepth()*100),0,0,0);
+            cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));            cl.setPadding((int) (currentComment.getCommentDepth()*100),0,0,0);
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
             TextView nameView = convertView.findViewById(R.id.nameView);
