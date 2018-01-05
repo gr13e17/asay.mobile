@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -20,14 +19,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
-import asay.asaymobile.activities.BillActivity;
-import asay.asaymobile.activities.MainActivity;
 import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.CommentDTO;
 import asay.asaymobile.model.UserDTO;
@@ -108,13 +104,12 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     public void openBottomSheet (View v) {
 
-        bottomSheetView = getLayoutInflater ().inflate (R.layout.bottom_sheet, null);
+        bottomSheetView = getLayoutInflater ().inflate (R.layout.fragment_new_comment_dialog, null);
 
         mBottomSheetDialog = new Dialog (getContext(), R.style.MaterialDialogSheet);
         mBottomSheetDialog.setContentView (bottomSheetView);
         mBottomSheetDialog.setCancelable (true);
         mBottomSheetDialog.getWindow ().setLayout (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        mBottomSheetDialog.getWindow ().setGravity (Gravity.BOTTOM);
         mBottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         mBottomSheetDialog.show ();
@@ -145,7 +140,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     }
 
 
-    /////////////////
+
 
 
     public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
