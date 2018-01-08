@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,8 +48,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private View rootView;
     private FloatingActionButton commentButtonMain;
     private Button replyButton;
-    private View bottomSheetView;
-    private Dialog mBottomSheetDialog;
+    private View writeCommentView;
+    private Dialog writeCommentDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,28 +102,28 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     }
 
 
-    public void openBottomSheet (View v) {
+    public void writeComment(View v) {
 
-        bottomSheetView = getLayoutInflater ().inflate (R.layout.fragment_new_comment_dialog, null);
+        writeCommentView = getLayoutInflater ().inflate (R.layout.dialog_new_comment, null);
 
-        mBottomSheetDialog = new Dialog (getContext(), R.style.MaterialDialogSheet);
-        mBottomSheetDialog.setContentView (bottomSheetView);
-        mBottomSheetDialog.setCancelable (true);
-        mBottomSheetDialog.getWindow ().setLayout (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        mBottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        writeCommentDialog = new Dialog (getContext(), R.style.MaterialDialogSheet);
+        writeCommentDialog.setContentView (writeCommentView);
+        writeCommentDialog.setCancelable (true);
+        writeCommentDialog.getWindow ().setLayout (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        writeCommentDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        mBottomSheetDialog.show ();
+        writeCommentDialog.show ();
 
-        replyButton = bottomSheetView.findViewById(R.id.reply_button);
+        replyButton = writeCommentView.findViewById(R.id.reply_button);
         replyButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         if (view == commentButtonMain){
-            openBottomSheet(rootView);
+            writeComment(rootView);
         } else if (view == replyButton){
-            EditText editText = bottomSheetView.findViewById(R.id.content);
+            EditText editText = writeCommentView.findViewById(R.id.content);
             String content = editText.getText().toString();
             content = content.trim(); //trim string for trailing and leading whitespaces
 
@@ -144,7 +143,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     0
             );
             forumPresenter.addNewComment(comment);
-            mBottomSheetDialog.dismiss();
+            writeCommentDialog.dismiss();
         }
     }
 
@@ -226,7 +225,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             replyToComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openBottomSheet(rootView);
+                    writeComment(rootView);
                 }
             });
 
