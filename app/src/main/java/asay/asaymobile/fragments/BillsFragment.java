@@ -1,6 +1,9 @@
 package asay.asaymobile.fragments;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,8 +15,11 @@ import android.view.ViewGroup;
 
 import asay.asaymobile.R;
 
+import static asay.asaymobile.R2.id.tabItem;
+import static asay.asaymobile.R2.id.tabs;
 
-public class BillsFragment extends Fragment {
+
+public class BillsFragment extends Fragment{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -24,7 +30,9 @@ public class BillsFragment extends Fragment {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private BillsFragment.SectionsPagerAdapter mSectionsPagerAdapter;
-
+    private int userId = 1;
+    private boolean loggedIn = true;
+    private Bundle bundle;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -37,22 +45,48 @@ public class BillsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bills,container,false);
-        TabLayout tabLayout = view.findViewById(R.id.tabs);
+        View rootView = inflater.inflate(R.layout.fragment_bills,container,false);
+        return rootView;
+    }
+    @Override
+    public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(rootView, savedInstanceState);
+
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+        final TabLayout tabLayout = getActivity().findViewById(R.id.tabs);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = view.findViewById(R.id.container);
+        mViewPager = getActivity().findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        return view;
+        //set color filter to grey
+        tabLayout.getTabAt(0).getIcon().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        tabLayout.getTabAt(1).getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+        tabLayout.getTabAt(2).getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager){
+            //change the color on the selected tab icon to black
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.getIcon().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                super.onTabSelected(tab);
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+                super.onTabUnselected(tab);
+            }
+
+        });
+        mSectionsPagerAdapter.notifyDataSetChanged();
+
+
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -69,11 +103,23 @@ public class BillsFragment extends Fragment {
             switch (position) {
                 case 0:
                     BillsAllFragment billsAllFragment = new BillsAllFragment();
+
                     return billsAllFragment;
                 case 1:
-                    //TODO: return billsMineFragment
-                    BillsAllFragment billsAllFragment2 = new BillsAllFragment();
-                    return billsAllFragment2;
+                    BillsFinishAllFragment billsFinishAllFragment = new BillsFinishAllFragment();
+                    return billsFinishAllFragment;
+                case 2:
+                    //TODO: return billsFavoriterFragment
+                    if(loggedIn){
+                        bundle = new Bundle();
+                        bundle.putBoolean("isFavorite",true);
+                        BillsAllFragment billsAllFragmentFavorite = new BillsAllFragment();
+                        billsAllFragmentFavorite.setArguments(bundle);
+                        return billsAllFragmentFavorite;
+                    } else{
+                        return null;
+                    }
+
                 default:
                     return null;
             }
@@ -82,19 +128,7 @@ public class BillsFragment extends Fragment {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Alle";
-                case 1:
-                    return "Mine";
-
-            }
-            return null;
+            return 3;
         }
     }
 }

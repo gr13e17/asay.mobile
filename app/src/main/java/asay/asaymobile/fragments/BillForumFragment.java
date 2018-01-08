@@ -1,96 +1,257 @@
 package asay.asaymobile.fragments;
 
-import android.graphics.Color;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
+import asay.asaymobile.model.ArgumentType;
+import asay.asaymobile.model.CommentDTO;
+import asay.asaymobile.model.UserDTO;
+import asay.asaymobile.presenter.ForumPresenter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Soelberg on 31-10-2017.
  */
 
-public class BillForumFragment extends Fragment {
+public class BillForumFragment extends Fragment implements ForumContract.View, View.OnClickListener {
     //contains names of the one who wrote the comment. must be populated from database
-    ArrayList<String> nameArray = new ArrayList<String>();
+    @BindView(R.id.forum_list_view)
+    ListView listView;
+    int billId;
+    ForumPresenter forumPresenter;
+    ArrayList<UserDTO> nameArray = new ArrayList<UserDTO>();
     ArrayList<String> commentArray = new ArrayList<String>();
     ArrayList<Integer> colorArray = new ArrayList<Integer>();
     ArrayAdapter arrayAdapter;
+    UserDTO userDTO;
+    private View rootView;
+    private FloatingActionButton commentButtonMain;
+    private Button replyButton;
+    private View bottomSheetView;
+    private Dialog mBottomSheetDialog;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_bill_forum, container, false);
+        rootView = inflater.inflate(R.layout.fragment_bill_forum, container, false);
+        billId = getArguments().getInt("billId");
+        ButterKnife.bind(this, rootView);
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
-
-        namePlaceholder();
-        commentPlaceholder();
-        colorPlaceholder();
+        forumPresenter = new ForumPresenter(this, billId);
         // get reference to the views
-        arrayAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_comment,R.id.nameView,nameArray){
-            @Override
-            public View getView(int position, View cachedView, ViewGroup parent){
-                View view = super.getView(position, cachedView, parent);
 
-                TextView commentText = view.findViewById(R.id.comment);
-                commentText.setText(commentArray.get(position));
+        commentButtonMain = this.rootView.findViewById(R.id.commentButtonMain);
+        commentButtonMain.setOnClickListener(this);
+    }
 
-                TextView nameView = view.findViewById(R.id.nameView);
-                nameView.setBackgroundColor(colorArray.get(position));
-                return view;
+
+    @Override
+    public void closeForum() {
+    }
+
+    @Override
+    public void showUnloggedUserError() {
+
+    }
+
+    @Override
+    public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
+        if (getContext() != null) {
+            ForumAdapter commentArrayAdapter = new ForumAdapter(currentComment, nameArray, getContext(), forumPresenter);
+            listView.setAdapter(commentArrayAdapter);
+        }
+    }
+
+    @Override
+    public void refreshUsers(ArrayList<UserDTO> users) {
+        this.nameArray = users;
+    }
+
+
+    public void openBottomSheet (View v) {
+
+        bottomSheetView = getLayoutInflater ().inflate (R.layout.fragment_new_comment_dialog, null);
+
+        mBottomSheetDialog = new Dialog (getContext(), R.style.MaterialDialogSheet);
+        mBottomSheetDialog.setContentView (bottomSheetView);
+        mBottomSheetDialog.setCancelable (true);
+        mBottomSheetDialog.getWindow ().setLayout (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        mBottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        mBottomSheetDialog.show ();
+
+        replyButton = bottomSheetView.findViewById(R.id.reply_button);
+        replyButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == commentButtonMain){
+            openBottomSheet(rootView);
+        } else if (view == replyButton){
+            EditText editText = bottomSheetView.findViewById(R.id.content);
+            String content = editText.getText().toString();
+            content = content.trim(); //trim string for trailing and leading whitespaces
+
+            // Show error if no comment is written
+            if(content.length() == 0){
+                editText.setError(getResources().getString(R.string.error_no_text));
+                return;
             }
-        };
 
-
-        ListView listview = new ListView(getActivity());
-        listview.setAdapter(arrayAdapter);
-        ViewGroup viewGroup = (ViewGroup) rootView;
-        viewGroup.addView(listview);
-
+            CommentDTO comment = new CommentDTO(
+                    ArgumentType.FOR,
+                    billId,
+                    0,
+                    0,
+                    content,
+                    1,
+                    0
+            );
+            forumPresenter.addNewComment(comment);
+            mBottomSheetDialog.dismiss();
+        }
     }
 
-    //placeholder to populate the name arreylise
-    private void namePlaceholder(){
-        nameArray.add("Ole Hansen");
-        nameArray.add("Gitte Andersen");
-        nameArray.add("Anne Larsen");
-        nameArray.add("Ulla Nilsen");
-        nameArray.add("Allan Sønder");
-        nameArray.add("Sonja Rasmussen");
+
+
+
+
+    public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
+        ArrayList<CommentDTO> currentComments;
+        ArrayList<UserDTO> currentUsers;
+        Context context;
+        LayoutInflater mInflater;
+        public View.OnClickListener listener;
+        ForumPresenter presenter;
+
+
+        public ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter){
+            this.currentComments = currentComments;
+            this.currentUsers = currentUsers;
+            this.context = context;
+            this.mInflater = LayoutInflater.from(context);
+            this.presenter = presenter;
+        }
+
+        public void setButtonListener(View.OnClickListener listener) {
+            this.listener = listener;
+        }
+
+        private Integer getColor(ArgumentType argumentType){
+            switch (argumentType) {
+                case FOR:
+                    return context.getResources().getColor(R.color.forColor);
+                case AGAINST:
+                    return context.getResources().getColor(R.color.againstColor);
+                case NEUTRAL:
+                    return context.getResources().getColor(R.color.neutralColor);
+                default:
+                    return context.getResources().getColor(R.color.neutralColor);
+            }
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                convertView = inflater.inflate(R.layout.list_item_comment, parent, false);
+            }
+            final CommentDTO currentComment = currentComments.get(position);
+            TextView commentText = convertView.findViewById(R.id.comment);
+            commentText.setText(currentComment.getText());
+            TextView nameView = convertView.findViewById(R.id.nameView);
+            ImageButton upvote = (ImageButton) convertView.findViewById(R.id.up);
+            upvote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("you pressed upvote");
+                    int score = currentComment.getScore();
+                    currentComment.setScore(score +1);
+                    presenter.updateComment(currentComment);
+                }
+            });
+            ImageButton downvote = (ImageButton) convertView.findViewById(R.id.down);
+            downvote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("you pressed downVote");
+                    int score = currentComment.getScore();
+                    currentComment.setScore(score -1);
+                    presenter.updateComment(currentComment);
+                }
+            });
+            for (UserDTO user: currentUsers ){
+                if(user.getid() == currentComment.getUserid()){
+                    nameView.setText(user.getname());
+                    nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
+                }
+            }
+            Button replyToComment = convertView.findViewById(R.id.replyToComment);
+            replyToComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openBottomSheet(rootView);
+                }
+            });
+
+            return convertView;
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
+
+        @Override
+        public int getCount() {
+            return currentComments.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return currentComments.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
     }
 
-    private void commentPlaceholder(){
-        commentArray.add("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae est mollis, condimentum dolor in, porta orci. Maecenas et elit vel justo sagittis viverra non a ipsum. Nullam turpis mi, dignissim et lobortis nec, venenatis congue felis. Praesent eget eleifend sapien. Aliquam pulvinar at nunc eget efficitur. Nam vel pretium elit.");
-        commentArray.add("Pellentesque dignissim, lacus molestie tempus pellentesque, augue lorem dignissim nisl, quis tempor ipsum lacus id justo. Vivamus massa mi, ornare vitae elit vitae, imperdiet imperdiet tortor. Suspendisse elementum tincidunt neque, at bibendum odio sagittis in. Sed ut ullamcorper metus, id aliquet quam. Maecenas commodo pulvinar urna sit amet mollis. Sed vel purus congue, viverra eros sed, vestibulum erat. In facilisis est at erat imperdiet maximus. Pellentesque accumsan mauris lorem, et sagittis massa euismod eget.");
-        commentArray.add("Duis consectetur vestibulum posuere. In laoreet dapibus condimentum.");
-        commentArray.add("Aliquam blandit at risus nec mollis. Etiam a odio est. Etiam vitae finibus augue, et mollis neque. Phasellus ac nisl diam. Quisque in convallis ex. Donec ultrices molestie velit. Morbi ac enim commodo, sagittis tortor pellentesque, lobortis augue. Quisque ut ex quam. Vestibulum porta nunc ullamcorper ligula viverra, vitae tempus sapien bibendum.");
-        commentArray.add("Praesent convallis venenatis massa. aaskk aklaskh aslkjh ash ada");
-        commentArray.add("Nullam placerat magna metus, id tincidunt nunc vestibulum at. Donec ut ligula sagittis, posuere purus sollicitudin, tristique leo. Integer et ultrices risus, et cursus augue. ");
-    }
-
-    private void colorPlaceholder(){
-        colorArray.add(getResources().getColor(R.color.againstColor));
-        colorArray.add(getResources().getColor(R.color.forColor));
-        colorArray.add(getResources().getColor(R.color.againstColor));
-        colorArray.add(getResources().getColor(R.color.againstColor));
-        colorArray.add(getResources().getColor(R.color.forColor));
-        colorArray.add(getResources().getColor(R.color.againstColor));
-    }
 }

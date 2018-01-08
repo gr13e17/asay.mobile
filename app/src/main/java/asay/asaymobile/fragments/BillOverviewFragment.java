@@ -1,92 +1,89 @@
 package asay.asaymobile.fragments;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import asay.asaymobile.R;
-import asay.asaymobile.activities.VoteActivity;
 
-import static android.text.TextUtils.TruncateAt.END;
+import java.util.ArrayList;
+
+import asay.asaymobile.R;
+import asay.asaymobile.UserContract;
+import asay.asaymobile.activities.VoteActivity;
+import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.model.UserDTO;
+import asay.asaymobile.presenter.UserPresenter;
+import butterknife.ButterKnife;
 
 /**
  * Created by Soelberg on 31-10-2017.
  */
 
-public class BillOverviewFragment extends Fragment implements OnClickListener{
-
+public class BillOverviewFragment extends Fragment implements OnClickListener,UserContract.View{
 
     ImageButton sub;
-    TextView BillDesc;
-    int BillDescOrg;
-    TextView expBillDesc;
-    TextView arg1;
-    int arg1Org;
-    TextView expArg1;
-    TextView arg2;
-    int arg2Org;
-    TextView expArg2;
-    TextView popup;
     View Scroll;
     Button vote;
     boolean isSub = false;
-    boolean isExpandedBillDesc  = false;
-    boolean isExpandedFor  = false;
-    boolean isExpandedAgainst  = false;
-
-
-
+    private BillDTO bill;
+    private double userId = 1;
+    private UserDTO user;
+    private UserPresenter presenter;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final View rootView = inflater.inflate(R.layout.fragment_bill_overview, container, false);
+        ButterKnife.bind(this, rootView);
+        bill = getArguments().getParcelable("bill");
+        String childView = getArguments().getString("view");
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("bill", bill);
+        if(childView.equals("details")){
+            BillDetailFragment details = new BillDetailFragment();
+            details.setArguments(bundle);
+            addChildFragment(details);
+        } else if (childView.equals("comments")){
+            BillCommentsFragment comments = new BillCommentsFragment();
+            comments.setArguments(bundle);
+            addChildFragment(comments);
+        }
+        return rootView;
+    }
 
+    @Override
+    public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
         sub = (ImageButton) rootView.findViewById(R.id.subbtn);
         sub.setOnClickListener(this);
-
+        presenter = new UserPresenter(this);
+        presenter.getUser(userId);
+        String billTitle = bill.getNumber().concat(": ").concat(bill.getTitleShort());
+        TextView header = (TextView) rootView.findViewById(R.id.headerBill);
+        header.setText(billTitle);
         vote = (Button) rootView.findViewById(R.id.buttonVote);
         vote.setOnClickListener(this);
 
-        BillDesc = (TextView) rootView.findViewById(R.id.billDesc);
-        BillDescOrg = R.string.dummy_description_short;
-        BillDesc.setText(BillDescOrg);
-        BillDesc.setOnClickListener(this);
-        BillDesc.setMaxLines(3);
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(billTitle);
+    }
 
-
-
-        arg1 = (TextView) rootView.findViewById(R.id.argForTxt);
-        arg1Org = R.string.dummy_arg2;
-        arg1.setText(arg1Org);
-        arg1.setOnClickListener(this);
-        arg1.setMaxLines(3);
-
-
-
-        arg2 = (TextView) rootView.findViewById(R.id.argAgainstTxt);
-        arg2Org = R.string.dummy_arg1;
-        arg2.setText(arg2Org);
-        arg2.setOnClickListener(this);
-        arg2.setMaxLines(3);
-
-        expBillDesc = (TextView) rootView.findViewById(R.id.expandBillDesc);
-        expBillDesc.setOnClickListener(this);
-        expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
-        expArg1.setOnClickListener(this);
-        expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
-        expArg2.setOnClickListener(this);
-
-        return rootView;
-}
+    public void addChildFragment(Fragment fragment){
+        FragmentManager childFragMan = getChildFragmentManager();
+        FragmentTransaction childFragTrans = childFragMan.beginTransaction();
+        childFragTrans.add(R.id.fragment_container, fragment);
+        childFragTrans.addToBackStack("childFragment");
+        childFragTrans.commit();
+    }
 
     @Override
     public void onClick(View v){
@@ -94,84 +91,48 @@ public class BillOverviewFragment extends Fragment implements OnClickListener{
 
             case R.id.buttonVote:
                 Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
+                voteIntent.putExtra("bill", bill);
                 startActivity(voteIntent);
                 break;
 
             case R.id.subbtn :
-               if(isSub == false){
-                    sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
-                   isSub = true;
-                   break;
-                }
-                if(isSub == true) {
-                   sub.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
-                    isSub = false;
-                    break;
-                }
-
-                //BIll Description expanding
-            case R.id.billDesc :
-            case R.id.expandBillDesc :
-                if(isExpandedBillDesc == true){
-                    collapseTextView(BillDesc, 3);
-                    expBillDesc.setText("Se mere");
-                    isExpandedBillDesc = false;
-                }
-                else {
-                    expandTextView(BillDesc, BillDescOrg);
-                    expBillDesc.setText("Se mindre");
-                    isExpandedBillDesc = true;
-                }
+                toogleFavorite(sub);
                 break;
 
-                // Top Argument Against Expanding
-            case R.id.argAgainstTxt :
-            case R.id.expandArgAgainst :
-                if(isExpandedAgainst == true){
-                    expArg2.setText("Se mere");
-                    collapseTextView(arg2, 3);
-                    isExpandedAgainst = false;
-                }
-                else {
-                    expandTextView(arg2, arg2Org);
-                    expArg2.setText("Se mindre");
-                    isExpandedAgainst = true;
-                }
-                break;
-
-             // Top Argument For Expanding
-            case R.id.argForTxt :
-            case R.id.expandArgFor :
-                if(isExpandedAgainst == true){
-                    expArg1.setText("Se mere");
-                    collapseTextView(arg1, 3);
-                    isExpandedAgainst = false;
-                }
-                else {
-                    expandTextView(arg1, arg1Org);
-                    expArg1.setText("Se mindre");
-                    isExpandedAgainst = true;
-                }
-                break;
         }
 
     }
 
-    private void expandTextView(TextView billDesc, int orgTxt){
+    private void toogleFavorite(ImageButton button){
+        ArrayList<Integer> billSaved = user.getbillsSaved();
 
-       billDesc.setText(orgTxt);
-        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
-        animation.setDuration(80).start();
-
+        if(isSub){
+            for(int i = billSaved.size() -1 ; i >= 0; i-- ){
+                if(billSaved.get(i).equals(bill.getId()))
+                    billSaved.remove(i);
+            }
+            sub.setImageResource(R.drawable.ic_star);
+        }else {
+            billSaved.add(bill.getId());
+            sub.setImageResource(R.drawable.ic_star_border);
+        }
+        presenter.UpdateFavorites(userId,billSaved);
     }
 
-    private void collapseTextView(TextView billDesc, int numLines){
-
-        int lineEndIndex = billDesc.getLayout().getLineEnd(2);
-        String text = billDesc.getText().subSequence(0, lineEndIndex - 3) + "...";
-        billDesc.setText(text);
-        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", numLines);
-        animation.setDuration(80).start();
+    @Override
+    public void refreshUser(UserDTO user) {
+        System.out.println("number of bills saved: " + user.getbillsSaved().size());
+        isSub = user.getbillsSaved().contains(bill.getId());
+        try{
+            if (isSub)
+                sub.setImageResource(R.drawable.ic_star);
+            else{
+                sub.setImageResource(R.drawable.ic_star_border);
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        this.user = user;
     }
 }
 

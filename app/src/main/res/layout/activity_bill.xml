@@ -12,28 +12,22 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:paddingTop="0dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <!-- The ActionBar displayed at the top -->
+        <include
+            layout="@layout/toolbar_nav"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:layout_weight="1"
-            android:background="@color/secondaryDarkColor"
-            app:layout_scrollFlags="enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/BillExampleHead">
-
-        </android.support.v7.widget.Toolbar>
+            android:layout_height="wrap_content" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryLightColor"
-            app:tabSelectedTextColor="@color/primaryTextColor"
-            app:tabTextColor="@color/primaryTextColor">
+            android:background="@color/secondaryLightColor"
+            app:tabIndicatorColor="@color/primaryColor" >
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem3"
@@ -52,7 +46,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Debat" />
-
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
