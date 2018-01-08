@@ -65,13 +65,12 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
         boolean isFavorite = false;
-        if(getArguments() != null){
-            isFavorite = getArguments().getBoolean("isFavorite");
-        }
         boolean isEnded = false;
         if(getArguments() != null){
+            isFavorite = getArguments().getBoolean("isFavorite");
             isEnded = getArguments().getBoolean("isEnded");
         }
+
         String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
@@ -79,12 +78,14 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         billPresenter = new BillPresenter(this);
         userPresenter = new UserPresenter(this);
 
-        // TODO: Use isEnded to show only ended bills
-        if(!isFavorite){
+        if(isFavorite){
+            userPresenter.getUser(userId);
+        } else if (isEnded) {
+            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
+            billPresenter.getEndedBills();
+        } else {
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
             billPresenter.getAllBills();
-        } else{
-            userPresenter.getUser(userId);
         }
             // get reference to the views
         adapter = new ArrayAdapter<BillDTO>(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
