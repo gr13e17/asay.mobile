@@ -102,14 +102,15 @@ public class BillsFragment extends Fragment{
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    BillsAllFragment billsAllFragment = new BillsAllFragment();
-
-                    return billsAllFragment;
+                    BillsAllFragment billsAllFragmentActive = new BillsAllFragment();
+                    return billsAllFragmentActive;
                 case 1:
-                    BillsFinishAllFragment billsFinishAllFragment = new BillsFinishAllFragment();
-                    return billsFinishAllFragment;
+                    bundle = new Bundle();
+                    bundle.putBoolean("isEnded",true);
+                    BillsAllFragment billsAllFragmentEnded = new BillsAllFragment();
+                    billsAllFragmentEnded.setArguments(bundle);
+                    return billsAllFragmentEnded;
                 case 2:
-                    //TODO: return billsFavoriterFragment
                     if(loggedIn){
                         bundle = new Bundle();
                         bundle.putBoolean("isFavorite",true);

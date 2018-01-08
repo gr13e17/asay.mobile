@@ -68,12 +68,18 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         if(getArguments() != null){
             isFavorite = getArguments().getBoolean("isFavorite");
         }
+        boolean isEnded = false;
+        if(getArguments() != null){
+            isEnded = getArguments().getBoolean("isEnded");
+        }
         String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
         billPresenter = new BillPresenter(this);
         userPresenter = new UserPresenter(this);
+
+        // TODO: Use isEnded to show only ended bills
         if(!isFavorite){
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
             billPresenter.getAllBills();
