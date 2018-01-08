@@ -50,8 +50,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private View rootView;
     private FloatingActionButton commentButtonMain;
     private Button replyButton;
-    private View bottomSheetView;
-    private Dialog mBottomSheetDialog;
+    private View writeCommentView;
+    private Dialog writeCommentDialog;
     private Double parrentId;
 
     @Override
@@ -105,25 +105,22 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     }
 
 
-    public void openBottomSheet(View v, final Double parrentId) {
+    public void openWriteCommentDialog(View v, final Double parrentId) {
+        writeCommentView = getLayoutInflater().inflate(R.layout.dialog_new_comment, null);
 
+        writeCommentDialog = new Dialog(getContext(), R.style.MaterialDialogSheet);
+        writeCommentDialog.setContentView(writeCommentView);
+        writeCommentDialog.setCancelable(true);
+        writeCommentDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        writeCommentDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        writeCommentDialog.show();
 
-        bottomSheetView = getLayoutInflater().inflate(R.layout.fragment_new_comment_dialog, null);
-
-        mBottomSheetDialog = new Dialog(getContext(), R.style.MaterialDialogSheet);
-        mBottomSheetDialog.setContentView(bottomSheetView);
-        mBottomSheetDialog.setCancelable(true);
-        mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        mBottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        mBottomSheetDialog.show();
-
-        replyButton = bottomSheetView.findViewById(R.id.reply_button);
+        replyButton = writeCommentView.findViewById(R.id.reply_button);
         replyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (view == replyButton) {
-                    EditText editText = bottomSheetView.findViewById(R.id.content);
+                    EditText editText = writeCommentView.findViewById(R.id.content);
                     String content = editText.getText().toString();
                     content = content.trim(); //trim string for trailing and leading whitespaces
 
@@ -145,19 +142,18 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                             0
                     );
                     forumPresenter.addNewComment(comment);
-                    mBottomSheetDialog.dismiss();
+                    writeCommentDialog.dismiss();
                 }
             }
         });
-
     }
 
     @Override
     public void onClick(View view) {
         if (view == commentButtonMain) {
-            openBottomSheet(rootView, 0.0);
+            openWriteCommentDialog(rootView, 0.0);
         }// else if (view == replyButton) {
-         //   EditText editText = bottomSheetView.findViewById(R.id.content);
+         //   EditText editText = writeCommentView.findViewById(R.id.content);
          //   String content = editText.getText().toString();
          //   content = content.trim(); //trim string for trailing and leading whitespaces
 //
@@ -177,7 +173,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
          //           0
          //   );
          //   forumPresenter.addNewComment(comment);
-         //   mBottomSheetDialog.dismiss();
+         //   writeCommentDialog.dismiss();
         //}
     }
 
@@ -315,7 +311,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             replyToComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openBottomSheet(rootView, currentComment.getId());
+                    openWriteCommentDialog(rootView, currentComment.getId());
                 }
             });
 
