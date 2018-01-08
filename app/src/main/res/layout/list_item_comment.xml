@@ -34,38 +34,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameView" />
 
-    <Button
+    <ImageButton
         android:id="@+id/replyToComment"
-        android:layout_width="83dp"
-        android:layout_height="38dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:background="@drawable/forum_button_background"
-        android:text="@string/reply"
+        android:padding="10dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/ic_reply"
         app:layout_constraintBottom_toBottomOf="@+id/down"
         app:layout_constraintEnd_toEndOf="@+id/comment"
         app:layout_constraintTop_toTopOf="@+id/down" />
 
     <ImageButton
         android:id="@+id/up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/forum_button_background"
         android:padding="10dp"
         android:scaleType="fitStart"
-        android:src="@drawable/arrowup"
+        android:src="@drawable/ic_thumb_up"
         app:layout_constraintEnd_toStartOf="@+id/down"
         app:layout_constraintTop_toBottomOf="@+id/comment" />
 
     <ImageButton
         android:id="@+id/down"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/forum_button_background"
         android:padding="10dp"
         android:scaleType="fitStart"
-        android:src="@drawable/arrowdown"
+        android:src="@drawable/ic_thumb_down"
         app:layout_constraintBottom_toBottomOf="@+id/up"
         app:layout_constraintEnd_toStartOf="@+id/replyToComment"
         app:layout_constraintTop_toTopOf="@+id/up" />

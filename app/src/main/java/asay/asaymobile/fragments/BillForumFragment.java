@@ -307,7 +307,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
                 }
             }
-            Button replyToComment = convertView.findViewById(R.id.replyToComment);
+            ImageButton replyToComment = (ImageButton) convertView.findViewById(R.id.replyToComment);
             replyToComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
