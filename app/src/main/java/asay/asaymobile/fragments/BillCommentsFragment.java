@@ -200,43 +200,38 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                 counter++;
             }
 
+            if (arg1 != null) {
+                arg1.setText(currentComment.get(positionFor).getText());
+                arg1Org = arg1.getText().toString();
 
-
-            arg1.setText(currentComment.get(positionFor).getText());
-            arg1Org = arg1.getText().toString();
-
-            arg2.setText(currentComment.get(positionAgainst).getText());
-            arg2Org = arg2.getText().toString();
-
-
-            if(arg1.getLineCount() > 3) {
-                arg1.setOnClickListener(this);
-
-                expArg1.setVisibility(View.VISIBLE);
-
+                if (arg1.getLineCount() > 3) {
+                    arg1.setOnClickListener(this);
+                    expArg1.setVisibility(View.VISIBLE);
+                } else {
+                    expArg1.setVisibility(View.INVISIBLE);
+                }
             }
-            else{
+            if (arg2 != null) {
+                arg2.setText(currentComment.get(positionAgainst).getText());
+                arg2Org = arg2.getText().toString();
+
+                if (arg2.getLineCount() > 3) {
+                    arg2.setOnClickListener(this);
+                    expArg2.setVisibility(View.VISIBLE);
+                } else {
+                    expArg2.setVisibility(View.INVISIBLE);
+                }
+            }
+        } else{
+            if (arg1 != null)
+                arg1.setText(R.string.noComments);
+            if (arg2 != null)
+                arg2.setText(R.string.noComments);
+            if (expArg1 != null)
                 expArg1.setVisibility(View.INVISIBLE);
-            }
-
-            if (arg2.getLineCount() > 3){
-                arg2.setOnClickListener(this);
-                expArg2.setVisibility(View.VISIBLE);
-
-            }
-
-            else{
+            if (expArg2 != null)
                 expArg2.setVisibility(View.INVISIBLE);
-            }
-            }
-
-         else{
-            arg1.setText(R.string.noComments);
-            arg2.setText(R.string.noComments);
-            expArg1.setVisibility(View.INVISIBLE);
-            expArg2.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override
