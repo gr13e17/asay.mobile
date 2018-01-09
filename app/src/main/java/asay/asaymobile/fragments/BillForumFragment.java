@@ -1,6 +1,5 @@
 package asay.asaymobile.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,13 +9,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by Soelberg on 31-10-2017.
  */
 
-public class BillForumFragment extends Fragment implements ForumContract.View, View.OnClickListener {
+public class BillForumFragment extends Fragment implements ForumContract.View, View.OnClickListener, WriteCommentDialog.WriteCommentListener {
     //contains names of the one who wrote the comment. must be populated from database
     @BindView(R.id.forum_list_view)
     ListView listView;
@@ -49,10 +44,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     UserDTO userDTO;
     private View rootView;
     private FloatingActionButton commentButtonMain;
-    private Button replyButton;
-    private View writeCommentView;
-    private Dialog writeCommentDialog;
-    private Double parrentId;
+    private WriteCommentDialog writeCommentDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,48 +96,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         this.nameArray = users;
     }
 
-
-    public void openWriteCommentDialog(View v, final Double parrentId) {
-        writeCommentView = getLayoutInflater().inflate(R.layout.dialog_new_comment, null);
-
-        writeCommentDialog = new Dialog(getContext(), R.style.MaterialDialogSheet);
-        writeCommentDialog.setContentView(writeCommentView);
-        writeCommentDialog.setCancelable(true);
-        writeCommentDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        writeCommentDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        writeCommentDialog.show();
-
-        replyButton = writeCommentView.findViewById(R.id.reply_button);
-        replyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (view == replyButton) {
-                    EditText editText = writeCommentView.findViewById(R.id.content);
-                    String content = editText.getText().toString();
-                    content = content.trim(); //trim string for trailing and leading whitespaces
-
-                    // Show error if no comment is written
-                    if (content.length() == 0) {
-                        editText.setError(getResources().getString(R.string.error_no_text));
-                        return;
-                    }
-
-                    CommentDTO comment = new CommentDTO(
-                            ArgumentType.FOR,
-                            billId,
-                            0,
-                            0,
-                            content,
-                            1,
-                            parrentId,
-                            0,
-                            0
-                    );
-                    forumPresenter.addNewComment(comment);
-                    writeCommentDialog.dismiss();
-                }
-            }
-        });
+    public void openWriteCommentDialog(View v, final Double parentId) {
+        writeCommentDialog = WriteCommentDialog.newInstance(parentId);
+        writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(),"writeComment");
     }
 
     @Override
@@ -232,12 +185,28 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         return threaded;
     }
 
+    @Override
+    public void onSave(String commentContent, Double parentId) {
+        CommentDTO comment = new CommentDTO(
+                ArgumentType.FOR,
+                billId,
+                0,
+                0,
+                commentContent,
+                1,
+                parentId,
+                0,
+                0
+        );
+        forumPresenter.addNewComment(comment);
+        writeCommentDialog.dismiss();
+    }
+
 
     public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
         ArrayList<CommentDTO> currentComments;
         ArrayList<UserDTO> currentUsers;
         Context context;
-        LayoutInflater mInflater;
         public View.OnClickListener listener;
         ForumPresenter presenter;
 
@@ -246,7 +215,6 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             this.currentComments = currentComments;
             this.currentUsers = currentUsers;
             this.context = context;
-            this.mInflater = LayoutInflater.from(context);
             this.presenter = presenter;
         }
 
