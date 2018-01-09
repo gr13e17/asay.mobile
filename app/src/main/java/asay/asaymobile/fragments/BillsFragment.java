@@ -15,9 +15,6 @@ import android.view.ViewGroup;
 
 import asay.asaymobile.R;
 
-import static asay.asaymobile.R2.id.tabItem;
-import static asay.asaymobile.R2.id.tabs;
-
 
 public class BillsFragment extends Fragment{
 
@@ -83,8 +80,6 @@ public class BillsFragment extends Fragment{
 
         });
         mSectionsPagerAdapter.notifyDataSetChanged();
-
-
     }
 
 
@@ -132,4 +127,5 @@ public class BillsFragment extends Fragment{
             return 3;
         }
     }
+
 }

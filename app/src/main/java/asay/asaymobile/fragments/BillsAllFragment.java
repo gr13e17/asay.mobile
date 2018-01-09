@@ -55,15 +55,9 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
-        ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Inflate the layout for this fragment
-        // call AsynTask to perform network operation on separate thread
+       // ButterKnife.bind(this, view);
+        billPresenter = new BillPresenter(this);
+        userPresenter = new UserPresenter(this);
         boolean isFavorite = false;
         if(getArguments() != null){
             isFavorite = getArguments().getBoolean("isFavorite");
@@ -76,16 +70,25 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
-        billPresenter = new BillPresenter(this);
-        userPresenter = new UserPresenter(this);
 
-        // TODO: Use isEnded to show only ended bills
+
         if(!isFavorite){
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
             billPresenter.getAllBills();
         } else{
             userPresenter.getUser(userId);
+           view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
         }
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Inflate the layout for this fragment
+        // call AsynTask to perform network operation on separate thread
+        // TODO: Use isEnded to show only ended bills
+
             // get reference to the views
         adapter = new ArrayAdapter<BillDTO>(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
             @SuppressLint("DefaultLocale")
@@ -130,6 +133,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             this.bills.add(bill);
         }
         adapter.notifyDataSetChanged();
+        getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
     }
 
     @Override
@@ -167,6 +171,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             } catch (Exception excep){
                 Log.d("JSON Exception", "onTaskComplete: " + excep.getMessage());
             }
+
+
         }
     }
 
