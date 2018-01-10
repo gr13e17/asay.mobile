@@ -2,6 +2,7 @@ package asay.asaymobile.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -9,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,9 +48,9 @@ public class WriteCommentDialog extends DialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final View writeCommentView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_write_comment, null);
-        Dialog dialog = new Dialog(getActivity(), R.style.MaterialDialogSheet);
+        Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(writeCommentView);
-        dialog.setCancelable(false);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         dialog.show();
@@ -66,6 +68,7 @@ public class WriteCommentDialog extends DialogFragment {
         });
 
         commentEditText.addTextChangedListener(new TextWatcher() {
+            ColorStateList oldColors =  replyButton.getTextColors();
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -73,15 +76,25 @@ public class WriteCommentDialog extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.toString().trim().length() == 0)
+                if (charSequence.toString().trim().length() == 0) {
                     replyButton.setEnabled(false);
-                else
+                    replyButton.setTextColor(oldColors);
+                } else {
                     replyButton.setEnabled(true);
+                    replyButton.setTextColor(getResources().getColor(R.color.primaryColor));
+                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        writeCommentView.findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
             }
         });
 

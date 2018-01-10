@@ -98,6 +98,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     public void openWriteCommentDialog(View v, final Double parentId) {
         writeCommentDialog = WriteCommentDialog.newInstance(parentId);
+        writeCommentDialog.setCancelable(false);
         writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(),"writeComment");
     }
 

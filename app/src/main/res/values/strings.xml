@@ -41,5 +41,6 @@
     <string name="Toparg">Bedste argument for</string>
     <string name="argAgainst">Bedste argument imod</string>
     <string name="BillDesc">OM LOVFORSLAGET</string>
+    <string name="cancel">Annuller</string>
 
 </resources>
