@@ -1,5 +1,6 @@
 package asay.asaymobile.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -13,14 +14,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import asay.asaymobile.R;
@@ -31,12 +35,13 @@ public class CategoryActivity extends AppCompatActivity {
     StorageReference storageRef = storage.getReference();
     StringBuilder jsonstring = new StringBuilder();
     File localFile;
+    JSONObject categoriesObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
-        StorageReference dataRef = storageRef.child("data.json");
+        final StorageReference dataRef = storageRef.child("data.json");
         final BillDTO billDTO = getIntent().getParcelableExtra("bill");
 
         try {
@@ -65,7 +70,7 @@ public class CategoryActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             String text = category.getText().toString().toLowerCase();
                             try {
-                                JSONObject categoriesObject = new JSONObject(jsonstring.toString());
+                                categoriesObject = new JSONObject(jsonstring.toString());
                                 if(categoriesObject.has(text)){
                                     JSONArray list = categoriesObject.getJSONArray(text);
                                     list.put(billDTO.getResume());
@@ -74,12 +79,35 @@ public class CategoryActivity extends AppCompatActivity {
                                     list.put(billDTO.getResume());
                                     categoriesObject.putOpt(text,list);
                                 }
-                                System.out.println(categoriesObject);
-
                             } catch (JSONException e) {
                                 System.out.println("Error" + e.getMessage());
                                 e.printStackTrace();
                             }
+                            try {
+                                BufferedWriter outStream= new BufferedWriter(new FileWriter(localFile, false));
+                                outStream.write(categoriesObject.toString());
+                                outStream.close();
+                            }
+                            catch (IOException e) {
+                                System.out.println("Error: " + e.getMessage());
+                            }
+                            Uri file = Uri.fromFile(localFile);
+
+                            UploadTask uploadTask = dataRef.putFile(file);
+                            // Register observers to listen for when the download is done or if it fails
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    System.out.println(exception.getMessage());
+                                    // Handle unsuccessful uploads
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                }
+                            });
                             finish();
                         }
                     });
