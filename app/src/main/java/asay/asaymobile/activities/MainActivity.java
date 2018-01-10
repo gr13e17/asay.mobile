@@ -22,24 +22,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Adapter;
 import android.widget.SearchView;
-
-import java.util.ArrayList;
 
 import asay.asaymobile.R;
 import asay.asaymobile.fragments.BillsAllFragment;
 import asay.asaymobile.model.BillDTO;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private Toolbar toolbar;
-
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-
+    private BillsAllFragment billAll;
+    private MenuItem searchMenuItem;
+    private SearchView searchView;
     //Default user
     private int userId = 1;
     private boolean loggedIn = true;
+
 
     private ViewPager mViewPager;
 
@@ -117,11 +117,13 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     BillsAllFragment billsAllFragment = new BillsAllFragment();
+                    billAll = billsAllFragment;
                     return billsAllFragment;
                 case 1:
                     bundle = new Bundle();
                     bundle.putBoolean("isEnded",true);
                     BillsAllFragment billsAllFragmentEnded = new BillsAllFragment();
+                    billAll = billsAllFragmentEnded;
                     billsAllFragmentEnded.setArguments(bundle);
                     return billsAllFragmentEnded;
                 case 2:
@@ -153,12 +155,38 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchMenuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+
+    private void handelListItemClick(BillDTO bill) {
+        // close search view if its visible
+        if (searchView.isShown()) {
+            searchMenuItem.collapseActionView();
+            searchView.setQuery("", false);
+        }
+
+        // pass selected user and sensor to share activity
+        Intent intent = new Intent(this, BillActivity.class);
+        this.startActivity(intent);
+        this.overridePendingTransition(R.anim.popup_show,R.anim.popup_hide);
+}
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        billAll.getFilter().filter(newText);
         return true;
     }
 
