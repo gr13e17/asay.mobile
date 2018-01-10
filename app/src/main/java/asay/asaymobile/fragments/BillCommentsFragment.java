@@ -89,7 +89,9 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     BillDesc.setText(R.string.noDesc);
                 }
                 if (BillDesc.getLineCount() > 3) {
+                   addDots(BillDesc);
                     expBillDesc.setVisibility(View.VISIBLE);
+
                 } else
                     expBillDesc.setVisibility(View.INVISIBLE);
                 BillDesc.setOnClickListener(null);
@@ -156,10 +158,25 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                 break;
         }
     }
+
+    private void addDots(TextView txt){
+        int lineEndIndex = BillDesc.getLayout().getLineEnd(2);
+        String text;
+        if(txt.getText().toString().length() >= 3) {
+            text  = BillDesc.getText().subSequence(0, lineEndIndex - 3) + "...";
+        } else
+            text = "";
+        txt.setText(text);
+    }
+
     private void expandTextView(TextView billDesc, String orgTxt){
         billDesc.setText(orgTxt);
         ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
-        animation.setDuration(80).start();
+        if(billDesc.getLineCount()>7){
+        animation.setDuration(80).start();}
+        else{
+            animation.setDuration(30).start();
+        }
     }
 
     private void collapseTextView(TextView txt, int numLines){
@@ -206,6 +223,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
 
                 if (arg1.getLineCount() > 3) {
                     arg1.setOnClickListener(this);
+                    addDots(arg1);
                     expArg1.setVisibility(View.VISIBLE);
                 } else {
                     expArg1.setVisibility(View.INVISIBLE);
@@ -217,6 +235,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
 
                 if (arg2.getLineCount() > 3) {
                     arg2.setOnClickListener(this);
+                    addDots(arg2);
                     expArg2.setVisibility(View.VISIBLE);
                 } else {
                     expArg2.setVisibility(View.INVISIBLE);

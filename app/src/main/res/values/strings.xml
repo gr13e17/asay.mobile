@@ -37,5 +37,9 @@
     <string name="your_profile">Din profil</string>
     <string name="error_no_text">Du har ikke indtastet tekst i feltet</string>
     <string name="noDesc">Der findes ingen beskrivelse til dette forslag</string>
+    <string name="load">Loading...</string>
+    <string name="Toparg">Bedste argument for</string>
+    <string name="argAgainst">Bedste argument imod</string>
+    <string name="BillDesc">OM LOVFORSLAGET</string>
 
 </resources>
