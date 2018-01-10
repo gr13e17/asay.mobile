@@ -129,7 +129,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         this.bills.clear();
         for(BillDTO bill : bills){
             this.bills.add(bill);
-        }
+        } 
         adapter.notifyDataSetChanged();
     }
 
