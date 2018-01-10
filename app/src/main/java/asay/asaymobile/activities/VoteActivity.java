@@ -64,7 +64,7 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
             }
         });
 
-        ((TextView) findViewById(R.id.title)).setText(String.format("%s: %s", bill.getNumber(), bill.getTitleShort()));
+        ((TextView) findViewById(R.id.title)).setText(String.format("%s: %s", bill.getNumber(), bill.getTitle()));
         status = findViewById(R.id.status);
     }
 
