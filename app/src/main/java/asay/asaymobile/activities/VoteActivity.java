@@ -20,6 +20,7 @@ import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
 import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.BillPresenter;
 
 public class VoteActivity extends AppCompatActivity implements BillContract.View {
@@ -27,6 +28,7 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
     private final BillDTO.Vote vote = new BillDTO.Vote();
     private TextView status;
     private Button buttonCancel;
+    private UserDTO currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +66,12 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
             }
         });
 
+        //Set title of bill
         ((TextView) findViewById(R.id.title)).setText(String.format("%s: %s", bill.getNumber(), bill.getTitle()));
+
+        //Set status of vote
         status = findViewById(R.id.status);
+        //TODO: Set status according to registered vote on bill and user
     }
 
     /**
@@ -99,6 +105,7 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
                     public void onClick(DialogInterface dialogInterface, int i) {
                         status.setVisibility(View.INVISIBLE);
                         buttonCancel.setVisibility(View.INVISIBLE);
+                        //TODO: Use bill.removeVote() to remove vote for user
                     }
                 })
                 .setNegativeButton(R.string.no, null)
