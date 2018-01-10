@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
 import asay.asaymobile.UserContract;
 import asay.asaymobile.activities.BillActivity;
+import asay.asaymobile.activities.CategoryActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.model.UserDTO;
@@ -91,16 +94,29 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         adapter = new ArrayAdapter<BillDTO>(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
             @SuppressLint("DefaultLocale")
             @Override
-            public View getView(int position, View cachedView, ViewGroup parent){
-                View view = super.getView(position, cachedView, parent);
-                BillDTO bill = bills.get(position);
+            public View getView(int position, final View cachedView, ViewGroup parent){
+                final View view = super.getView(position, cachedView, parent);
+                final BillDTO bill = bills.get(position);
                     TextView titleTextView = view.findViewById(R.id.listeelem_header);
                     String title = bill.number + ": " + bill.getTitleShort();
                     titleTextView.setText(title);
                     TextView date = view.findViewById(R.id.listeelem_date);
                     date.setText(String.format(getResources().getString(R.string.days_until_deadline), CalcDateFromToday(bill.getDeadline())));
                     TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
-                    if(bill.votes.size() > 0)
+                ImageView button = (ImageView) view.findViewById( R.id.categorie_view);
+                button.setOnClickListener(
+                        new View.OnClickListener() {
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getContext(), CategoryActivity.class);
+                                intent.putExtra("bill",bill);
+                                startActivity(intent);
+                                Toast.makeText( view.getContext(),
+                                        "ImageView clicked",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                if(bill.votes.size() > 0)
                         numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
                     else{
                         numberOfVotes.setText("");
@@ -128,7 +144,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         this.bills.clear();
         for(BillDTO bill : bills){
-            this.bills.add(bill);
+            if(bill.getResume() != null && !bill.getResume().isEmpty())
+                this.bills.add(bill);
         } 
         adapter.notifyDataSetChanged();
     }

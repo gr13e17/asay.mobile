@@ -25,7 +25,8 @@
             android:label="@string/title_activity_bill"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activities.ProfileActivity"/>
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.CategoryActivity"></activity>
     </application>
 
 </manifest>

@@ -1,38 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp">
 
     <TextView
         android:id="@+id/listeelem_header"
-        android:layout_width="match_parent"
+        android:layout_width="298dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="@string/BillExampleHead"
         android:textAppearance="@style/BillListTitle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/listeelem_date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_gravity="start"
+        android:layout_marginEnd="112dp"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/days_until_deadline"
         android:textAppearance="@style/BillListSubTitle"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/listeelem_number_of_votes"
         app:layout_constraintTop_toBottomOf="@+id/listeelem_header" />
 
     <TextView
         android:id="@+id/listeelem_number_of_votes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="19dp"
         android:layout_gravity="end"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
@@ -40,4 +46,19 @@
         android:textAppearance="@style/BillListSubTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listeelem_header" />
+
+    <ImageView
+        android:id="@+id/categorie_view"
+        android:layout_width="100px"
+        android:layout_height="100px"
+        android:layout_marginBottom="19dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/listeelem_number_of_votes"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/listeelem_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/name" />
 </android.support.constraint.ConstraintLayout>
