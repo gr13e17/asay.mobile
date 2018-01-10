@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,7 +27,6 @@ public class WriteCommentDialog extends DialogFragment {
     }
 
     public static WriteCommentDialog newInstance(Double parentId) {
-        System.out.println("newInstance");
         WriteCommentDialog dialog = new WriteCommentDialog();
 
         // Supply num input as an argument.
@@ -38,15 +39,13 @@ public class WriteCommentDialog extends DialogFragment {
 
     @Override
     public void onAttach(Context context) {
-        System.out.println("onAttach");
         super.onAttach(context);
     }
 
     @Override
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        System.out.println("onCreateDialog");
-        final View writeCommentView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_new_comment, null);
+        final View writeCommentView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_write_comment, null);
         Dialog dialog = new Dialog(getActivity(), R.style.MaterialDialogSheet);
         dialog.setContentView(writeCommentView);
         dialog.setCancelable(false);
@@ -55,22 +54,34 @@ public class WriteCommentDialog extends DialogFragment {
         dialog.show();
 
         final Button replyButton = writeCommentView.findViewById(R.id.reply_button);
+        final EditText commentEditText = writeCommentView.findViewById(R.id.content);
+
         replyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (view == replyButton) {
-                    EditText commentEditText = writeCommentView.findViewById(R.id.content);
-                    String commentContent = commentEditText.getText().toString();
-                    commentContent = commentContent.trim(); //trim string for trailing and leading whitespaces
+                String commentContent = commentEditText.getText().toString();
+                commentContent = commentContent.trim(); //trim string for trailing and leading whitespaces
+                ((WriteCommentListener) getParentFragment()).onSave(commentContent, getArguments().getDouble("parentId")); // save comment
+            }
+        });
 
-                    // Show error if no comment is written
-                    if (commentContent.length() == 0) {
-                        commentEditText.setError(getResources().getString(R.string.error_no_text));
-                        return;
-                    }
+        commentEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                    ((WriteCommentListener) getParentFragment()).onSave(commentContent, getArguments().getDouble("parentId")); // save comment
-                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.toString().trim().length() == 0)
+                    replyButton.setEnabled(false);
+                else
+                    replyButton.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
