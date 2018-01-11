@@ -1,32 +1,32 @@
 package asay.asaymobile.model;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+
+import android.support.annotation.NonNull;
+
 /**
  * Created by s123725 on 15/12/2017.
  */
 
-public class CommentDTO {
-    public double getBillId() {
-        return billId;
+public class CommentDTO implements Comparable<CommentDTO> {
+    private double billId;
+    private ArgumentType argumentType;
+    private double id;
+    private int score;
+    private String text;
+    private double userid;
+    private double parrentId;
+    private double commentDepth;
+    private double childrentCount;
+
+    public CommentDTO() {
+        //empty constructor
     }
 
-    public void setBillId(double billId) {
-        this.billId = billId;
-    }
-
-    double billId;
-    ArgumentType argumentType;
-    double id;
-    int score;
-    String text;
-    double userid;
-    double parrentId;
-    double commentDepth;
-    double childrentCount;
-    public CommentDTO(){
-        //empty contsructor
-    }
-
-    public CommentDTO(final CommentDTO commentDTO){
+    String dateTime;
+    public CommentDTO(final CommentDTO commentDTO) {
         argumentType = commentDTO.getArgumentType();
         billId = commentDTO.billId;
         id = commentDTO.getId();
@@ -36,19 +36,29 @@ public class CommentDTO {
         parrentId = commentDTO.getParrentId();
         childrentCount = commentDTO.getChildrentCount();
         commentDepth = commentDTO.getCommentDepth();
+        dateTime = commentDTO.getDateTime();
     }
 
-    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId, double childrentCount, double commentDepth ){
+    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId, double childrentCount, double commentDepth , String dateTime){
         this.argumentType = argument;
         this.billId = billId;
         this.id = id;
         this.score = score;
         this.text = text;
-        this.userid = userId;
+        this.userid = userid;
         this.parrentId = parrentId;
         this.childrentCount = childrentCount;
         this.commentDepth = commentDepth;
+        this.dateTime = dateTime;
         }
+
+    public double getBillId() {
+        return billId;
+    }
+
+    public void setBillId(double billId) {
+        this.billId = billId;
+    }
 
     public ArgumentType getArgumentType() {
         return argumentType;
@@ -94,13 +104,35 @@ public class CommentDTO {
         return parrentId;
     }
 
-    public void setCommentDepth(double commentDepth) { this.commentDepth = commentDepth; }
+    public void setCommentDepth(double commentDepth) {
+        this.commentDepth = commentDepth;
+    }
 
-    public double getCommentDepth() { return commentDepth; }
+    public double getCommentDepth() {
+        return commentDepth;
+    }
 
-    public void setChildrentCount(double childrentCount) { this.childrentCount = childrentCount; }
+    public void setChildrentCount(double childrentCount) {
+        this.childrentCount = childrentCount;
+    }
 
-    public double getChildrentCount() { return childrentCount; }
+    public double getChildrentCount() {
+        return childrentCount;
+    }
+
+    @Override
+    public int compareTo(@NonNull CommentDTO o) {
+        if (this.score < o.score)
+            return 1; //after
+        else if (this.score > o.score)
+            return -1; //before
+        else
+            return 0; //equal
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
 }
 
 

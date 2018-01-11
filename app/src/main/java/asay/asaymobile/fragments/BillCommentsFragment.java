@@ -1,25 +1,32 @@
 package asay.asaymobile.fragments;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
+import asay.asaymobile.UserContract;
+import asay.asaymobile.activities.VoteActivity;
 import asay.asaymobile.model.ArgumentType;
 import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.model.CommentDTO;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.ForumPresenter;
+import asay.asaymobile.presenter.UserPresenter;
 
-public class BillCommentsFragment extends Fragment implements View.OnClickListener, ForumContract.View{
+public class BillCommentsFragment extends Fragment implements View.OnClickListener, ForumContract.View, UserContract.View{
 
     TextView BillDesc;
     String BillDescOrg;
@@ -36,6 +43,11 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     private BillDTO bill;
     private double userId = 1;
     ForumPresenter presenter;
+    ImageButton sub;
+    Button vote;
+    boolean isSub = false;
+    private UserDTO user;
+    private UserPresenter uPresenter;
 
     public BillCommentsFragment() {
         // Required empty public constructor
@@ -52,8 +64,16 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bill = getArguments().getParcelable("bill");
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("bill", bill);
+        setArguments(bundle);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bill_comments, container, false);
+        return inflater.inflate(R.layout.fragment_bill_overview, container, false);
+
+
     }
 
     @Override
@@ -74,11 +94,26 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
 
         expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
         expArg1.setOnClickListener(this);
-        expArg1.setVisibility(View.INVISIBLE);
+        expArg1.setVisibility(View.GONE);
 
         expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
         expArg2.setOnClickListener(this);
-        expArg2.setVisibility(View.INVISIBLE);
+        expArg2.setVisibility(View.GONE);
+
+        sub = (ImageButton) rootView.findViewById(R.id.subbtn);
+        sub.setOnClickListener(this);
+
+        uPresenter = new UserPresenter(this);
+        uPresenter.getUser(userId);
+        String billTitle = bill.getNumber().concat(": ").concat(bill.getTitleShort());
+        TextView header = (TextView) rootView.findViewById(R.id.headerBill);
+        header.setText(billTitle);
+        vote = (Button) rootView.findViewById(R.id.buttonVote);
+        vote.setOnClickListener(this);
+
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(billTitle);
+
 
         super.onViewCreated(rootView, savedInstanceState);
 
@@ -156,23 +191,33 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     arg1.setOnClickListener(null);
                 }
                 break;
+            case R.id.buttonVote:
+                Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
+                voteIntent.putExtra("bill", bill);
+                startActivity(voteIntent);
+                break;
+
+            case R.id.subbtn :
+                toogleFavorite(sub);
+                break;
+
         }
     }
 
     private void addDots(TextView txt){
-        int lineEndIndex = BillDesc.getLayout().getLineEnd(2);
+        int lineEndIndex = txt.getLayout().getLineEnd(2);
         String text;
         if(txt.getText().toString().length() >= 3) {
-            text  = BillDesc.getText().subSequence(0, lineEndIndex - 3) + "...";
+            text  = txt.getText().subSequence(0, lineEndIndex - 3) + "...";
         } else
             text = "";
         txt.setText(text);
     }
 
-    private void expandTextView(TextView billDesc, String orgTxt){
-        billDesc.setText(orgTxt);
-        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
-        if(billDesc.getLineCount()>7){
+    private void expandTextView(TextView txt, String orgTxt){
+        txt.setText(orgTxt);
+        ObjectAnimator animation = ObjectAnimator.ofInt(txt, "maxLines", txt.getLineCount());
+        if(txt.getLineCount()>7){
         animation.setDuration(80).start();}
         else{
             animation.setDuration(30).start();
@@ -185,11 +230,18 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
         String text;
         if(txt.getText().toString().length() >= 3) {
           text  = txt.getText().subSequence(0, lineEndIndex - 3) + "...";
-        } else
+        } else {
             text = "";
+        }
+
         txt.setText(text);
+
         ObjectAnimator animation = ObjectAnimator.ofInt(txt, "maxLines", numLines);
-        animation.setDuration(80).start();
+        if(txt.getLineCount()>7){
+            animation.setDuration(80).start();}
+        else{
+            animation.setDuration(30).start();
+        }
     }
 
     @Override
@@ -219,6 +271,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
 
             if (arg1 != null) {
                 arg1.setText(currentComment.get(positionFor).getText());
+                System.out.println("for text: " + arg1.getText().toString());
                 arg1Org = arg1.getText().toString();
 
                 if (arg1.getLineCount() > 3) {
@@ -226,7 +279,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     addDots(arg1);
                     expArg1.setVisibility(View.VISIBLE);
                 } else {
-                    expArg1.setVisibility(View.INVISIBLE);
+                    expArg1.setVisibility(View.GONE);
                 }
             }
             if (arg2 != null) {
@@ -238,7 +291,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     addDots(arg2);
                     expArg2.setVisibility(View.VISIBLE);
                 } else {
-                    expArg2.setVisibility(View.INVISIBLE);
+                    expArg2.setVisibility(View.GONE);
                 }
             }
         } else{
@@ -247,14 +300,50 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
             if (arg2 != null)
                 arg2.setText(R.string.noComments);
             if (expArg1 != null)
-                expArg1.setVisibility(View.INVISIBLE);
+                expArg1.setVisibility(View.GONE);
             if (expArg2 != null)
-                expArg2.setVisibility(View.INVISIBLE);
+                expArg2.setVisibility(View.GONE);
         }
+
+
+    }
+
+    private void toogleFavorite(ImageButton button){
+        ArrayList<Integer> billSaved = user.getbillsSaved();
+
+        if(isSub){
+            for(int i = billSaved.size() -1 ; i >= 0; i-- ){
+                if(billSaved.get(i).equals(bill.getId()))
+                    billSaved.remove(i);
+            }
+            sub.setImageResource(R.drawable.ic_star);
+        }else {
+            billSaved.add(bill.getId());
+            sub.setImageResource(R.drawable.ic_star_border);
+        }
+        uPresenter.UpdateFavorites(userId,billSaved);
+    }
+
+    @Override
+    public void refreshUser(UserDTO user) {
+        System.out.println("number of bills saved: " + user.getbillsSaved().size());
+        isSub = user.getbillsSaved().contains(bill.getId());
+        try{
+            if (isSub)
+                sub.setImageResource(R.drawable.ic_star);
+            else{
+                sub.setImageResource(R.drawable.ic_star_border);
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        this.user = user;
     }
 
     @Override
     public void refreshUsers(ArrayList<UserDTO> users) {
 
     }
+
+
 }
