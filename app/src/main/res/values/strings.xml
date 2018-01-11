@@ -30,5 +30,10 @@
     <string name="Toparg">Bedste argument for</string>
     <string name="argAgainst">Bedste argument imod</string>
     <string name="BillDesc">OM FORSLAGET</string>
+    <string name="cancel">Annuller</string>
+    <string name="argument_against">imod</string>
+    <string name="argument_for">for</string>
+    <string name="cancel_vote">Fortryd stemme</string>
+    <string name="vote_registered">Stemme afgivet</string>
 
 </resources>
