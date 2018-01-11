@@ -6,7 +6,7 @@
     <string name="tab_text_1">Detaljer</string>
     <string name="tab_text_2">Forslag</string>
     <string name="tab_text_3">Debat</string>
-    <string name="reply">Svar</string>
+    <string name="reply">Send</string>
     <string name="billSchedule">Fremsat 26-10-2017 \n1. behandlet / henvist til udvalg 07-11-2017 \nFrist for spørgsmål 13-11-2017 \nFrist for svar 20-11-2017 \nFrist for ændringsforslag 21-11-2017 \nPolitisk drøftelse 22-11-2017 \nFrist for politiske bemærkninger 24-11-2017 \nBetænkning afgivet 29-11-2017 \nSat på dagsorden til 2. behandling 05-12-2017 \nSat på dagsorden til 3. behandling 07-12-2017</string>
     <string name="BillExampleHead">L72: Forslag til lov om ændring af dyreværnsloven og lov om hold af dyr.</string>
     <string name="reply_content">Tilføj ny kommentar</string>
@@ -36,6 +36,9 @@
     <string name="argument_neutral">neutralt</string>
     <string name="cancel_vote">Fortryd stemme</string>
     <string name="vote_registered">Stemme afgivet</string>
+    <string name="active">Aktive</string>
+    <string name="ended">Afsluttede</string>
+    <string name="favorits">Favoritter</string>
 
 
 </resources>
