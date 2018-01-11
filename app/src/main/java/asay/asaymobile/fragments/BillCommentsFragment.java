@@ -230,11 +230,18 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
         String text;
         if(txt.getText().toString().length() >= 3) {
           text  = txt.getText().subSequence(0, lineEndIndex - 3) + "...";
-        } else
+        } else {
             text = "";
+        }
+
         txt.setText(text);
+
         ObjectAnimator animation = ObjectAnimator.ofInt(txt, "maxLines", numLines);
-        animation.setDuration(80).start();
+        if(txt.getLineCount()>7){
+            animation.setDuration(80).start();}
+        else{
+            animation.setDuration(30).start();
+        }
     }
 
     @Override
@@ -264,6 +271,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
 
             if (arg1 != null) {
                 arg1.setText(currentComment.get(positionFor).getText());
+                System.out.println("for text: " + arg1.getText().toString());
                 arg1Org = arg1.getText().toString();
 
                 if (arg1.getLineCount() > 3) {
