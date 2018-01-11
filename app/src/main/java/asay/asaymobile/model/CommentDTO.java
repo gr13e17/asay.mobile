@@ -1,5 +1,9 @@
 package asay.asaymobile.model;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.support.annotation.NonNull;
 
 /**
@@ -21,6 +25,7 @@ public class CommentDTO implements Comparable<CommentDTO> {
         //empty constructor
     }
 
+    String dateTime;
     public CommentDTO(final CommentDTO commentDTO) {
         argumentType = commentDTO.getArgumentType();
         billId = commentDTO.billId;
@@ -31,9 +36,10 @@ public class CommentDTO implements Comparable<CommentDTO> {
         parrentId = commentDTO.getParrentId();
         childrentCount = commentDTO.getChildrentCount();
         commentDepth = commentDTO.getCommentDepth();
+        dateTime = commentDTO.getDateTime();
     }
 
-    public CommentDTO(final ArgumentType argument, double billId, final int id, final int score, final String text, final int userid, double parrentId, double childrentCount, double commentDepth) {
+    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId, double childrentCount, double commentDepth , String dateTime){
         this.argumentType = argument;
         this.billId = billId;
         this.id = id;
@@ -43,7 +49,8 @@ public class CommentDTO implements Comparable<CommentDTO> {
         this.parrentId = parrentId;
         this.childrentCount = childrentCount;
         this.commentDepth = commentDepth;
-    }
+        this.dateTime = dateTime;
+        }
 
     public double getBillId() {
         return billId;
@@ -121,6 +128,10 @@ public class CommentDTO implements Comparable<CommentDTO> {
             return -1; //before
         else
             return 0; //equal
+    }
+
+    public String getDateTime() {
+        return dateTime;
     }
 }
 

@@ -16,10 +16,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
@@ -29,6 +35,8 @@ import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.ForumPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static java.util.Calendar.DAY_OF_MONTH;
 
 /**
  * Created by Soelberg on 31-10-2017.
@@ -45,6 +53,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private View rootView;
     private FloatingActionButton commentButtonMain;
     private WriteCommentDialog writeCommentDialog;
+    String dateTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,7 +104,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private void openWriteCommentDialog(View v, final Double parentId) {
         writeCommentDialog = WriteCommentDialog.newInstance(parentId);
         writeCommentDialog.setCancelable(false);
-        writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(),"writeComment");
+        writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(), "writeComment");
     }
 
     @Override
@@ -105,7 +114,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         }
     }
 
-    private static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
+    private static List<CommentDTO> toThreadedComments(List<CommentDTO> comments) {
 
         //comments should be sorted first
         Collections.sort(comments);
@@ -117,9 +126,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         List<CommentDTO> removeComments = new ArrayList<>();
 
         //get the root comments first (comments with no parent)
-        for(int i = 0; i < comments.size(); i++){
+        for (int i = 0; i < comments.size(); i++) {
             CommentDTO c = comments.get(i);
-            if(c.getParrentId() == 0){
+            if (c.getParrentId() == 0) {
                 c.setCommentDepth(0); //A property of Comment to hold its depth
                 c.setChildrentCount(0); //A property of Comment to hold its child count
                 threaded.add(c);
@@ -127,7 +136,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             }
         }
 
-        if(removeComments.size() > 0){
+        if (removeComments.size() > 0) {
             //clear processed comments
             comments.removeAll(removeComments);
             removeComments.clear();
@@ -135,22 +144,22 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
         int depth = 0;
         //get the child comments up to a max depth of 10
-        while(comments.size() > 0 && depth <= 10){
+        while (comments.size() > 0 && depth <= 10) {
             depth++;
-            for(int j = 0; j< comments.size(); j++){
+            for (int j = 0; j < comments.size(); j++) {
                 CommentDTO child = comments.get(j);
                 //check root comments for match
-                for(int i = 0; i < threaded.size(); i++){
+                for (int i = 0; i < threaded.size(); i++) {
                     CommentDTO parent = threaded.get(i);
-                    if(parent.getId() == child.getParrentId()){
-                        parent.setChildrentCount(parent.getChildrentCount()+1);
-                        child.setCommentDepth(depth+parent.getCommentDepth());
-                        threaded.add((int) (i+parent.getChildrentCount()),child);
+                    if (parent.getId() == child.getParrentId()) {
+                        parent.setChildrentCount(parent.getChildrentCount() + 1);
+                        child.setCommentDepth(depth + parent.getCommentDepth());
+                        threaded.add((int) (i + parent.getChildrentCount()), child);
                         removeComments.add(child);
                     }
                 }
             }
-            if(removeComments.size() > 0){
+            if (removeComments.size() > 0) {
                 //clear processed comments
                 comments.removeAll(removeComments);
                 removeComments.clear();
@@ -162,6 +171,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     @Override
     public void onSave(String commentContent, Double parentId, ArgumentType argumentType) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy  HH:mm");
+        dateTime = format.format(calendar.getTime());
         CommentDTO comment = new CommentDTO(
                 argumentType,
                 billId,
@@ -171,7 +183,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 1,
                 parentId,
                 0,
-                0
+                0,
+                dateTime
         );
         forumPresenter.addNewComment(comment);
         writeCommentDialog.dismiss();
@@ -223,13 +236,25 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
 
+            TextView dateTextView = convertView.findViewById(R.id.dateTextView);
+            dateTextView.setBackground(getBackground(currentComment.getArgumentType()));
+
             TextView nameView = convertView.findViewById(R.id.nameView);
             nameView.setBackground(getBackground(currentComment.getArgumentType()));
+
+            String userName = null;
             for (UserDTO user : currentUsers) {
                 if (user.getid() == currentComment.getUserid()) {
-                    nameView.setText(user.getname());
+                    userName = user.getname();
                     break;
                 }
+            }
+
+            if (currentComment.getDateTime() != null && userName != null) {
+                nameView.setText(userName);
+                dateTextView.setText(currentComment.getDateTime());
+            } else if (userName != null) {
+                nameView.setText(userName);
             }
 
             ImageButton upVoteButton = convertView.findViewById(R.id.up);
@@ -240,6 +265,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     int score = currentComment.getScore();
                     currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
+                    Toast.makeText(getActivity(), R.string.upVote,
+                            Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -251,6 +278,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     int score = currentComment.getScore();
                     currentComment.setScore(score - 1);
                     presenter.updateComment(currentComment);
+                    Toast.makeText(getActivity(), R.string.downVote,
+                            Toast.LENGTH_LONG).show();
                 }
             });
 

@@ -41,5 +41,8 @@
     <string name="favorits">Favoritter</string>
     <string name="user_0">Hanne Olsen</string>
 
+    <string name="upVote">Du har stemt kommentaren op</string>
+    <string name="downVote">Du har stemt kommentaren ned</string>
+
 
 </resources>
