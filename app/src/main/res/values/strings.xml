@@ -36,7 +36,7 @@
     <string name="cancel_vote">Fortryd stemme</string>
     <string name="vote_registered">Stemme afgivet</string>
     <string name="active">Aktive</string>
-    <string name="Ended">Afsluttede</string>
+    <string name="ended">Afsluttede</string>
     <string name="favorits">Favoritter</string>
 
 </resources>

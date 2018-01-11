@@ -1,7 +1,6 @@
 package asay.asaymobile.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -14,10 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,11 +33,9 @@ import asay.asaymobile.activities.BillActivity;
 import asay.asaymobile.activities.MainActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.BillDTO;
-import asay.asaymobile.model.BillListAdapter;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.BillPresenter;
 import asay.asaymobile.presenter.UserPresenter;
-import butterknife.ButterKnife;
 
 
 public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View, UserContract.View{
@@ -112,7 +107,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 String title = bill.number + ": " + bill.getTitleShort();
                 titleTextView.setText(title);
                 TextView date = view.findViewById(R.id.listeelem_date);
-                date.setText(String.format(getResources().getString(R.string.days_until_deadline), CalcDateFromToday(bill.getDeadline())));
+                date.setText(String.format(getResources().getString(R.string.days_until_deadline), calcDateFromToday(bill.getDeadline())));
                 TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
                 if(bill.votes.size() > 0)
                     numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
@@ -193,7 +188,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         }
     }
 
-    private long CalcDateFromToday(String date) {
+    private long calcDateFromToday(String date) {
         long diffDays = 0;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

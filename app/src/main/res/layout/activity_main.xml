@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:icon="@drawable/ic_history"
                 android:scaleType="fitCenter"
-                android:text="@string/Ended" />
+                android:text="@string/ended" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem3Main"
