@@ -144,9 +144,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         //get the root comments first (comments with no parent)
         for(int i = 0; i < comments.size(); i++){
             CommentDTO c = comments.get(i);
-            if(c.getParrentId() == 0){
+            if(c.getParentId() == 0){
                 c.setCommentDepth(0); //A property of Comment to hold its depth
-                c.setChildrentCount(0); //A property of Comment to hold its child count
+                c.setChildrenCount(0); //A property of Comment to hold its child count
                 threaded.add(c);
                 removeComments.add(c);
             }
@@ -167,10 +167,10 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 //check root comments for match
                 for(int i = 0; i < threaded.size(); i++){
                     CommentDTO parent = threaded.get(i);
-                    if(parent.getId() == child.getParrentId()){
-                        parent.setChildrentCount(parent.getChildrentCount()+1);
+                    if(parent.getId() == child.getParentId()){
+                        parent.setChildrenCount(parent.getChildrenCount()+1);
                         child.setCommentDepth(depth+parent.getCommentDepth());
-                        threaded.add((int) (i+parent.getChildrentCount()),child);
+                        threaded.add((int) (i+parent.getChildrenCount()),child);
                         removeComments.add(child);
                         continue;
                     }
@@ -271,7 +271,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 }
             });
             for (UserDTO user : currentUsers) {
-                if (user.getid() == currentComment.getUserid()) {
+                if (user.getid() == currentComment.getUserId()) {
                     nameView.setText(user.getname());
                     nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
                 }
