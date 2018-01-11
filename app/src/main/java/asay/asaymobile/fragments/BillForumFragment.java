@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import asay.asaymobile.ForumContract;
@@ -32,24 +33,18 @@ import butterknife.ButterKnife;
  */
 
 public class BillForumFragment extends Fragment implements ForumContract.View, View.OnClickListener, WriteCommentDialog.WriteCommentListener {
-    //contains names of the one who wrote the comment. must be populated from database
     @BindView(R.id.forum_list_view)
     ListView listView;
-    int billId;
-    ForumPresenter forumPresenter;
-    ArrayList<UserDTO> nameArray = new ArrayList<UserDTO>();
-    ArrayList<String> commentArray = new ArrayList<String>();
-    ArrayList<Integer> colorArray = new ArrayList<Integer>();
+    private int billId;
+    private ForumPresenter forumPresenter;
+    private ArrayList<UserDTO> nameArray = new ArrayList<>(); //contains names of the one who wrote the comment. must be populated from database
+    ArrayList<String> commentArray = new ArrayList<>();
+    ArrayList<Integer> colorArray = new ArrayList<>();
     ArrayAdapter arrayAdapter;
     UserDTO userDTO;
     private View rootView;
     private FloatingActionButton commentButtonMain;
     private WriteCommentDialog writeCommentDialog;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +60,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
         // Inflate the layout for this fragment
-        // call AsynTask to perform network operation on separate thread
+        // call AsyncTask to perform network operation on separate thread
         forumPresenter = new ForumPresenter(this, billId);
         // get reference to the views
 
@@ -87,8 +82,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
         List<CommentDTO> threadedComments = toThreadedComments(currentComment);
         ForumAdapter commentArrayAdapter = new ForumAdapter((ArrayList<CommentDTO>) threadedComments, nameArray, getContext(), forumPresenter);
-
-        listView.setAdapter(commentArrayAdapter);
+        if (listView.getAdapter() == null) {
+            listView.setAdapter(commentArrayAdapter);
+        }
     }
 
     @Override
@@ -96,7 +92,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         this.nameArray = users;
     }
 
-    public void openWriteCommentDialog(View v, final Double parentId) {
+    private void openWriteCommentDialog(View v, final Double parentId) {
         writeCommentDialog = WriteCommentDialog.newInstance(parentId);
         writeCommentDialog.setCancelable(false);
         writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(),"writeComment");
@@ -106,40 +102,19 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void onClick(View view) {
         if (view == commentButtonMain) {
             openWriteCommentDialog(rootView, 0.0);
-        }// else if (view == replyButton) {
-         //   EditText editText = writeCommentView.findViewById(R.id.content);
-         //   String content = editText.getText().toString();
-         //   content = content.trim(); //trim string for trailing and leading whitespaces
-//
-         //   // Show error if no comment is written
-         //   if (content.length() == 0) {
-         //       editText.setError(getResources().getString(R.string.error_no_text));
-         //       return;
-         //   }
-//
-         //   CommentDTO comment = new CommentDTO(
-         //           ArgumentType.FOR,
-         //           billId,
-         //           0,
-         //           0,
-         //           content,
-         //           1,
-         //           0
-         //   );
-         //   forumPresenter.addNewComment(comment);
-         //   writeCommentDialog.dismiss();
-        //}
+        }
     }
 
-    public static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
+    private static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
 
-        //comments should be sorted by date first
+        //comments should be sorted first
+        Collections.sort(comments);
 
         //The resulting array of threaded comments
-        List<CommentDTO> threaded = new ArrayList<CommentDTO>();
+        List<CommentDTO> threaded = new ArrayList<>();
 
         //An array used to hold processed comments which should be removed at the end of the cycle
-        List<CommentDTO> removeComments = new ArrayList<CommentDTO>();
+        List<CommentDTO> removeComments = new ArrayList<>();
 
         //get the root comments first (comments with no parent)
         for(int i = 0; i < comments.size(); i++){
@@ -172,7 +147,6 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                         child.setCommentDepth(depth+parent.getCommentDepth());
                         threaded.add((int) (i+parent.getChildrentCount()),child);
                         removeComments.add(child);
-                        continue;
                     }
                 }
             }
@@ -205,11 +179,11 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
 
     public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
-        ArrayList<CommentDTO> currentComments;
-        ArrayList<UserDTO> currentUsers;
-        Context context;
+        final ArrayList<CommentDTO> currentComments;
+        final ArrayList<UserDTO> currentUsers;
+        final Context context;
         public View.OnClickListener listener;
-        ForumPresenter presenter;
+        final ForumPresenter presenter;
 
 
         public ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter) {
@@ -246,7 +220,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             View view2 = new View(getActivity());
             view2.setBackgroundColor(0xFFC2BEBF);
 
-            ConstraintLayout cl = (ConstraintLayout)convertView.findViewById(R.id.commentConstrain);
+            ConstraintLayout cl = convertView.findViewById(R.id.commentConstrain);
             cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));
             cl.setPadding((int) (currentComment.getCommentDepth()*100),0,0,0);
 
@@ -262,19 +236,19 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 }
             }
 
-            ImageButton upvote = (ImageButton) convertView.findViewById(R.id.up);
-            upvote.setOnClickListener(new View.OnClickListener() {
+            ImageButton upVoteButton = convertView.findViewById(R.id.up);
+            upVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("you pressed upvote");
+                    System.out.println("you pressed upVote");
                     int score = currentComment.getScore();
                     currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
                 }
             });
 
-            ImageButton downvote = (ImageButton) convertView.findViewById(R.id.down);
-            downvote.setOnClickListener(new View.OnClickListener() {
+            ImageButton downVoteButton = convertView.findViewById(R.id.down);
+            downVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     System.out.println("you pressed downVote");
@@ -284,7 +258,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 }
             });
 
-            ImageButton replyToComment = (ImageButton) convertView.findViewById(R.id.replyToComment);
+            ImageButton replyToComment = convertView.findViewById(R.id.replyToComment);
             replyToComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
