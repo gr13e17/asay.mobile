@@ -37,9 +37,7 @@ public class BillActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null){
-        }
-        setContentView(R.layout.activity_bill);
+            setContentView(R.layout.activity_bill);
 
         bill = getIntent().getParcelableExtra("bill");
 
@@ -116,17 +114,5 @@ public class BillActivity extends AppCompatActivity {
             return 3;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 1:
-                    return "Lovforslag";
-                case 2:
-                    return "Debat";
-                case 0:
-                    return "Detaljer";
-            }
-            return null;
-        }
     }
 }
