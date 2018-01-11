@@ -40,8 +40,6 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private int billId;
     private ForumPresenter forumPresenter;
     private ArrayList<UserDTO> nameArray = new ArrayList<>(); //contains names of the one who wrote the comment. must be populated from database
-    ArrayList<String> commentArray = new ArrayList<>();
-    ArrayList<Integer> colorArray = new ArrayList<>();
     ArrayAdapter arrayAdapter;
     UserDTO userDTO;
     private View rootView;
@@ -180,23 +178,17 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     }
 
 
-    public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
+    public class ForumAdapter extends BaseAdapter {
         final ArrayList<CommentDTO> currentComments;
         final ArrayList<UserDTO> currentUsers;
         final Context context;
-        public View.OnClickListener listener;
         final ForumPresenter presenter;
 
-
-        public ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter) {
+        ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter) {
             this.currentComments = currentComments;
             this.currentUsers = currentUsers;
             this.context = context;
             this.presenter = presenter;
-        }
-
-        public void setButtonListener(View.OnClickListener listener) {
-            this.listener = listener;
         }
 
         private Drawable getBackground(ArgumentType argumentType) {
@@ -221,12 +213,11 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             final CommentDTO currentComment = currentComments.get(position);
             View view2 = new View(getActivity());
 
+            //Padding for threaded comments
             ConstraintLayout cl = convertView.findViewById(R.id.commentConstrain);
             cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));
-
-            //Find width of screen and use to set padding of threaded comments
             DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+            float dpWidth = displayMetrics.widthPixels / displayMetrics.density; //Find width of screen
             cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
 
             TextView commentText = convertView.findViewById(R.id.comment);
@@ -272,11 +263,6 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             });
 
             return convertView;
-        }
-
-        @Override
-        public void onClick(View v) {
-
         }
 
         @Override
