@@ -13,5 +13,5 @@
   <color name="neutralColor">#DCDCDC</color>
   <color name="buttonDefault">#000000ff</color>
   <color name="buttonPressed">#eeeeee</color>
-  <color name="button_focused">#000000</color>
+  <color name="button_focused">#e60f0f</color>
 </resources>

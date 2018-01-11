@@ -100,8 +100,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="2dp"
                 android:background="@drawable/text_round_corners"
-                android:elevation="1dp"
-                android:gravity="start"
+
                 android:padding="10dp"
                 android:text="@string/load"
                 android:textAlignment="viewStart"
@@ -122,8 +121,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/text_round_corners"
-                android:gravity="start"
-                android:elevation="1dp"
+
                 android:padding="10dp"
                 android:text="@string/load"
                 android:textAlignment="viewStart"
@@ -156,9 +154,9 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:elevation="1dp"
-                android:gravity="center"
+
                 android:padding="8dp"
+                android:background="@drawable/round_corners_for"
                 android:paddingEnd="20dp"
                 android:paddingStart="20dp"
                 android:text="@string/Toparg"
@@ -177,8 +175,9 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:elevation="1dp"
-                android:gravity="center"
+
+                android:background="@drawable/round_corners_against"
+
                 android:padding="8dp"
                 android:paddingEnd="20dp"
                 android:paddingStart="20dp"
@@ -225,12 +224,15 @@
 
     <Button
         android:id="@+id/buttonVote"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:backgroundTint="@color/primaryColor"
         android:text="@string/vote"
+        android:textColor="@color/secondaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"

@@ -25,7 +25,6 @@ import asay.asaymobile.model.CommentDTO;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.ForumPresenter;
 import asay.asaymobile.presenter.UserPresenter;
-import butterknife.ButterKnife;
 
 public class BillCommentsFragment extends Fragment implements View.OnClickListener, ForumContract.View, UserContract.View{
 
@@ -72,7 +71,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
         setArguments(bundle);
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bill_comments, container, false);
+        return inflater.inflate(R.layout.fragment_bill_overview, container, false);
 
 
     }
@@ -208,7 +207,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     private void addDots(TextView txt){
         int lineEndIndex = BillDesc.getLayout().getLineEnd(2);
         String text;
-        if(txt.getText().toString().length() >= 3) {
+        if(BillDesc.getText().toString().length() >= 3) {
             text  = BillDesc.getText().subSequence(0, lineEndIndex - 3) + "...";
         } else
             text = "";
