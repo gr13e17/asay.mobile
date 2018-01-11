@@ -106,7 +106,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private void openWriteCommentDialog(View v, final Double parentId) {
         writeCommentDialog = WriteCommentDialog.newInstance(parentId);
         writeCommentDialog.setCancelable(false);
-        writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(),"writeComment");
+        writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(), "writeComment");
     }
 
     @Override
@@ -116,7 +116,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         }
     }
 
-    private static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
+    private static List<CommentDTO> toThreadedComments(List<CommentDTO> comments) {
 
         //comments should be sorted first
         Collections.sort(comments);
@@ -128,9 +128,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         List<CommentDTO> removeComments = new ArrayList<>();
 
         //get the root comments first (comments with no parent)
-        for(int i = 0; i < comments.size(); i++){
+        for (int i = 0; i < comments.size(); i++) {
             CommentDTO c = comments.get(i);
-            if(c.getParrentId() == 0){
+            if (c.getParrentId() == 0) {
                 c.setCommentDepth(0); //A property of Comment to hold its depth
                 c.setChildrentCount(0); //A property of Comment to hold its child count
                 threaded.add(c);
@@ -138,7 +138,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             }
         }
 
-        if(removeComments.size() > 0){
+        if (removeComments.size() > 0) {
             //clear processed comments
             comments.removeAll(removeComments);
             removeComments.clear();
@@ -146,22 +146,22 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
         int depth = 0;
         //get the child comments up to a max depth of 10
-        while(comments.size() > 0 && depth <= 10){
+        while (comments.size() > 0 && depth <= 10) {
             depth++;
-            for(int j = 0; j< comments.size(); j++){
+            for (int j = 0; j < comments.size(); j++) {
                 CommentDTO child = comments.get(j);
                 //check root comments for match
-                for(int i = 0; i < threaded.size(); i++){
+                for (int i = 0; i < threaded.size(); i++) {
                     CommentDTO parent = threaded.get(i);
-                    if(parent.getId() == child.getParrentId()){
-                        parent.setChildrentCount(parent.getChildrentCount()+1);
-                        child.setCommentDepth(depth+parent.getCommentDepth());
-                        threaded.add((int) (i+parent.getChildrentCount()),child);
+                    if (parent.getId() == child.getParrentId()) {
+                        parent.setChildrentCount(parent.getChildrentCount() + 1);
+                        child.setCommentDepth(depth + parent.getCommentDepth());
+                        threaded.add((int) (i + parent.getChildrentCount()), child);
                         removeComments.add(child);
                     }
                 }
             }
-            if(removeComments.size() > 0){
+            if (removeComments.size() > 0) {
                 //clear processed comments
                 comments.removeAll(removeComments);
                 removeComments.clear();
@@ -241,18 +241,30 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             //Find width of screen and use to set padding of threaded comments
             DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
             float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-            cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
+            cl.setPadding((int) (currentComment.getCommentDepth() * dpWidth * 0.1), 0, 0, 0);
 
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
 
+            TextView dateTextView = convertView.findViewById(R.id.dateTextView);
+
             TextView nameView = convertView.findViewById(R.id.nameView);
             nameView.setBackground(getBackground(currentComment.getArgumentType()));
+            dateTextView.setBackground(getBackground(currentComment.getArgumentType()));
+
+            String userName = null;
             for (UserDTO user : currentUsers) {
                 if (user.getid() == currentComment.getUserid()) {
-                    nameView.setText(user.getname());
+                    userName = user.getname();
                     break;
                 }
+            }
+
+            if (currentComment.getDateTime() != null && userName != null) {
+                nameView.setText(userName);
+                dateTextView.setText(currentComment.getDateTime());
+            } else if (userName != null) {
+                nameView.setText(userName);
             }
 
             ImageButton upVoteButton = convertView.findViewById(R.id.up);
@@ -280,13 +292,6 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                             Toast.LENGTH_LONG).show();
                 }
             });
-            for (UserDTO user : currentUsers) {
-                if (user.getid() == currentComment.getUserid()) {
-
-                    nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
-                    dateTextView.setBackgroundColor(getColor(currentComment.getArgumentType()));
-                }
-            }
 
             ImageButton replyToComment = (ImageButton) convertView.findViewById(R.id.replyToComment);
             replyToComment.setOnClickListener(new View.OnClickListener() {
