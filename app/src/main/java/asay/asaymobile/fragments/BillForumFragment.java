@@ -291,17 +291,12 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             });
             for (UserDTO user : currentUsers) {
                 if (user.getid() == currentComment.getUserid()) {
-                    if (currentComment.getDateTime() != null) {
-                        nameView.setText(user.getname());
-                        dateTextView.setText(currentComment.getDateTime());
-                    }
-                    else{
-                        nameView.setText(user.getname());
-                    }
+
                     nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
                     dateTextView.setBackgroundColor(getColor(currentComment.getArgumentType()));
                 }
             }
+
             ImageButton replyToComment = (ImageButton) convertView.findViewById(R.id.replyToComment);
             replyToComment.setOnClickListener(new View.OnClickListener() {
                 @Override
