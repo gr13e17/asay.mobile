@@ -245,11 +245,23 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             final CommentDTO currentComment = currentComments.get(position);
             View view2 = new View(getActivity());
             view2.setBackgroundColor(0xFFC2BEBF);
+
             ConstraintLayout cl = (ConstraintLayout)convertView.findViewById(R.id.commentConstrain);
-            cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));            cl.setPadding((int) (currentComment.getCommentDepth()*100),0,0,0);
+            cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));
+            cl.setPadding((int) (currentComment.getCommentDepth()*100),0,0,0);
+
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
+
             TextView nameView = convertView.findViewById(R.id.nameView);
+            nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
+            for (UserDTO user : currentUsers) {
+                if (user.getid() == currentComment.getUserid()) {
+                    nameView.setText(user.getname());
+                    break;
+                }
+            }
+
             ImageButton upvote = (ImageButton) convertView.findViewById(R.id.up);
             upvote.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -260,6 +272,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     presenter.updateComment(currentComment);
                 }
             });
+
             ImageButton downvote = (ImageButton) convertView.findViewById(R.id.down);
             downvote.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -270,12 +283,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     presenter.updateComment(currentComment);
                 }
             });
-            for (UserDTO user : currentUsers) {
-                if (user.getid() == currentComment.getUserid()) {
-                    nameView.setText(user.getname());
-                    nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
-                }
-            }
+
             ImageButton replyToComment = (ImageButton) convertView.findViewById(R.id.replyToComment);
             replyToComment.setOnClickListener(new View.OnClickListener() {
                 @Override
