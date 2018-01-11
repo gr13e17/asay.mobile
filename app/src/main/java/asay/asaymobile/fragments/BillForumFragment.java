@@ -1,11 +1,13 @@
 package asay.asaymobile.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -197,16 +199,16 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             this.listener = listener;
         }
 
-        private Integer getColor(ArgumentType argumentType) {
+        private Drawable getBackground(ArgumentType argumentType) {
             switch (argumentType) {
                 case FOR:
-                    return context.getResources().getColor(R.color.forColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_for);
                 case AGAINST:
-                    return context.getResources().getColor(R.color.againstColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_against);
                 case NEUTRAL:
-                    return context.getResources().getColor(R.color.neutralColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_neutral);
                 default:
-                    return context.getResources().getColor(R.color.neutralColor);
+                    return null;
             }
         }
 
@@ -218,17 +220,20 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             }
             final CommentDTO currentComment = currentComments.get(position);
             View view2 = new View(getActivity());
-            view2.setBackgroundColor(0xFFC2BEBF);
 
             ConstraintLayout cl = convertView.findViewById(R.id.commentConstrain);
             cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));
-            cl.setPadding((int) (currentComment.getCommentDepth()*100),0,0,0);
+
+            //Find width of screen and use to set padding of threaded comments
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+            cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
 
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
 
             TextView nameView = convertView.findViewById(R.id.nameView);
-            nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
+            nameView.setBackground(getBackground(currentComment.getArgumentType()));
             for (UserDTO user : currentUsers) {
                 if (user.getid() == currentComment.getUserid()) {
                     nameView.setText(user.getname());
