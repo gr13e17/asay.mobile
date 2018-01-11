@@ -1,5 +1,9 @@
 package asay.asaymobile.model;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by s123725 on 15/12/2017.
  */
@@ -22,6 +26,8 @@ public class CommentDTO {
     double parrentId;
     double commentDepth;
     double childrentCount;
+    String dateTime;
+
     public CommentDTO(){
         //empty contsructor
     }
@@ -36,9 +42,10 @@ public class CommentDTO {
         parrentId = commentDTO.getParrentId();
         childrentCount = commentDTO.getChildrentCount();
         commentDepth = commentDTO.getCommentDepth();
+        dateTime = commentDTO.getDateTime();
     }
 
-    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId, double childrentCount, double commentDepth ){
+    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId, double childrentCount, double commentDepth , String dateTime){
         this.argumentType = argument;
         this.billId = billId;
         this.id = id;
@@ -48,6 +55,7 @@ public class CommentDTO {
         this.parrentId = parrentId;
         this.childrentCount = childrentCount;
         this.commentDepth = commentDepth;
+        this.dateTime = dateTime;
         }
 
     public ArgumentType getArgumentType() {
@@ -101,6 +109,10 @@ public class CommentDTO {
     public void setChildrentCount(double childrentCount) { this.childrentCount = childrentCount; }
 
     public double getChildrentCount() { return childrentCount; }
+
+    public String getDateTime() {
+        return dateTime;
+    }
 }
 
 
