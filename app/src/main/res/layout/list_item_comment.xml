@@ -1,10 +1,14 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/commentConstrain"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="asay.asaymobile.activities.BillActivity$PlaceholderFragment">
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:background="@drawable/text_round_corners">
 
     <TextView
         android:id="@+id/nameView"
@@ -15,6 +19,9 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="0dp"
         android:gravity="start"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="@drawable/text_round_corners"
         android:text="Hanne Olsen"
         android:textAlignment="textStart"
         app:layout_constraintHorizontal_bias="1.0"
@@ -71,5 +78,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/up"
         app:layout_constraintEnd_toStartOf="@+id/replyToComment"
         app:layout_constraintTop_toTopOf="@+id/up" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
