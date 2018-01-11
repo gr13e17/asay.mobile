@@ -14,9 +14,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
@@ -26,6 +32,8 @@ import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.ForumPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static java.util.Calendar.DAY_OF_MONTH;
 
 /**
  * Created by Soelberg on 31-10-2017.
@@ -45,6 +53,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private View rootView;
     private FloatingActionButton commentButtonMain;
     private WriteCommentDialog writeCommentDialog;
+    String dateTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -188,6 +197,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     @Override
     public void onSave(String commentContent, Double parentId, ArgumentType argumentType) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy  HH:mm");
+        dateTime = format.format(calendar.getTime());
         CommentDTO comment = new CommentDTO(
                 argumentType,
                 billId,
@@ -197,7 +209,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 1,
                 parentId,
                 0,
-                0
+                0,
+                dateTime
+
         );
         forumPresenter.addNewComment(comment);
         writeCommentDialog.dismiss();
@@ -250,6 +264,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
             TextView nameView = convertView.findViewById(R.id.nameView);
+            TextView dateTextView = convertView.findViewById(R.id.dateTextView);
             ImageButton upvote = (ImageButton) convertView.findViewById(R.id.up);
             upvote.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -258,6 +273,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     int score = currentComment.getScore();
                     currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
+                    Toast.makeText(getActivity(), R.string.upVote,
+                            Toast.LENGTH_LONG).show();
                 }
             });
             ImageButton downvote = (ImageButton) convertView.findViewById(R.id.down);
@@ -268,12 +285,21 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     int score = currentComment.getScore();
                     currentComment.setScore(score - 1);
                     presenter.updateComment(currentComment);
+                    Toast.makeText(getActivity(), R.string.downVote,
+                            Toast.LENGTH_LONG).show();
                 }
             });
             for (UserDTO user : currentUsers) {
                 if (user.getid() == currentComment.getUserid()) {
-                    nameView.setText(user.getname());
+                    if (currentComment.getDateTime() != null) {
+                        nameView.setText(user.getname());
+                        dateTextView.setText(currentComment.getDateTime());
+                    }
+                    else{
+                        nameView.setText(user.getname());
+                    }
                     nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
+                    dateTextView.setBackgroundColor(getColor(currentComment.getArgumentType()));
                 }
             }
             ImageButton replyToComment = (ImageButton) convertView.findViewById(R.id.replyToComment);

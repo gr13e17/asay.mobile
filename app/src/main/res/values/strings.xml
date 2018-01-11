@@ -40,5 +40,8 @@
     <string name="ended">Afsluttede</string>
     <string name="favorits">Favoritter</string>
 
+    <string name="upVote">Du har stemt kommentaren op</string>
+    <string name="downVote">Du har stemt kommentaren ned</string>
+
 
 </resources>
