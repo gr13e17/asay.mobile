@@ -15,17 +15,21 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import asay.asaymobile.R;
+import asay.asaymobile.model.ArgumentType;
 
 /**
  * Dialog fragment to show the pop up where user can write a comment
  */
 
 public class WriteCommentDialog extends DialogFragment {
+    ArgumentType argumentType;
 
     public interface WriteCommentListener {
-        void onSave(String comment, Double parentId);
+        void onSave(String comment, Double parentId, ArgumentType argumentType);
     }
 
     public static WriteCommentDialog newInstance(Double parentId) {
@@ -57,13 +61,32 @@ public class WriteCommentDialog extends DialogFragment {
 
         final Button replyButton = writeCommentView.findViewById(R.id.reply_button);
         final EditText commentEditText = writeCommentView.findViewById(R.id.content);
+        final RadioGroup radioGroup = writeCommentView.findViewById(R.id.radioGroup);
+        final RadioButton forRadio = writeCommentView.findViewById(R.id.forRadioButton);
+        final RadioButton agiensRadio = writeCommentView.findViewById(R.id.agienstRadioButton);
+        final RadioButton neutralRadio = writeCommentView.findViewById(R.id.neutralRadioButto);
+        neutralRadio.setChecked(true);
+
 
         replyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String commentContent = commentEditText.getText().toString();
                 commentContent = commentContent.trim(); //trim string for trailing and leading whitespaces
-                ((WriteCommentListener) getParentFragment()).onSave(commentContent, getArguments().getDouble("parentId")); // save comment
+                int radioId = radioGroup.getCheckedRadioButtonId();
+                if (radioId == forRadio.getId()){
+                    argumentType = ArgumentType.FOR;
+                    System.out.println("for ###"+ argumentType);
+                }
+                else if (radioId == agiensRadio.getId()){
+                    argumentType = ArgumentType.AGAINST;
+                    System.out.println("agienst ###" + argumentType);
+                }
+                else{
+                    argumentType = ArgumentType.NEUTRAL;
+                    System.out.println("neutral ###"+ argumentType);
+                }
+                ((WriteCommentListener) getParentFragment()).onSave(commentContent, getArguments().getDouble("parentId"), argumentType); // save comment
             }
         });
 
