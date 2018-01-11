@@ -27,7 +27,7 @@
             android:name=".activities.BillActivity"
             android:label="@string/title_activity_bill"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.ProfileActivity"/>
     </application>
 

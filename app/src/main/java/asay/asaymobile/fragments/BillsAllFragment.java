@@ -69,26 +69,27 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         billPresenter = new BillPresenter(this);
         userPresenter = new UserPresenter(this);
         boolean isFavorite = false;
-        if(getArguments() != null){
-            isFavorite = getArguments().getBoolean("isFavorite");
-        }
         boolean isEnded = false;
         if(getArguments() != null){
+            isFavorite = getArguments().getBoolean("isFavorite");
             isEnded = getArguments().getBoolean("isEnded");
         }
+
         String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
 
-
-        if(!isFavorite){
-            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
-            billPresenter.getAllBills();
-        } else{
+        if(isFavorite){
             userPresenter.getUser(userId);
             view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
             getFilter();
+        } else if (isEnded) {
+            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
+            billPresenter.getEndedBills();
+        } else {
+            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
+            billPresenter.getAllBills();
         }
         return view;
     }

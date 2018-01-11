@@ -24,20 +24,20 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Fortryd stemme"
+        android:text="@string/cancel_vote"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
 
     <TextView
-        android:id="@+id/argForHead"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="13dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Stemme afgivet"
+        android:text="@string/vote_registered"
         app:layout_constraintBottom_toTopOf="@+id/buttonCancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -50,10 +50,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/againstColor"
-        android:text="IMOD"
-        app:layout_constraintBottom_toTopOf="@+id/argForHead"
+        android:text="@string/argument_against"
+        app:layout_constraintBottom_toTopOf="@+id/status"
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
 
     <Button
@@ -64,21 +63,22 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/forColor"
-        android:text="FOR"
+        android:text="@string/argument_for"
         app:layout_constraintBottom_toTopOf="@+id/buttonAgainst"
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Titel på lovforslaget man stemmer på"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="@string/BillExampleHead"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="19sp"
         app:layout_constraintBottom_toTopOf="@+id/buttonFor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
