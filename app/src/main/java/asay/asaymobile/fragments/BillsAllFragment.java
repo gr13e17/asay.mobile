@@ -17,10 +17,8 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,6 +80,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         } else if (isEnded) {
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
             billPresenter.getEndedBills();
+            view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
         } else {
             new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
             billPresenter.getAllBills();

@@ -183,9 +183,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     }
 
     @Override
-    public void onSave(String commentContent, Double parentId) {
+    public void onSave(String commentContent, Double parentId, ArgumentType argumentType) {
         CommentDTO comment = new CommentDTO(
-                ArgumentType.FOR,
+                argumentType,
                 billId,
                 0,
                 0,
