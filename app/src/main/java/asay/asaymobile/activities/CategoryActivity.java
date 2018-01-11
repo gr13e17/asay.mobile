@@ -1,7 +1,9 @@
 package asay.asaymobile.activities;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import asay.asaymobile.R;
 import asay.asaymobile.model.BillDTO;
@@ -71,9 +74,16 @@ public class CategoryActivity extends AppCompatActivity {
                             String text = category.getText().toString().toLowerCase();
                             try {
                                 categoriesObject = new JSONObject(jsonstring.toString());
+                                boolean contains = false;
                                 if(categoriesObject.has(text)){
                                     JSONArray list = categoriesObject.getJSONArray(text);
-                                    list.put(billDTO.getResume());
+                                    for(int i=0; i<list.length();i++){
+                                        if(list.get(i).toString().equals(billDTO.getResume())){
+                                            contains = true;
+                                        }
+                                    }
+                                    if(!contains)
+                                        list.put(billDTO.getResume());
                                 } else{
                                     JSONArray list = new JSONArray();
                                     list.put(billDTO.getResume());
@@ -108,6 +118,7 @@ public class CategoryActivity extends AppCompatActivity {
                                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                 }
                             });
+                            billCategorized(billDTO.getId());
                             finish();
                         }
                     });
@@ -124,14 +135,31 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
-
-
         TextView title = findViewById(R.id.title);
         title.setText(billDTO.getNumber()+": " + billDTO.getTitle());
         TextView description = findViewById(R.id.resume);
         description.setText(billDTO.getResume());
 
         }
-
+    private void billCategorized(double billId){
+        SharedPreferences sharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        String billString =  sharedPrefs.getString("categorizedBills","");
+        ArrayList<Double> billIdList= new ArrayList<Double>();
+        if(!billString.isEmpty()){
+            String[] items = billString.split(",");
+            for (String item : items) {
+                billIdList.add(Double.parseDouble(item));
+            }
+            billIdList.add(billId);
+        } else{
+            billIdList.add(billId);
+        }
+        StringBuilder builder = new StringBuilder();
+        for(double item : billIdList){
+            builder.append(String.valueOf(item)).append(",");
+        }
+        sharedPrefs.edit().putString("categorizedBills",builder.toString()).apply();
+    }
 
 }

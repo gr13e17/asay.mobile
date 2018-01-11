@@ -1,10 +1,13 @@
 package asay.asaymobile.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,11 +17,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,8 +34,8 @@ import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
 import asay.asaymobile.UserContract;
 import asay.asaymobile.activities.BillActivity;
-import asay.asaymobile.activities.MainActivity;
 import asay.asaymobile.activities.CategoryActivity;
+import asay.asaymobile.activities.MainActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.model.UserDTO;
@@ -121,9 +123,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                                 Intent intent = new Intent(getContext(), CategoryActivity.class);
                                 intent.putExtra("bill",bill);
                                 startActivity(intent);
-                                Toast.makeText( view.getContext(),
-                                        "ImageView clicked",
-                                        Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -159,6 +158,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             if(bill.getResume() != null && !bill.getResume().isEmpty())
                 this.bills.add(bill);
         }
+        removeCategorized(getContext());
         adapter.notifyDataSetChanged();
         if (getView() != null)
             getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
@@ -169,6 +169,26 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             listFilter = new ListFilter();
         }
         return listFilter;
+    }
+
+    private void removeCategorized(Context context){
+        SharedPreferences sharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        String categorized = sharedPrefs.getString("categorizedBills","");
+        ArrayList<Double> billIdList= new ArrayList<Double>();
+        if(!categorized.isEmpty()){
+            String[] items = categorized.split(",");
+            for (String item : items) {
+                billIdList.add(Double.parseDouble(item));
+            }
+            for(double item : billIdList){
+                for(int i=bills.size() - 1; i >= 0;i--){
+                    if(bills.get(i).getId() == (int) item){
+                        bills.remove(i);
+                    }
+                }
+            }
+        }
     }
 
     @Override
