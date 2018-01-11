@@ -116,11 +116,11 @@ public class CommentDTO implements Comparable<CommentDTO> {
     @Override
     public int compareTo(@NonNull CommentDTO o) {
         if (this.score < o.score)
-            return -1;
+            return 1; //after
         else if (this.score > o.score)
-            return 1;
+            return -1; //before
         else
-            return 0;
+            return 0; //equal
     }
 }
 

@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import asay.asaymobile.ForumContract;
@@ -87,8 +88,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
         List<CommentDTO> threadedComments = toThreadedComments(currentComment);
         ForumAdapter commentArrayAdapter = new ForumAdapter((ArrayList<CommentDTO>) threadedComments, nameArray, getContext(), forumPresenter);
-
-        listView.setAdapter(commentArrayAdapter);
+        if (listView.getAdapter() == null) {
+            listView.setAdapter(commentArrayAdapter);
+        }
     }
 
     @Override
@@ -133,7 +135,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     public static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
 
-        //comments should be sorted by date first
+        //comments should be sorted first
+        Collections.sort(comments);
 
         //The resulting array of threaded comments
         List<CommentDTO> threaded = new ArrayList<CommentDTO>();
