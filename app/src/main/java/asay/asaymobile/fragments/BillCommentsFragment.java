@@ -205,10 +205,10 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     }
 
     private void addDots(TextView txt){
-        int lineEndIndex = BillDesc.getLayout().getLineEnd(2);
+        int lineEndIndex = txt.getLayout().getLineEnd(2);
         String text;
-        if(BillDesc.getText().toString().length() >= 3) {
-            text  = BillDesc.getText().subSequence(0, lineEndIndex - 3) + "...";
+        if(txt.getText().toString().length() >= 3) {
+            text  = txt.getText().subSequence(0, lineEndIndex - 3) + "...";
         } else
             text = "";
         txt.setText(text);
