@@ -140,7 +140,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             this.bills.add(bill);
         }
         adapter.notifyDataSetChanged();
-        getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
+        if (getView() != null)
+            getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
     }
 
     public Filter getFilter() {
