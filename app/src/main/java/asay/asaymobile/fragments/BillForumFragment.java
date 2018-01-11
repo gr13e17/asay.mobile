@@ -102,29 +102,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void onClick(View view) {
         if (view == commentButtonMain) {
             openWriteCommentDialog(rootView, 0.0);
-        }// else if (view == replyButton) {
-         //   EditText editText = writeCommentView.findViewById(R.id.content);
-         //   String content = editText.getText().toString();
-         //   content = content.trim(); //trim string for trailing and leading whitespaces
-//
-         //   // Show error if no comment is written
-         //   if (content.length() == 0) {
-         //       editText.setError(getResources().getString(R.string.error_no_text));
-         //       return;
-         //   }
-//
-         //   CommentDTO comment = new CommentDTO(
-         //           ArgumentType.FOR,
-         //           billId,
-         //           0,
-         //           0,
-         //           content,
-         //           1,
-         //           0
-         //   );
-         //   forumPresenter.addNewComment(comment);
-         //   writeCommentDialog.dismiss();
-        //}
+        }
     }
 
     private static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
@@ -141,9 +119,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         //get the root comments first (comments with no parent)
         for(int i = 0; i < comments.size(); i++){
             CommentDTO c = comments.get(i);
-            if(c.getParentId() == 0){
+            if(c.getParrentId() == 0){
                 c.setCommentDepth(0); //A property of Comment to hold its depth
-                c.setChildrenCount(0); //A property of Comment to hold its child count
+                c.setChildrentCount(0); //A property of Comment to hold its child count
                 threaded.add(c);
                 removeComments.add(c);
             }
@@ -164,10 +142,10 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 //check root comments for match
                 for(int i = 0; i < threaded.size(); i++){
                     CommentDTO parent = threaded.get(i);
-                    if(parent.getId() == child.getParentId()){
-                        parent.setChildrenCount(parent.getChildrenCount()+1);
+                    if(parent.getId() == child.getParrentId()){
+                        parent.setChildrentCount(parent.getChildrentCount()+1);
                         child.setCommentDepth(depth+parent.getCommentDepth());
-                        threaded.add((int) (i+parent.getChildrenCount()),child);
+                        threaded.add((int) (i+parent.getChildrentCount()),child);
                         removeComments.add(child);
                     }
                 }
@@ -267,7 +245,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 }
             });
             for (UserDTO user : currentUsers) {
-                if (user.getid() == currentComment.getUserId()) {
+                if (user.getid() == currentComment.getUserid()) {
                     nameView.setText(user.getname());
                     nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
                 }

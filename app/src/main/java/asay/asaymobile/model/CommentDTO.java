@@ -12,13 +12,13 @@ public class CommentDTO implements Comparable<CommentDTO> {
     private double id;
     private int score;
     private String text;
-    private double userId;
-    private double parentId;
+    private double userid;
+    private double parrentId;
     private double commentDepth;
-    private double childrenCount;
+    private double childrentCount;
 
     public CommentDTO() {
-        //empty contsructor
+        //empty constructor
     }
 
     public CommentDTO(final CommentDTO commentDTO) {
@@ -27,21 +27,21 @@ public class CommentDTO implements Comparable<CommentDTO> {
         id = commentDTO.getId();
         score = commentDTO.getScore();
         text = commentDTO.getText();
-        userId = commentDTO.getUserId();
-        parentId = commentDTO.getParentId();
-        childrenCount = commentDTO.getChildrenCount();
+        userid = commentDTO.getUserid();
+        parrentId = commentDTO.getParrentId();
+        childrentCount = commentDTO.getChildrentCount();
         commentDepth = commentDTO.getCommentDepth();
     }
 
-    public CommentDTO(final ArgumentType argument, double billId, final int id, final int score, final String text, final int userId, double parentId, double childrenCount, double commentDepth) {
+    public CommentDTO(final ArgumentType argument, double billId, final int id, final int score, final String text, final int userid, double parrentId, double childrentCount, double commentDepth) {
         this.argumentType = argument;
         this.billId = billId;
         this.id = id;
         this.score = score;
         this.text = text;
-        this.userId = userId;
-        this.parentId = parentId;
-        this.childrenCount = childrenCount;
+        this.userid = userid;
+        this.parrentId = parrentId;
+        this.childrentCount = childrentCount;
         this.commentDepth = commentDepth;
     }
 
@@ -85,16 +85,16 @@ public class CommentDTO implements Comparable<CommentDTO> {
         this.text = text;
     }
 
-    public double getUserId() {
-        return userId;
+    public double getUserid() {
+        return userid;
     }
 
-    public void setUserId(double userId) {
-        this.userId = userId;
+    public void setUserid(double userid) {
+        this.userid = userid;
     }
 
-    public double getParentId() {
-        return parentId;
+    public double getParrentId() {
+        return parrentId;
     }
 
     public void setCommentDepth(double commentDepth) {
@@ -105,12 +105,12 @@ public class CommentDTO implements Comparable<CommentDTO> {
         return commentDepth;
     }
 
-    public void setChildrenCount(double childrenCount) {
-        this.childrenCount = childrenCount;
+    public void setChildrentCount(double childrentCount) {
+        this.childrentCount = childrentCount;
     }
 
-    public double getChildrenCount() {
-        return childrenCount;
+    public double getChildrentCount() {
+        return childrentCount;
     }
 
     @Override
