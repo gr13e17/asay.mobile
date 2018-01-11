@@ -11,8 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import asay.asaymobile.R;
+import asay.asaymobile.fragments.BillCommentsFragment;
+import asay.asaymobile.fragments.BillDetailFragment;
 import asay.asaymobile.fragments.BillForumFragment;
-import asay.asaymobile.fragments.BillOverviewFragment;
 import asay.asaymobile.model.BillDTO;
 
 public class BillActivity extends AppCompatActivity {
@@ -89,7 +90,7 @@ public class BillActivity extends AppCompatActivity {
             switch (position) {
                 case 1:
                     bundle.putParcelable("bill", bill);
-                    BillOverviewFragment overview = new BillOverviewFragment();
+                    BillCommentsFragment overview = new BillCommentsFragment();
                     bundle.putString("view", "comments");
                     overview.setArguments(bundle);
                     return overview;
@@ -101,7 +102,7 @@ public class BillActivity extends AppCompatActivity {
                 case 0:
                     bundle.putParcelable("bill", bill);
                     bundle.putString("view", "details");
-                    BillOverviewFragment details  = new BillOverviewFragment();
+                    BillDetailFragment details  = new BillDetailFragment();
                     details.setArguments(bundle);
                     return details;
                 default:
