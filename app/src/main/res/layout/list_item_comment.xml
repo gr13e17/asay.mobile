@@ -1,17 +1,24 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/commentConstrain"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="asay.asaymobile.activities.BillActivity$PlaceholderFragment">
+    android:layout_height="wrap_content" >
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:background="@drawable/text_round_corners">
 
     <TextView
         android:id="@+id/nameView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:text="Hanne Olsen"
+        android:text="@string/user_0"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="@drawable/text_round_corners"
         android:textAlignment="textStart"
         app:layout_constraintEnd_toStartOf="@+id/dateTextView"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,7 +31,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:singleLine="false"
-        android:text="Jeg er enig i ovenstående kommentar, da jeg har oplevet lignende tidligere."
+        android:text="@string/load"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameView" />
@@ -66,6 +73,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/up"
         app:layout_constraintEnd_toStartOf="@+id/replyToComment"
         app:layout_constraintTop_toTopOf="@+id/up" />
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/dateTextView"

@@ -1,11 +1,13 @@
 package asay.asaymobile.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,25 +43,19 @@ import static java.util.Calendar.DAY_OF_MONTH;
  */
 
 public class BillForumFragment extends Fragment implements ForumContract.View, View.OnClickListener, WriteCommentDialog.WriteCommentListener {
-    //contains names of the one who wrote the comment. must be populated from database
     @BindView(R.id.forum_list_view)
     ListView listView;
-    int billId;
-    ForumPresenter forumPresenter;
-    ArrayList<UserDTO> nameArray = new ArrayList<UserDTO>();
-    ArrayList<String> commentArray = new ArrayList<String>();
-    ArrayList<Integer> colorArray = new ArrayList<Integer>();
+    private int billId;
+    private ForumPresenter forumPresenter;
+    private ArrayList<UserDTO> nameArray = new ArrayList<>(); //contains names of the one who wrote the comment. must be populated from database
+    ArrayList<String> commentArray = new ArrayList<>();
+    ArrayList<Integer> colorArray = new ArrayList<>();
     ArrayAdapter arrayAdapter;
     UserDTO userDTO;
     private View rootView;
     private FloatingActionButton commentButtonMain;
     private WriteCommentDialog writeCommentDialog;
     String dateTime;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,7 +71,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
         // Inflate the layout for this fragment
-        // call AsynTask to perform network operation on separate thread
+        // call AsyncTask to perform network operation on separate thread
         forumPresenter = new ForumPresenter(this, billId);
         // get reference to the views
 
@@ -96,8 +93,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
         List<CommentDTO> threadedComments = toThreadedComments(currentComment);
         ForumAdapter commentArrayAdapter = new ForumAdapter((ArrayList<CommentDTO>) threadedComments, nameArray, getContext(), forumPresenter);
-
-        listView.setAdapter(commentArrayAdapter);
+        if (listView.getAdapter() == null) {
+            listView.setAdapter(commentArrayAdapter);
+        }
     }
 
     @Override
@@ -105,7 +103,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         this.nameArray = users;
     }
 
-    public void openWriteCommentDialog(View v, final Double parentId) {
+    private void openWriteCommentDialog(View v, final Double parentId) {
         writeCommentDialog = WriteCommentDialog.newInstance(parentId);
         writeCommentDialog.setCancelable(false);
         writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(),"writeComment");
@@ -115,40 +113,19 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void onClick(View view) {
         if (view == commentButtonMain) {
             openWriteCommentDialog(rootView, 0.0);
-        }// else if (view == replyButton) {
-         //   EditText editText = writeCommentView.findViewById(R.id.content);
-         //   String content = editText.getText().toString();
-         //   content = content.trim(); //trim string for trailing and leading whitespaces
-//
-         //   // Show error if no comment is written
-         //   if (content.length() == 0) {
-         //       editText.setError(getResources().getString(R.string.error_no_text));
-         //       return;
-         //   }
-//
-         //   CommentDTO comment = new CommentDTO(
-         //           ArgumentType.FOR,
-         //           billId,
-         //           0,
-         //           0,
-         //           content,
-         //           1,
-         //           0
-         //   );
-         //   forumPresenter.addNewComment(comment);
-         //   writeCommentDialog.dismiss();
-        //}
+        }
     }
 
-    public static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
+    private static List<CommentDTO> toThreadedComments(List<CommentDTO> comments){
 
-        //comments should be sorted by date first
+        //comments should be sorted first
+        Collections.sort(comments);
 
         //The resulting array of threaded comments
-        List<CommentDTO> threaded = new ArrayList<CommentDTO>();
+        List<CommentDTO> threaded = new ArrayList<>();
 
         //An array used to hold processed comments which should be removed at the end of the cycle
-        List<CommentDTO> removeComments = new ArrayList<CommentDTO>();
+        List<CommentDTO> removeComments = new ArrayList<>();
 
         //get the root comments first (comments with no parent)
         for(int i = 0; i < comments.size(); i++){
@@ -181,7 +158,6 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                         child.setCommentDepth(depth+parent.getCommentDepth());
                         threaded.add((int) (i+parent.getChildrentCount()),child);
                         removeComments.add(child);
-                        continue;
                     }
                 }
             }
@@ -219,11 +195,11 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
 
     public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
-        ArrayList<CommentDTO> currentComments;
-        ArrayList<UserDTO> currentUsers;
-        Context context;
+        final ArrayList<CommentDTO> currentComments;
+        final ArrayList<UserDTO> currentUsers;
+        final Context context;
         public View.OnClickListener listener;
-        ForumPresenter presenter;
+        final ForumPresenter presenter;
 
 
         public ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter) {
@@ -237,16 +213,16 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             this.listener = listener;
         }
 
-        private Integer getColor(ArgumentType argumentType) {
+        private Drawable getBackground(ArgumentType argumentType) {
             switch (argumentType) {
                 case FOR:
-                    return context.getResources().getColor(R.color.forColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_for);
                 case AGAINST:
-                    return context.getResources().getColor(R.color.againstColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_against);
                 case NEUTRAL:
-                    return context.getResources().getColor(R.color.neutralColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_neutral);
                 default:
-                    return context.getResources().getColor(R.color.neutralColor);
+                    return null;
             }
         }
 
@@ -258,18 +234,32 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             }
             final CommentDTO currentComment = currentComments.get(position);
             View view2 = new View(getActivity());
-            view2.setBackgroundColor(0xFFC2BEBF);
-            ConstraintLayout cl = (ConstraintLayout)convertView.findViewById(R.id.commentConstrain);
-            cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));            cl.setPadding((int) (currentComment.getCommentDepth()*100),0,0,0);
+
+            ConstraintLayout cl = convertView.findViewById(R.id.commentConstrain);
+            cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));
+
+            //Find width of screen and use to set padding of threaded comments
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+            cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
+
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
+
             TextView nameView = convertView.findViewById(R.id.nameView);
-            TextView dateTextView = convertView.findViewById(R.id.dateTextView);
-            ImageButton upvote = (ImageButton) convertView.findViewById(R.id.up);
-            upvote.setOnClickListener(new View.OnClickListener() {
+            nameView.setBackground(getBackground(currentComment.getArgumentType()));
+            for (UserDTO user : currentUsers) {
+                if (user.getid() == currentComment.getUserid()) {
+                    nameView.setText(user.getname());
+                    break;
+                }
+            }
+
+            ImageButton upVoteButton = convertView.findViewById(R.id.up);
+            upVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("you pressed upvote");
+                    System.out.println("you pressed upVote");
                     int score = currentComment.getScore();
                     currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
@@ -277,8 +267,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                             Toast.LENGTH_LONG).show();
                 }
             });
-            ImageButton downvote = (ImageButton) convertView.findViewById(R.id.down);
-            downvote.setOnClickListener(new View.OnClickListener() {
+
+            ImageButton downVoteButton = convertView.findViewById(R.id.down);
+            downVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     System.out.println("you pressed downVote");
