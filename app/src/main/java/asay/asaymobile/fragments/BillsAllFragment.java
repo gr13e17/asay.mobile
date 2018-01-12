@@ -137,12 +137,14 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         this.bills.clear();
         for(BillDTO bill : bills){
-            if(bill.getResume() != null && !bill.getResume().isEmpty() && (bill.getTypeId() == 87 ||
-                    bill.getTypeId() == 7 || bill.getTypeId() == 23 || bill.getTypeId() == 17 ||
-                    bill.getTypeId() == 12))
+//            if(bill.getResume() != null && !bill.getResume().isEmpty() && (bill.getTypeId() == 87 ||
+//                    bill.getTypeId() == 7 || bill.getTypeId() == 23 || bill.getTypeId() == 17 ||
+//                    bill.getTypeId() == 12))
+            if(bill.getResume() != null && !bill.getResume().isEmpty())
                 this.bills.add(bill);
         }
-        adapter.notifyDataSetChanged();
+        if(!bills.isEmpty())
+            adapter.notifyDataSetChanged();
 
         if (getView() != null)
             getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
@@ -172,7 +174,16 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 }
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
+                int actorId = 0;
+
                 for (int i = 0; i < articles.length(); i++){
+                    JSONArray actors = articles.getJSONObject(i).getJSONArray("SagAktør");
+                    for(int j=0; j < actors.length(); j++){
+                        if (actors.getJSONObject(j).getString("aktørid").equals("11")){
+                            actorId = Integer.valueOf(actors.getJSONObject(j).getString("aktørid"));
+                        }
+
+                    }
                     BillDTO bill = new BillDTO(
                             " ",
                             articles.getJSONObject(i).getJSONObject("Periode").getString("slutdato"),
@@ -183,7 +194,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("titel"),
                             articles.getJSONObject(i).getString("titelkort"),
                             articles.getJSONObject(i).getString("resume"),
-                           Integer.valueOf(articles.getJSONObject(i).getString("typeid"))
+                            Integer.valueOf(articles.getJSONObject(i).getString("typeid")),
+                            actorId
                     );
                     billPresenter.addNewBill(bill);
                 }
