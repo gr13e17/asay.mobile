@@ -107,6 +107,10 @@ public class BillInteractor {
                     Object result = data.child("id").getValue();
                     if (data.child("id").getValue().toString().equals(String.valueOf(billDTO.id))) {
                         exist = true;
+                        BillDTO databillDTO = data.getValue(BillDTO.class);
+                        if(!databillDTO.equals(billDTO)){
+                            exist = false;
+                        }
                     } else {
                         //do something
                     }
