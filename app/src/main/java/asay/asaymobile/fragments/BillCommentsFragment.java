@@ -94,11 +94,11 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
 
         expArg1 = (TextView) rootView.findViewById(R.id.expandArgFor);
         expArg1.setOnClickListener(this);
-        expArg1.setVisibility(View.INVISIBLE);
+        expArg1.setVisibility(View.GONE);
 
         expArg2 = (TextView) rootView.findViewById(R.id.expandArgAgainst);
         expArg2.setOnClickListener(this);
-        expArg2.setVisibility(View.INVISIBLE);
+        expArg2.setVisibility(View.GONE);
 
         sub = (ImageButton) rootView.findViewById(R.id.subbtn);
         sub.setOnClickListener(this);
@@ -214,10 +214,10 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
         txt.setText(text);
     }
 
-    private void expandTextView(TextView billDesc, String orgTxt){
-        billDesc.setText(orgTxt);
-        ObjectAnimator animation = ObjectAnimator.ofInt(billDesc, "maxLines", billDesc.getLineCount());
-        if(billDesc.getLineCount()>7){
+    private void expandTextView(TextView txt, String orgTxt){
+        txt.setText(orgTxt);
+        ObjectAnimator animation = ObjectAnimator.ofInt(txt, "maxLines", txt.getLineCount());
+        if(txt.getLineCount()>7){
         animation.setDuration(80).start();}
         else{
             animation.setDuration(30).start();
@@ -279,7 +279,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     addDots(arg1);
                     expArg1.setVisibility(View.VISIBLE);
                 } else {
-                    expArg1.setVisibility(View.INVISIBLE);
+                    expArg1.setVisibility(View.GONE);
                 }
             }
             if (arg2 != null) {
@@ -291,7 +291,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
                     addDots(arg2);
                     expArg2.setVisibility(View.VISIBLE);
                 } else {
-                    expArg2.setVisibility(View.INVISIBLE);
+                    expArg2.setVisibility(View.GONE);
                 }
             }
         } else{
@@ -300,9 +300,9 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
             if (arg2 != null)
                 arg2.setText(R.string.noComments);
             if (expArg1 != null)
-                expArg1.setVisibility(View.INVISIBLE);
+                expArg1.setVisibility(View.GONE);
             if (expArg2 != null)
-                expArg2.setVisibility(View.INVISIBLE);
+                expArg2.setVisibility(View.GONE);
         }
 
 
