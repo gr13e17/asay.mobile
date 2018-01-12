@@ -40,11 +40,11 @@
     <string name="ended">Afsluttede</string>
     <string name="favorits">Favoritter</string>
     <string name="user_0">Hanne Olsen</string>
-
     <string name="upVote">Du har stemt kommentaren op</string>
     <string name="downVote">Du har stemt kommentaren ned</string>
     <string name="noCommentsFor">Der er ingen kommentarer som argumenterer for forslaget endnu</string>
     <string name="noCommentsAgainst">Der er ingen kommentarer som argumenterer imod forslaget endnu</string>
+    <string name="dummy_date">18/01/18 10:38</string>
 
 
 </resources>

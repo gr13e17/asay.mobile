@@ -231,15 +231,16 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             float dpWidth = getResources().getDisplayMetrics().widthPixels;
             cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
 
+            //Set comment text
             TextView commentText = convertView.findViewById(R.id.comment);
             commentText.setText(currentComment.getText());
 
-            TextView dateTextView = convertView.findViewById(R.id.dateTextView);
-            dateTextView.setBackground(getBackground(currentComment.getArgumentType()));
+            //Header background color based on ArgumentType
+            View header = convertView.findViewById(R.id.header);
+            header.setBackground(getBackground(currentComment.getArgumentType()));
 
+            //Set name text
             TextView nameView = convertView.findViewById(R.id.nameView);
-            nameView.setBackground(getBackground(currentComment.getArgumentType()));
-
             for (UserDTO user : currentUsers) {
                 if (user.getid() == currentComment.getUserid()) {
                     nameView.setText(user.getname());
@@ -247,7 +248,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 }
             }
 
+            //Set datetime text
             if (currentComment.getDateTime() != null) {
+                TextView dateTextView = convertView.findViewById(R.id.dateTextView);
                 dateTextView.setText(currentComment.getDateTime());
             }
 
