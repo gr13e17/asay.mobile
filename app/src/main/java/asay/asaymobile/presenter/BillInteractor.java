@@ -4,9 +4,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import asay.asaymobile.model.BillDTO;
 
@@ -50,11 +53,34 @@ public class BillInteractor {
     }
 
     void retriveEndedBills() {
+        Date date = new Date();
+        String str = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date);
+        Query query = billElementReference.orderByChild("deadline").endAt(str);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                BillDTO billDTO = new BillDTO();
+                mbillList.clear();
+                for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
+                    billDTO = messagesSnapshot.getValue(BillDTO.class);
+                    mbillList.add(billDTO);
+                }
+                presenter.refreshCurrentBillDTO(mbillList);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TODO: Handle error on presenter here.
+            }
+        });
     }
 
     void retrieveAllBills() {
-        billElementReference.addValueEventListener(new ValueEventListener() {
+        Date date = new Date();
+        String str = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date);
+        Query query = billElementReference.orderByChild("deadline").startAt(str);
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mbillList.clear();
