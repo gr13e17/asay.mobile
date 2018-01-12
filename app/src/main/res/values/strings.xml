@@ -20,7 +20,7 @@
     <string name="ok">OK</string>
     <string name="showMore">Se mere</string>
     <string name="showLess">Se mindre</string>
-    <string name="noComments">Der er ingen kommentarer til dette forum endnu</string>
+    <string name="noComments">Der er ingen kommentarer i debatten endnu</string>
     <string name="number_of_votes">Deltagelse: %d personer</string>
     <string name="days_until_deadline">Deadline: %d dage</string>
     <string name="your_profile">Din profil</string>
@@ -43,6 +43,8 @@
 
     <string name="upVote">Du har stemt kommentaren op</string>
     <string name="downVote">Du har stemt kommentaren ned</string>
+    <string name="noCommentsFor">Der er ingen kommentarer som argumenterer for forslaget endnu</string>
+    <string name="noCommentsAgainst">Der er ingen kommentarer som argumenterer imod forslaget endnu</string>
 
 
 </resources>

@@ -255,54 +255,69 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void refreshCurrentCommentList(ArrayList<CommentDTO> currentComment) {
-        if(currentComment.size() != 0){
-            int maxFor = 0, maxAgainst = 0, positionFor = 0, positionAgainst = 0, counter = 0;
-            for(CommentDTO comment : currentComment){
-                if(maxFor < comment.getScore() && comment.getArgumentType().equals(ArgumentType.FOR)){
-                    maxFor = comment.getScore();
-                    positionFor = counter;
-                } else if (maxAgainst < comment.getScore() && comment.getArgumentType().equals(ArgumentType.AGAINST)) {
-                    maxAgainst = comment.getScore();
-                    positionAgainst = counter;
+    public void refreshCurrentCommentList(ArrayList<CommentDTO> comments) {
+        if(comments.size() != 0){
+            Integer maxFor = null, maxAgainst = null, positionFor = null, positionAgainst = null, counter = 0;
+            for(CommentDTO comment : comments){
+                int score = comment.getScore();
+                ArgumentType type = comment.getArgumentType();
+                if(type.equals(ArgumentType.FOR)){
+                    if (maxFor == null || maxFor < score) {
+                        maxFor = comment.getScore();
+                        positionFor = counter;
+                    }
+                } else if (type.equals(ArgumentType.AGAINST)) {
+                    if (maxAgainst == null || maxAgainst < score) {
+                        maxAgainst = comment.getScore();
+                        positionAgainst = counter;
+                    }
                 }
                 counter++;
             }
 
             if (arg1 != null) {
-                arg1.setText(currentComment.get(positionFor).getText());
-                System.out.println("for text: " + arg1.getText().toString());
-                arg1Org = arg1.getText().toString();
-
-                if (arg1.getLineCount() > 3) {
-                    arg1.setOnClickListener(this);
-                    addDots(arg1);
-                    expArg1.setVisibility(View.VISIBLE);
-                } else {
-                    expArg1.setVisibility(View.GONE);
+                if (positionFor == null) // No arguments for
+                    arg1.setText(getResources().getString(R.string.noCommentsFor));
+                else {
+                    arg1.setText(comments.get(positionFor).getText());
+                    System.out.println("Top 1 argument FOR text: " + arg1.getText().toString());
+                    arg1Org = arg1.getText().toString();
                 }
             }
             if (arg2 != null) {
-                arg2.setText(currentComment.get(positionAgainst).getText());
-                arg2Org = arg2.getText().toString();
-
-                if (arg2.getLineCount() > 3) {
-                    arg2.setOnClickListener(this);
-                    addDots(arg2);
-                    expArg2.setVisibility(View.VISIBLE);
-                } else {
-                    expArg2.setVisibility(View.GONE);
+                if (positionAgainst == null) // No arguments against
+                    arg2.setText(getResources().getString(R.string.noCommentsAgainst));
+                else {
+                    arg2.setText(comments.get(positionAgainst).getText());
+                    System.out.println("Top 1 argument AGAINST text: " + arg1.getText().toString());
+                    arg2Org = arg2.getText().toString();
                 }
             }
-        } else{
+        } else{ // No comments at all
             if (arg1 != null)
                 arg1.setText(R.string.noComments);
             if (arg2 != null)
                 arg2.setText(R.string.noComments);
-            if (expArg1 != null)
+        }
+
+        // View or hide expand text
+        if (arg1 != null) {
+            if (arg1.getLineCount() > 3) {
+                arg1.setOnClickListener(this);
+                addDots(arg1);
+                expArg1.setVisibility(View.VISIBLE);
+            } else {
                 expArg1.setVisibility(View.GONE);
-            if (expArg2 != null)
+            }
+        }
+        if (arg2 != null) {
+            if (arg2.getLineCount() > 3) {
+                arg2.setOnClickListener(this);
+                addDots(arg2);
+                expArg2.setVisibility(View.VISIBLE);
+            } else {
                 expArg2.setVisibility(View.GONE);
+            }
         }
 
 

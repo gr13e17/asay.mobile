@@ -149,8 +149,8 @@
 
                 <TextView
                     android:id="@+id/argAgainstTxt"
-                    android:layout_width="0dp"
-                    android:layout_height="46dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text="@string/load"
                     android:textAlignment="viewStart"
