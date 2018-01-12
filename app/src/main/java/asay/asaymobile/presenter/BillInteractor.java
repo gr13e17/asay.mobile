@@ -34,15 +34,17 @@ public class BillInteractor {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 BillDTO billDTO = new BillDTO();
                 mbillList.clear();
-                for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
-                    billDTO = messagesSnapshot.getValue(BillDTO.class);
-                    for (int billId : savedbills) {
-                        if (billDTO.getId() == billId) {
-                            mbillList.add(billDTO);
+                if(dataSnapshot.getChildren() != null){
+                    for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
+                        billDTO = messagesSnapshot.getValue(BillDTO.class);
+                        for (int billId : savedbills) {
+                            if (billDTO.getId() == billId) {
+                                mbillList.add(billDTO);
+                            }
                         }
                     }
+                    presenter.refreshCurrentBillDTO(mbillList);
                 }
-                presenter.refreshCurrentBillDTO(mbillList);
             }
 
             @Override
@@ -109,7 +111,7 @@ public class BillInteractor {
                         exist = true;
                         BillDTO databillDTO = data.getValue(BillDTO.class);
                         if(!databillDTO.equals(billDTO)){
-                            exist = false;
+                            updateBill(databillDTO);
                         }
                     } else {
                         //do something

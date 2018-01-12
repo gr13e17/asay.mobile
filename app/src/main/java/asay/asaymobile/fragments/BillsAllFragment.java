@@ -158,7 +158,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void refreshUser(UserDTO user) {
         savedbills = user.getbillsSaved();
-        System.out.println("number of savedbills userRefresh :" + savedbills.size());
         billPresenter.getSavedBills(savedbills);
     }
 
@@ -184,7 +183,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("titel"),
                             articles.getJSONObject(i).getString("titelkort"),
                             articles.getJSONObject(i).getString("resume"),
-                           Integer.valueOf(articles.getJSONObject(i).getString("typeId"))
+                           Integer.valueOf(articles.getJSONObject(i).getString("typeid"))
                     );
                     billPresenter.addNewBill(bill);
                 }
