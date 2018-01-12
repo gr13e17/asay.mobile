@@ -78,7 +78,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
 
         } else if (isEnded) {
-            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
             billPresenter.getEndedBills();
             view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
 
