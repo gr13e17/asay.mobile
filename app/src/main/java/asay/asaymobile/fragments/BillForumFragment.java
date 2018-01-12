@@ -19,13 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
@@ -35,8 +32,6 @@ import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.ForumPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static java.util.Calendar.DAY_OF_MONTH;
 
 /**
  * Created by Soelberg on 31-10-2017.
