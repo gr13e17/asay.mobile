@@ -20,12 +20,13 @@ public class BillDTO implements Parcelable{
     public String titleShort;
     public String resume;
     public ArrayList<Vote> votes = new ArrayList<>();
+    public int typeId;
 
     public BillDTO(){
 
     }
 
-    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume,ArrayList<Vote> votes){
+    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume,ArrayList<Vote> votes, int typeId){
         this.createdBy = createdBy;
         this.deadline = deadline;
         this.department = department;
@@ -36,8 +37,10 @@ public class BillDTO implements Parcelable{
         this.titleShort = titleShort;
         this.resume = resume;
         this.votes = votes;
+        this.typeId = typeId;
+
     }
-    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume){
+    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume, int typeId){
         this.createdBy = createdBy;
         this.deadline = deadline;
         this.department = department;
@@ -47,6 +50,7 @@ public class BillDTO implements Parcelable{
         this.title = title;
         this.titleShort = titleShort;
         this.resume = resume;
+        this.typeId = typeId;
     }
 
     public BillDTO(BillDTO billDTO){
@@ -60,6 +64,7 @@ public class BillDTO implements Parcelable{
         this.titleShort = billDTO.titleShort;
         this.resume = billDTO.resume;
         this.votes = billDTO.votes;
+        this.typeId = billDTO.typeId;
     }
 
     protected BillDTO(Parcel in){
@@ -72,9 +77,17 @@ public class BillDTO implements Parcelable{
         this.title = in.readString();
         this.titleShort = in.readString();
         this.resume = in.readString();
+        this.typeId = in.readInt();
         in.readTypedList(this.votes, Vote.CREATOR);
     }
 
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
+    }
     public String getCreatedBy() {
         return createdBy;
     }
@@ -182,6 +195,7 @@ public class BillDTO implements Parcelable{
         dest.writeString(this.titleShort);
         dest.writeString(this.resume);
         dest.writeTypedList(this.votes);
+        dest.writeInt(this.typeId);
     }
 
     public static final Creator<BillDTO> CREATOR = new BillDTOCreator();
