@@ -54,6 +54,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private FloatingActionButton commentButtonMain;
     private WriteCommentDialog writeCommentDialog;
     String dateTime;
+    CommentDTO newComment = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,11 +89,12 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     }
 
     @Override
-    public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
-        List<CommentDTO> threadedComments = toThreadedComments(currentComment);
+    public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComments) {
+        List<CommentDTO> threadedComments = toThreadedComments(currentComments);
         ForumAdapter commentArrayAdapter = new ForumAdapter((ArrayList<CommentDTO>) threadedComments, nameArray, getContext(), forumPresenter);
-        if (listView.getAdapter() == null) {
+        if (listView.getAdapter() == null || newComment != null) {
             listView.setAdapter(commentArrayAdapter);
+            newComment = null;
         }
     }
 
@@ -114,7 +116,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         }
     }
 
-    private static List<CommentDTO> toThreadedComments(List<CommentDTO> comments) {
+    private List<CommentDTO> toThreadedComments(List<CommentDTO> comments) {
 
         //comments should be sorted first
         Collections.sort(comments);
@@ -188,6 +190,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         );
         forumPresenter.addNewComment(comment);
         writeCommentDialog.dismiss();
+        newComment = comment;
     }
 
 
