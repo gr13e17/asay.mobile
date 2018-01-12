@@ -39,7 +39,7 @@ public class CommentDTO implements Comparable<CommentDTO> {
         dateTime = commentDTO.getDateTime();
     }
 
-    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userId, double parrentId, double childrentCount, double commentDepth , String dateTime){
+    public CommentDTO(final ArgumentType argument,double billId, final int id, final int score, final String text, final int userid, double parrentId, double childrentCount, double commentDepth , String dateTime){
         this.argumentType = argument;
         this.billId = billId;
         this.id = id;
