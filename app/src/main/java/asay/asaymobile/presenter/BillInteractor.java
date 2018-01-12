@@ -22,6 +22,7 @@ public class BillInteractor {
 
     BillInteractor(BillPresenter presenter) {
         this.presenter = presenter;
+        retrieveAllBills();
     }
 
     void retriveSavedBills(final ArrayList<Integer> savedbills) {

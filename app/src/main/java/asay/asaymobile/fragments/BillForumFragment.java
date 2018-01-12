@@ -264,7 +264,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
                     Toast.makeText(getActivity(), R.string.upVote,
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -277,7 +277,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     currentComment.setScore(score - 1);
                     presenter.updateComment(currentComment);
                     Toast.makeText(getActivity(), R.string.downVote,
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
