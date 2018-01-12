@@ -222,13 +222,13 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 convertView = inflater.inflate(R.layout.list_item_comment, parent, false);
             }
             final CommentDTO currentComment = currentComments.get(position);
-            View view2 = new View(getActivity());
 
             //Padding for threaded comments
+            View view2 = new View(getActivity());
             ConstraintLayout cl = convertView.findViewById(R.id.commentConstrain);
             cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));
-            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            float dpWidth = displayMetrics.widthPixels / displayMetrics.density; //Find width of screen
+            //Find width of screen
+            float dpWidth = getResources().getDisplayMetrics().widthPixels;
             cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
 
             TextView commentText = convertView.findViewById(R.id.comment);
