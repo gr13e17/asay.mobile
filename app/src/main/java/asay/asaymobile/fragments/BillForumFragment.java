@@ -240,19 +240,15 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             TextView nameView = convertView.findViewById(R.id.nameView);
             nameView.setBackground(getBackground(currentComment.getArgumentType()));
 
-            String userName = null;
             for (UserDTO user : currentUsers) {
                 if (user.getid() == currentComment.getUserid()) {
-                    userName = user.getname();
+                    nameView.setText(user.getname());
                     break;
                 }
             }
 
-            if (currentComment.getDateTime() != null && userName != null) {
-                nameView.setText(userName);
+            if (currentComment.getDateTime() != null) {
                 dateTextView.setText(currentComment.getDateTime());
-            } else if (userName != null) {
-                nameView.setText(userName);
             }
 
             ImageButton upVoteButton = convertView.findViewById(R.id.up);
