@@ -52,15 +52,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         // Set a Toolbar to replace the ActionBar.
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setTitle(R.string.asay);
+        }
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
-
-
-
-
-
-
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.containerMain);
