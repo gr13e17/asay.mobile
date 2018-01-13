@@ -78,6 +78,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
 
         } else if (isEnded) {
+            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
             billPresenter.getEndedBills();
             view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
 
@@ -117,11 +118,11 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 return view;
             }
         };
-        listview = new ListView(getActivity());
+        ListView listview = (ListView) view.findViewById(R.id.allBillsListView);
         listview.setOnItemClickListener(this);
+        listview.setDividerHeight(10);
         listview.setAdapter(adapter);
-        ViewGroup viewGroup = (ViewGroup) view;
-        viewGroup.addView(listview);
+
     }
 
     @Override
@@ -137,7 +138,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         this.bills.clear();
         for(BillDTO bill : bills){
-            if(bill.getResume() != null && !bill.getResume().isEmpty() )
+            if(bill.getResume() != null && !bill.getResume().isEmpty())
                 this.bills.add(bill);
         }
         adapter.notifyDataSetChanged();
@@ -156,6 +157,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void refreshUser(UserDTO user) {
         savedbills = user.getbillsSaved();
+        System.out.println("number of savedbills userRefresh :" + savedbills.size());
         billPresenter.getSavedBills(savedbills);
     }
 
@@ -181,7 +183,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("titel"),
                             articles.getJSONObject(i).getString("titelkort"),
                             articles.getJSONObject(i).getString("resume"),
-                           Integer.valueOf(articles.getJSONObject(i).getString("typeid"))
+                           Integer.valueOf(articles.getJSONObject(i).getString("typeId"))
                     );
                     billPresenter.addNewBill(bill);
                 }
