@@ -137,9 +137,9 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         this.bills.clear();
         for(BillDTO bill : bills){
-            /*if(bill.getResume() != null && !bill.getResume().isEmpty() && (bill.getTypeId() == 87 ||
+            if(bill.getResume() != null && !bill.getResume().isEmpty() && (bill.getTypeId() == 87 ||
                     bill.getTypeId() == 7 || bill.getTypeId() == 23 || bill.getTypeId() == 17 ||
-                    bill.getTypeId() == 12))*/
+                    bill.getTypeId() == 12))
                 this.bills.add(bill);
         }
         adapter.notifyDataSetChanged();
