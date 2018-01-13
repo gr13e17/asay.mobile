@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Asay</string>
+    <string name="app_name">gr13 Asay</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_bill">BillActivity</string>
@@ -47,5 +47,6 @@
     <string name="add_to_favorites">Tilføj til favoritter</string>
     <string name="app_label">Søg</string>
     <string name="Search_hint">Søg efter forslag..</string>
+    <string name="asay">Asay</string>
 
 </resources>

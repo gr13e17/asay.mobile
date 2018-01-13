@@ -11,7 +11,7 @@
 
         <include
             android:id="@+id/comment"
-            layout="@layout/comment_simple"
+            layout="@layout/comment_without_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,7 +26,6 @@
             android:padding="10dp"
             android:scaleType="fitStart"
             android:src="@drawable/ic_reply"
-            app:layout_constraintBottom_toBottomOf="@+id/down"
             app:layout_constraintEnd_toEndOf="@+id/comment"
             app:layout_constraintTop_toTopOf="@+id/down" />
 
@@ -51,7 +50,6 @@
             android:padding="10dp"
             android:scaleType="fitStart"
             android:src="@drawable/ic_thumb_down"
-            app:layout_constraintBottom_toBottomOf="@+id/up"
             app:layout_constraintEnd_toStartOf="@+id/replyToComment"
             app:layout_constraintTop_toTopOf="@+id/up" />
     </android.support.constraint.ConstraintLayout>
