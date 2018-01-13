@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
@@ -167,8 +168,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     @Override
     public void onSave(String commentContent, Double parentId, ArgumentType argumentType) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy  HH:mm");
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy  HH:mm");
         dateTime = format.format(calendar.getTime());
         CommentDTO comment = new CommentDTO(
                 argumentType,
