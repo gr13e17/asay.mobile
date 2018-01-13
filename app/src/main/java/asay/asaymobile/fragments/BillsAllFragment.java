@@ -136,21 +136,21 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
-        this.bills.clear();
-        boolean hasSteps = false;
-        for(BillDTO bill : bills){
-            for (CaseStep step : bill.getCaseSteps()){
-                if((step.getTypeid() == 87 || step.getTypeid() == 7 || step.getTypeid() == 23 || step.getTypeid() == 17 ||
-                        step.getTypeid() == 12))
-                    hasSteps = true;
+        if(!bills.isEmpty()) {
+            this.bills.clear();
+            boolean hasSteps = false;
+            for (BillDTO bill : bills) {
+                for (CaseStep step : bill.getCaseSteps()) {
+                    if ((step.getTypeid() == 87 || step.getTypeid() == 7 || step.getTypeid() == 23 || step.getTypeid() == 17 ||
+                            step.getTypeid() == 12))
+                        hasSteps = true;
+                }
+
+                if (bill.getResume() != null && !bill.getResume().isEmpty() && hasSteps)
+                    this.bills.add(bill);
             }
-
-            if(bill.getResume() != null && !bill.getResume().isEmpty() && hasSteps)
-                this.bills.add(bill);
         }
-        if(!bills.isEmpty())
-            adapter.notifyDataSetChanged();
-
+        adapter.notifyDataSetChanged();
         if (getView() != null)
             getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
     }
