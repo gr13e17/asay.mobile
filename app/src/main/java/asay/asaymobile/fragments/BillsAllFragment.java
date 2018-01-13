@@ -1,21 +1,34 @@
 package asay.asaymobile.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.database.MatrixCursor;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,6 +64,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     private ListFilter listFilter;
     public BillsAllFragment() {
         // Required empty public constructor
+
     }
 
     @Override
@@ -67,7 +81,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             isFavorite = getArguments().getBoolean("isFavorite");
             isEnded = getArguments().getBoolean("isEnded");
         }
-
+        setHasOptionsMenu(true);
         String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
@@ -124,6 +138,36 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         viewGroup.addView(listview);
     }
 
+@Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+    SearchManager searchManager =
+            (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+    SearchableInfo searchableInfo =
+            searchManager.getSearchableInfo(getActivity().getComponentName());
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) item.getActionView();
+    searchView.setQueryHint("search for something");
+
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
+
+
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         BillDTO item = bills.get(position);
@@ -137,15 +181,18 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         this.bills.clear();
         for(BillDTO bill : bills){
-            if(bill.getResume() != null && !bill.getResume().isEmpty() && (bill.getTypeId() == 87 ||
-                    bill.getTypeId() == 7 || bill.getTypeId() == 23 || bill.getTypeId() == 17 ||
-                    bill.getTypeId() == 12))
+            if(bill.getResume() != null && !bill.getResume().isEmpty())
                 this.bills.add(bill);
         }
         adapter.notifyDataSetChanged();
 
         if (getView() != null)
             getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
+    }
+
+
+    public int getCount() {
+        return filteredList.size();
     }
 
     public Filter getFilter() {
@@ -211,6 +258,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
 
 
+
     private class ListFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -239,6 +287,11 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            if(results.count == 0){
+                adapter.notifyDataSetInvalidated();
+                return;
+            }
             filteredList = (ArrayList<BillDTO>) results.values;
             adapter.notifyDataSetChanged();
             System.out.println("n: " + filteredList.size());

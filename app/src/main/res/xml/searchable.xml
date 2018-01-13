@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:label="Søg her"
-    android:hint="søg">
+    android:label="@string/app_label"
+    android:hint="@string/search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:iconifiedByDefault="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
     </searchable>

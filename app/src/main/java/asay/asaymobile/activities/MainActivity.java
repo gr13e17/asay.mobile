@@ -5,6 +5,7 @@ package asay.asaymobile.activities;
 
 
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,7 +31,7 @@ import asay.asaymobile.fragments.BillsAllFragment;
 import asay.asaymobile.model.BillDTO;
 
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private BillsAllFragment billAll;
@@ -150,45 +151,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchMenuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(this);
-        return true;
-    }
-
-
-    private void handelListItemClick(BillDTO bill) {
-        // close search view if its visible
-        if (searchView.isShown()) {
-            searchMenuItem.collapseActionView();
-            searchView.setQuery("", false);
-        }
-
-        // pass selected user and sensor to share activity
-        Intent intent = new Intent(this, BillActivity.class);
-        this.startActivity(intent);
-        this.overridePendingTransition(R.anim.popup_show,R.anim.popup_hide);
-}
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        billAll.getFilter().filter(newText);
-        return true;
-    }
 
 
 }

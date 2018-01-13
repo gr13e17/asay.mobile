@@ -45,6 +45,8 @@
     <string name="noCommentsFor">Der er ingen kommentarer som argumenterer for forslaget endnu</string>
     <string name="noCommentsAgainst">Der er ingen kommentarer som argumenterer imod forslaget endnu</string>
     <string name="dummy_date">18/01/18 10:38</string>
+    <string name="search">søg</string>
+    <string name="app_label">søg her</string>
 
 
 </resources>
