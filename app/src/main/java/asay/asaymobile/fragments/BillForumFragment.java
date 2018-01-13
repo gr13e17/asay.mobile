@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -262,7 +261,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     int score = currentComment.getScore();
                     currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
-                    Toast.makeText(getActivity(), R.string.upVote,
+                    Toast.makeText(getActivity(), R.string.you_have_up_voted,
                             Toast.LENGTH_SHORT).show();
                 }
             });
@@ -275,7 +274,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     int score = currentComment.getScore();
                     currentComment.setScore(score - 1);
                     presenter.updateComment(currentComment);
-                    Toast.makeText(getActivity(), R.string.downVote,
+                    Toast.makeText(getActivity(), R.string.you_have_down_voted,
                             Toast.LENGTH_SHORT).show();
                 }
             });

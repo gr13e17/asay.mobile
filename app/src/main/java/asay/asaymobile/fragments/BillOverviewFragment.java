@@ -103,7 +103,7 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
             @Override
             public void run() {
                 if (billDesc.length() <= 0) {
-                    billDesc.setText(R.string.noDesc);
+                    billDesc.setText(R.string.there_is_no_description_for_this_bill);
                 }
                 if (billDesc.getLineCount() > 3) {
                     addDots(billDesc);
@@ -152,36 +152,36 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
         if (v == billDesc || v == expandBillDesc) {
             if (isExpandedBillDesc) {
                 collapseTextView(billDesc, 3);
-                expandBillDesc.setText(R.string.showMore);
+                expandBillDesc.setText(R.string.show_more);
                 isExpandedBillDesc = false;
                 billDesc.setOnClickListener(this);
             } else {
                 expandTextView(billDesc, billDescFull);
-                expandBillDesc.setText(R.string.showLess);
+                expandBillDesc.setText(R.string.show_less);
                 isExpandedBillDesc = true;
                 billDesc.setOnClickListener(null);
             }
         } else if (v == argForTextView || v == expandArgFor) {
             if (isExpandedFor) {
-                expandArgFor.setText(R.string.showMore);
+                expandArgFor.setText(R.string.show_more);
                 collapseTextView(argForTextView, 3);
                 isExpandedFor = false;
                 argForTextView.setOnClickListener(this);
             } else {
                 expandTextView(argForTextView, argForFull);
-                expandArgFor.setText(R.string.showLess);
+                expandArgFor.setText(R.string.show_less);
                 isExpandedFor = true;
                 argForTextView.setOnClickListener(null);
             }
         } else if (v == argAgainstTextView || v == expandArgAgainst) {
             if (isExpandedAgainst) {
-                expandArgAgainst.setText(R.string.showMore);
+                expandArgAgainst.setText(R.string.show_more);
                 collapseTextView(argAgainstTextView, 3);
                 isExpandedAgainst = false;
                 argAgainstTextView.setOnClickListener(this);
             } else {
                 expandTextView(argAgainstTextView, argAgainstFull);
-                expandArgAgainst.setText(R.string.showLess);
+                expandArgAgainst.setText(R.string.show_less);
                 isExpandedAgainst = true;
                 argAgainstTextView.setOnClickListener(null);
             }

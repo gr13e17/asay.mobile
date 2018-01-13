@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
-            android:text="@string/user_0"
+            android:text="@string/dummy_user"
             app:layout_constraintEnd_toStartOf="@+id/dateTextView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

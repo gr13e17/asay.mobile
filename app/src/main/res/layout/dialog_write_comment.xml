@@ -63,7 +63,7 @@
             android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:buttonTint="@color/forColor"
-            android:text="@string/argument_for"
+            android:text="@string/vote_for"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,7 +75,7 @@
             android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:buttonTint="@color/againstColor"
-            android:text="@string/argument_against"
+            android:text="@string/vote_against"
             app:layout_constraintStart_toEndOf="@+id/forRadioButton"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -88,7 +88,7 @@
             android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:buttonTint="@color/neutralColor"
-            android:text="@string/argument_neutral"
+            android:text="@string/neutral"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.052"
             app:layout_constraintStart_toEndOf="@+id/agienstRadioButton"
