@@ -28,15 +28,16 @@ import asay.asaymobile.presenter.ForumPresenter;
 import asay.asaymobile.presenter.UserPresenter;
 
 public class BillOverviewFragment extends Fragment implements View.OnClickListener, ForumContract.View, UserContract.View {
-    private TextView BillDesc;
-    private String BillDescOrg;
-    private TextView expBillDesc;
-    private TextView arg1;
-    private String arg1Org;
-    private TextView expArg1;
-    private TextView arg2;
-    private String arg2Org;
-    private TextView expArg2;
+    private View rootView;
+    private TextView billDesc;
+    private String billDescFull;
+    private TextView expandBillDesc;
+    private TextView argForTextView;
+    private String argForFull;
+    private TextView expandArgFor;
+    private TextView argAgainstTextView;
+    private String argAgainstFull;
+    private TextView expandArgAgainst;
     private boolean isExpandedBillDesc = false;
     private boolean isExpandedFor = false;
     private boolean isExpandedAgainst = false;
@@ -48,6 +49,7 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
     private boolean isSub = false;
     private UserDTO user;
     private UserPresenter uPresenter;
+    private ArrayList<UserDTO> users;
 
     public BillOverviewFragment() {
         // Required empty public constructor
@@ -75,127 +77,120 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
-        expBillDesc = rootView.findViewById(R.id.expandBillDesc);
-        expBillDesc.setOnClickListener(this);
+        super.onViewCreated(rootView, savedInstanceState);
+        this.rootView = rootView;
 
-        BillDesc = rootView.findViewById(R.id.billDesc);
-        BillDescOrg = bill.getResume();
-        BillDesc.setText(BillDescOrg);
-        BillDesc.setOnClickListener(this);
-
-        arg1 = rootView.findViewById(R.id.argForTxt);
-        arg1.setMaxLines(3);
-
-        arg2 = rootView.findViewById(R.id.argAgainstTxt);
-        arg2.setMaxLines(3);
-
-        expArg1 = rootView.findViewById(R.id.expandArgFor);
-        expArg1.setOnClickListener(this);
-        expArg1.setVisibility(View.GONE);
-
-        expArg2 = rootView.findViewById(R.id.expandArgAgainst);
-        expArg2.setOnClickListener(this);
-        expArg2.setVisibility(View.GONE);
-
-        sub = rootView.findViewById(R.id.subbtn);
-        sub.setOnClickListener(this);
-
+        // Header
         uPresenter = new UserPresenter(this);
         uPresenter.getUser(userId);
         String billTitle = bill.getNumber().concat(": ").concat(bill.getTitleShort());
         TextView header = rootView.findViewById(R.id.headerBill);
         header.setText(billTitle);
-        vote = rootView.findViewById(R.id.buttonVote);
-        vote.setOnClickListener(this);
 
+        // Actionbar
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null)
             actionBar.setTitle(billTitle);
 
-        super.onViewCreated(rootView, savedInstanceState);
-
-        BillDesc.post(new Runnable() {
+        // Bill description
+        billDesc = rootView.findViewById(R.id.billDesc);
+        billDescFull = bill.getResume();
+        billDesc.setText(billDescFull);
+        billDesc.setOnClickListener(this);
+        expandBillDesc = rootView.findViewById(R.id.expandBillDesc);
+        expandBillDesc.setOnClickListener(this);
+        billDesc.post(new Runnable() {
             @Override
             public void run() {
-                if (BillDesc.length() <= 0) {
-                    BillDesc.setText(R.string.noDesc);
+                if (billDesc.length() <= 0) {
+                    billDesc.setText(R.string.noDesc);
                 }
-                if (BillDesc.getLineCount() > 3) {
-                    addDots(BillDesc);
-                    expBillDesc.setVisibility(View.VISIBLE);
+                if (billDesc.getLineCount() > 3) {
+                    addDots(billDesc);
+                    expandBillDesc.setVisibility(View.VISIBLE);
 
                 } else
-                    expBillDesc.setVisibility(View.INVISIBLE);
-                BillDesc.setOnClickListener(null);
-                BillDesc.setMaxLines(3);
+                    expandBillDesc.setVisibility(View.INVISIBLE);
+                billDesc.setOnClickListener(null);
+                billDesc.setMaxLines(3);
             }
         });
+
+        // Argument for
+        View argForView = rootView.findViewById(R.id.comment_for);
+        argForTextView = argForView.findViewById(R.id.comment_text);
+        argForTextView.setMaxLines(3);
+        expandArgFor = rootView.findViewById(R.id.expand_for);
+        expandArgFor.setOnClickListener(this);
+        expandArgFor.setVisibility(View.GONE);
+        //Header background color based on ArgumentType
+        View argForHeader = argForView.findViewById(R.id.header);
+        argForHeader.setBackground(getResources().getDrawable(R.drawable.round_header_for));
+
+        // Argument against
+        View argAgainstView = rootView.findViewById(R.id.comment_against);
+        argAgainstTextView = argAgainstView.findViewById(R.id.comment_text);
+        argAgainstTextView.setMaxLines(3);
+        expandArgAgainst = rootView.findViewById(R.id.expand_against);
+        expandArgAgainst.setOnClickListener(this);
+        expandArgAgainst.setVisibility(View.GONE);
+        //Header background color based on ArgumentType
+        View argAgainstHeader = argAgainstView.findViewById(R.id.header);
+        argAgainstHeader.setBackground(getResources().getDrawable(R.drawable.round_header_against));
+
+        // Add to favorites button
+        sub = rootView.findViewById(R.id.subbtn);
+        sub.setOnClickListener(this);
+
+        // Vote button
+        vote = rootView.findViewById(R.id.buttonVote);
+        vote.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-
-            // Bill Description expanding
-            case R.id.billDesc:
-            case R.id.expandBillDesc:
-                if (isExpandedBillDesc) {
-                    collapseTextView(BillDesc, 3);
-                    expBillDesc.setText(R.string.showMore);
-                    isExpandedBillDesc = false;
-                    BillDesc.setOnClickListener(this);
-                } else {
-                    expandTextView(BillDesc, BillDescOrg);
-                    expBillDesc.setText(R.string.showLess);
-                    isExpandedBillDesc = true;
-                    BillDesc.setOnClickListener(null);
-                }
-                break;
-
-            // Top Argument Against Expanding
-            case R.id.argAgainstTxt:
-            case R.id.expandArgAgainst:
-                if (isExpandedAgainst) {
-                    expArg2.setText(R.string.showMore);
-                    collapseTextView(arg2, 3);
-                    isExpandedAgainst = false;
-                    arg2.setOnClickListener(this);
-                } else {
-                    expandTextView(arg2, arg2Org);
-                    expArg2.setText(R.string.showLess);
-                    isExpandedAgainst = true;
-                    arg2.setOnClickListener(null);
-                }
-                break;
-
-            // Top Argument For Expanding
-            case R.id.argForTxt:
-            case R.id.expandArgFor:
-                if (isExpandedFor) {
-                    expArg1.setText(R.string.showMore);
-                    collapseTextView(arg1, 3);
-                    isExpandedFor = false;
-                    arg1.setOnClickListener(this);
-                } else {
-                    expandTextView(arg1, arg1Org);
-                    expArg1.setText(R.string.showLess);
-                    isExpandedFor = true;
-                    arg1.setOnClickListener(null);
-                }
-                break;
-
-            // Vote button
-            case R.id.buttonVote:
-                Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
-                voteIntent.putExtra("bill", bill);
-                startActivity(voteIntent);
-                break;
-
-            // Add to favorites button
-            case R.id.subbtn:
-                toggleFavorite();
-                break;
-
+        if (v == billDesc || v == expandBillDesc) {
+            if (isExpandedBillDesc) {
+                collapseTextView(billDesc, 3);
+                expandBillDesc.setText(R.string.showMore);
+                isExpandedBillDesc = false;
+                billDesc.setOnClickListener(this);
+            } else {
+                expandTextView(billDesc, billDescFull);
+                expandBillDesc.setText(R.string.showLess);
+                isExpandedBillDesc = true;
+                billDesc.setOnClickListener(null);
+            }
+        } else if (v == argForTextView || v == expandArgFor) {
+            if (isExpandedFor) {
+                expandArgFor.setText(R.string.showMore);
+                collapseTextView(argForTextView, 3);
+                isExpandedFor = false;
+                argForTextView.setOnClickListener(this);
+            } else {
+                expandTextView(argForTextView, argForFull);
+                expandArgFor.setText(R.string.showLess);
+                isExpandedFor = true;
+                argForTextView.setOnClickListener(null);
+            }
+        } else if (v == argAgainstTextView || v == expandArgAgainst) {
+            if (isExpandedAgainst) {
+                expandArgAgainst.setText(R.string.showMore);
+                collapseTextView(argAgainstTextView, 3);
+                isExpandedAgainst = false;
+                argAgainstTextView.setOnClickListener(this);
+            } else {
+                expandTextView(argAgainstTextView, argAgainstFull);
+                expandArgAgainst.setText(R.string.showLess);
+                isExpandedAgainst = true;
+                argAgainstTextView.setOnClickListener(null);
+            }
+        } else if (v.getId() == R.id.buttonVote) {
+            Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
+            voteIntent.putExtra("bill", bill);
+            startActivity(voteIntent);
+        } else if (v.getId() == R.id.subbtn) {
+            toggleFavorite();
         }
     }
 
@@ -249,67 +244,109 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void refreshCurrentCommentList(ArrayList<CommentDTO> comments) {
-        if (comments.size() != 0) {
-            Integer maxFor = null, maxAgainst = null, positionFor = null, positionAgainst = null, counter = 0;
-            for (CommentDTO comment : comments) {
-                int score = comment.getScore();
-                ArgumentType type = comment.getArgumentType();
-                if (type.equals(ArgumentType.FOR)) {
-                    if (maxFor == null || maxFor < score) {
-                        maxFor = comment.getScore();
-                        positionFor = counter;
+        if (rootView != null) {
+            if (comments.size() != 0) {
+                Integer maxFor = null, maxAgainst = null, positionFor = null, positionAgainst = null, counter = 0;
+                for (CommentDTO comment : comments) {
+                    int score = comment.getScore();
+                    ArgumentType type = comment.getArgumentType();
+                    if (type.equals(ArgumentType.FOR)) {
+                        if (maxFor == null || maxFor < score) {
+                            maxFor = comment.getScore();
+                            positionFor = counter;
+                        }
+                    } else if (type.equals(ArgumentType.AGAINST)) {
+                        if (maxAgainst == null || maxAgainst < score) {
+                            maxAgainst = comment.getScore();
+                            positionAgainst = counter;
+                        }
                     }
-                } else if (type.equals(ArgumentType.AGAINST)) {
-                    if (maxAgainst == null || maxAgainst < score) {
-                        maxAgainst = comment.getScore();
-                        positionAgainst = counter;
+                    counter++;
+                }
+
+                if (positionFor == null) { // No arguments for
+                    rootView.findViewById(R.id.argForContext).setVisibility(View.INVISIBLE);
+                    rootView.findViewById(R.id.noArgForText).setVisibility(View.VISIBLE);
+                } else {
+                    CommentDTO commentFor = comments.get(positionFor);
+                    View commentView = rootView.findViewById(R.id.comment_for);
+
+                    //Hide "No arguments for" and show comment
+                    rootView.findViewById(R.id.argForContext).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.noArgForText).setVisibility(View.INVISIBLE);
+
+                    argForFull = commentFor.getText();
+                    argForTextView.setText(argForFull);
+                    System.out.println("Top 1 argument FOR text: " + argForFull);
+
+                    //Set name text
+                    TextView nameView = commentView.findViewById(R.id.nameView);
+                    for (UserDTO user : users) {
+                        if (user.getid() == commentFor.getUserid()) {
+                            nameView.setText(user.getname());
+                            break;
+                        }
+                    }
+
+                    //Set datetime text
+                    if (commentFor.getDateTime() != null) {
+                        TextView dateTextView = commentView.findViewById(R.id.dateTextView);
+                        dateTextView.setText(commentFor.getDateTime());
                     }
                 }
-                counter++;
+                if (positionAgainst == null) { // No arguments against
+                    rootView.findViewById(R.id.argAgainstContext).setVisibility(View.INVISIBLE);
+                    rootView.findViewById(R.id.noArgAgainstText).setVisibility(View.VISIBLE);
+                } else {
+                    CommentDTO commentAgainst = comments.get(positionAgainst);
+                    View commentView = rootView.findViewById(R.id.comment_against);
+
+                    //Hide "No arguments against" and show comment
+                    rootView.findViewById(R.id.argAgainstContext).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.noArgAgainstText).setVisibility(View.INVISIBLE);
+
+                    argAgainstFull = commentAgainst.getText();
+                    argAgainstTextView.setText(argAgainstFull);
+                    System.out.println("Top 1 argument AGAINST text: " + argAgainstFull);
+
+                    //Set name text
+                    TextView nameView = commentView.findViewById(R.id.nameView);
+                    for (UserDTO user : users) {
+                        if (user.getid() == commentAgainst.getUserid()) {
+                            nameView.setText(user.getname());
+                            break;
+                        }
+                    }
+
+                    //Set datetime text
+                    if (commentAgainst.getDateTime() != null) {
+                        TextView dateTextView = commentView.findViewById(R.id.dateTextView);
+                        dateTextView.setText(commentAgainst.getDateTime());
+                    }
+                }
+            } else { // No comments at all
+                if (rootView != null) {
+                    rootView.findViewById(R.id.argForContext).setVisibility(View.INVISIBLE);
+                    rootView.findViewById(R.id.noArgForText).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.argAgainstContext).setVisibility(View.INVISIBLE);
+                    rootView.findViewById(R.id.noArgAgainstText).setVisibility(View.VISIBLE);
+                }
             }
 
-            if (arg1 != null) {
-                if (positionFor == null) // No arguments for
-                    arg1.setText(getResources().getString(R.string.noCommentsFor));
-                else {
-                    arg1.setText(comments.get(positionFor).getText());
-                    System.out.println("Top 1 argument FOR text: " + arg1.getText().toString());
-                    arg1Org = arg1.getText().toString();
-                }
-            }
-            if (arg2 != null) {
-                if (positionAgainst == null) // No arguments against
-                    arg2.setText(getResources().getString(R.string.noCommentsAgainst));
-                else {
-                    arg2.setText(comments.get(positionAgainst).getText());
-                    System.out.println("Top 1 argument AGAINST text: " + arg1.getText().toString());
-                    arg2Org = arg2.getText().toString();
-                }
-            }
-        } else { // No comments at all
-            if (arg1 != null)
-                arg1.setText(R.string.noComments);
-            if (arg2 != null)
-                arg2.setText(R.string.noComments);
-        }
-
-        // View or hide expand text
-        if (arg1 != null) {
-            if (arg1.getLineCount() > 3) {
-                arg1.setOnClickListener(this);
-                addDots(arg1);
-                expArg1.setVisibility(View.VISIBLE);
+            // View or hide expand text
+            if (argForTextView.getLineCount() > 3) {
+                argForTextView.setOnClickListener(this);
+                addDots(argForTextView);
+                expandArgFor.setVisibility(View.VISIBLE);
             } else {
-                expArg1.setVisibility(View.GONE);
+                expandArgFor.setVisibility(View.GONE);
             }
-        }
-        if (arg2 != null) {
-            if (arg2.getLineCount() > 3) {
-                arg2.setOnClickListener(this);
-                addDots(arg2);
-                expArg2.setVisibility(View.VISIBLE);
+            if (argAgainstTextView.getLineCount() > 3) {
+                argAgainstTextView.setOnClickListener(this);
+                addDots(argAgainstTextView);
+                expandArgAgainst.setVisibility(View.VISIBLE);
             } else {
-                expArg2.setVisibility(View.GONE);
+                expandArgAgainst.setVisibility(View.GONE);
             }
         }
     }
@@ -348,7 +385,7 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void refreshUsers(ArrayList<UserDTO> users) {
-
+        this.users = users;
     }
 
 }

@@ -232,7 +232,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
 
             //Set comment text
-            TextView commentText = convertView.findViewById(R.id.comment);
+            TextView commentText = convertView.findViewById(R.id.comment_text);
             commentText.setText(currentComment.getText());
 
             //Header background color based on ArgumentType

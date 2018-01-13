@@ -9,48 +9,14 @@
         android:layout_height="wrap_content"
         android:background="@drawable/text_round_corners">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_round_corners"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/nameView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
-                android:text="@string/user_0"
-                app:layout_constraintEnd_toStartOf="@+id/dateTextView"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/dateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="@string/dummy_date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </android.support.constraint.ConstraintLayout>
-
-        <TextView
+        <include
             android:id="@+id/comment"
+            layout="@layout/comment_simple"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:singleLine="false"
-            android:text="@string/load"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/replyToComment"
