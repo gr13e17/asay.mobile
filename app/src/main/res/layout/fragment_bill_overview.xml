@@ -18,9 +18,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonVote"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -49,6 +47,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="4dp"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/add_to_favorites"
                 android:elevation="8dp"
                 android:gravity="start"
                 android:scaleType="fitCenter"
@@ -91,6 +90,37 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
+            <TextView
+                android:id="@+id/expandBillDesc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/showMore"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/billDesc" />
+
+            <TextView
+                android:id="@+id/argForHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/Toparg"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/expandBillDesc" />
+
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/argForContext"
                 android:layout_width="0dp"
@@ -98,9 +128,9 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/text_round_corners"
-                app:layout_constraintTop_toBottomOf="@+id/argForHead"
-            app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/argForHead">
 
                 <TextView
                     android:id="@+id/argForTxt"
@@ -136,6 +166,25 @@
                     app:layout_constraintTop_toBottomOf="@+id/argForTxt" />
 
             </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/argAgainstHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/argAgainst"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/argForContext" />
+
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/argAgainstContent"
                 android:layout_width="0dp"
@@ -181,62 +230,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/argAgainstTxt" />
 
             </android.support.constraint.ConstraintLayout>
-
-
-
-            <TextView
-                android:id="@+id/argForHead"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/round_corners_for"
-                android:paddingEnd="20dp"
-                android:paddingStart="20dp"
-                android:text="@string/Toparg"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textSize="17sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/expandBillDesc" />
-
-            <TextView
-                android:id="@+id/argAgainstHead"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/round_corners_against"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:paddingEnd="20dp"
-                android:paddingStart="20dp"
-                android:text="@string/argAgainst"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textSize="17sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/argForContext" />
-
-            <TextView
-                android:id="@+id/expandBillDesc"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:text="@string/showMore"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/billDesc" />
-
-
-
 
         </android.support.constraint.ConstraintLayout>
 
