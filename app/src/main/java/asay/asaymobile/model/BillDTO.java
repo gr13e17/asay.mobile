@@ -21,13 +21,12 @@ public class BillDTO implements Parcelable{
     private String resume;
     public ArrayList<Vote> votes = new ArrayList<>();
     private int typeId;
-
     private  int actorId;
-    public BillDTO(){
+    private String status;
 
-    }
+    public BillDTO(){}
 
-    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume,ArrayList<Vote> votes, int typeId,int actorId){
+    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume,ArrayList<Vote> votes, int typeId,int actorId,String status){
         this.createdBy = createdBy;
         this.deadline = deadline;
         this.department = department;
@@ -40,9 +39,10 @@ public class BillDTO implements Parcelable{
         this.votes = votes;
         this.typeId = typeId;
         this.actorId = actorId;
+        this.status = status;
 
     }
-    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume, int typeId, int actorId){
+    public BillDTO(String createdBy, String deadline, String department, int forumId, int id, String number, String title, String titleShort, String resume, int typeId, int actorId, String status){
         this.createdBy = createdBy;
         this.deadline = deadline;
         this.department = department;
@@ -54,6 +54,7 @@ public class BillDTO implements Parcelable{
         this.resume = resume;
         this.typeId = typeId;
         this.actorId = actorId;
+        this.status = status;
     }
 
     public BillDTO(BillDTO billDTO){
@@ -69,6 +70,7 @@ public class BillDTO implements Parcelable{
         this.votes = billDTO.votes;
         this.typeId = billDTO.typeId;
         this.actorId = billDTO.actorId;
+        this.status = billDTO.status;
     }
 
     protected BillDTO(Parcel in){
@@ -84,111 +86,7 @@ public class BillDTO implements Parcelable{
         in.readTypedList(this.votes, Vote.CREATOR);
         this.typeId = in.readInt();
         this.actorId = in.readInt();
-    }
-
-    public int getActorId() {
-        return actorId;
-    }
-
-    public void setActorId(int actorId) {
-        this.actorId = actorId;
-    }
-
-    public int getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
-    }
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public int getForumId() {
-        return forumId;
-    }
-
-    public void setForumId(int forumId) {
-        this.forumId = forumId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitleShort() {
-        return titleShort;
-    }
-
-    public void setTitleShort(String titleShort) {
-        this.titleShort = titleShort;
-    }
-
-    public String getResume(){
-        return resume;
-    }
-
-    public void setResume(String resume){
-        this.resume = resume;
-    }
-
-    public ArrayList<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(ArrayList<Vote> votes) {
-        this.votes = votes;
-    }
-
-    public void addVote(Vote vote){
-        this.votes.add(vote);
-    }
-    public void removeVote(String userHash){
-        for(int i = this.votes.size() -1 ; i>=0; i--){
-            if (votes.get(i).getUserHash().equals(userHash) )
-                votes.remove(i);
-        }
+        this.status = in.readString();
     }
 
     @Override
@@ -210,6 +108,7 @@ public class BillDTO implements Parcelable{
         dest.writeTypedList(this.votes);
         dest.writeInt(this.typeId);
         dest.writeInt(this.actorId);
+        dest.writeString(this.status);
     }
 
     public static final Creator<BillDTO> CREATOR = new BillDTOCreator();
@@ -226,10 +125,44 @@ public class BillDTO implements Parcelable{
         }
     }
 
+    public String getStatus(){return status; }
+    public void setStatus(String status){ this.status = status;}
+    public int getActorId() { return actorId; }
+    public void setActorId(int actorId) { this.actorId = actorId; }
+    public int getTypeId() { return typeId; }
+    public void setTypeId(int typeId) { this.typeId = typeId; }
+    public String getCreatedBy() { return createdBy; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
+    public String getDeadline() { return deadline; }
+    public void setDeadline(String deadline) { this.deadline = deadline; }
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+    public int getForumId() { return forumId; }
+    public void setForumId(int forumId) { this.forumId = forumId; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getNumber() { return number; }
+    public void setNumber(String number) { this.number = number; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getTitleShort() { return titleShort; }
+    public void setTitleShort(String titleShort) { this.titleShort = titleShort; }
+    public String getResume(){ return resume; }
+    public void setResume(String resume){ this.resume = resume; }
+    public ArrayList<Vote> getVotes() { return votes; }
+    public void setVotes(ArrayList<Vote> votes) { this.votes = votes; }
+    public void addVote(Vote vote){ this.votes.add(vote); }
+    public void removeVote(String userHash){
+        for(int i = this.votes.size() -1 ; i>=0; i--){
+            if (votes.get(i).getUserHash().equals(userHash) )
+                votes.remove(i);
+        }
+    }
+
     public static class Vote implements Parcelable{
         public int id;
-        public String userHash;
-        public ArgumentType vote;
+        private String userHash;
+        private ArgumentType vote;
 
         public Vote(){}
 
@@ -257,31 +190,6 @@ public class BillDTO implements Parcelable{
             }
         };
 
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getUserHash() {
-            return userHash;
-        }
-
-        public void setUserHash(String userHash) {
-            this.userHash = userHash;
-        }
-
-        public ArgumentType getVote() {
-            return vote;
-        }
-
-        public void setVote(ArgumentType vote) {
-            this.vote = vote;
-        }
-
-
         @Override
         public int describeContents() {
             return 0;
@@ -294,6 +202,12 @@ public class BillDTO implements Parcelable{
             dest.writeString(this.vote.name());
         }
 
+        public int getId() { return id; }
+        public void setId(int id) { this.id = id; }
+        public String getUserHash() { return userHash; }
+        public void setUserHash(String userHash) { this.userHash = userHash; }
+        public ArgumentType getVote() { return vote; }
+        public void setVote(ArgumentType vote) { this.vote = vote; }
     }
 }
 
