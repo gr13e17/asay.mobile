@@ -11,7 +11,7 @@
 
         <include
             android:id="@+id/comment"
-            layout="@layout/comment_simple"
+            layout="@layout/comment_without_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
