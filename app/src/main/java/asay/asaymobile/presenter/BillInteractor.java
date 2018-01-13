@@ -29,6 +29,7 @@ public class BillInteractor {
     }
 
     void retriveSavedBills(final ArrayList<Integer> savedbills) {
+        DatabaseReference billElementReference = database.getReference("bills");
         billElementReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -103,17 +103,19 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             @Override
             public View getView(int position, View cachedView, ViewGroup parent){
                 View view = super.getView(position, cachedView, parent);
-                BillDTO bill = bills.get(position);
-                TextView titleTextView = view.findViewById(R.id.listeelem_header);
-                String title = bill.number + ": " + bill.getTitleShort();
-                titleTextView.setText(title);
-                TextView date = view.findViewById(R.id.listeelem_date);
-                date.setText(String.format(getResources().getString(R.string.days_until_deadline), calcDateFromToday(bill.getDeadline())));
-                TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
-                if(bill.votes.size() > 0)
-                    numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
-                else{
-                    numberOfVotes.setText("");
+                if(!bills.isEmpty()) {
+                    BillDTO bill = bills.get(position);
+                    TextView titleTextView = view.findViewById(R.id.listeelem_header);
+                    String title = bill.number + ": " + bill.getTitleShort();
+                    titleTextView.setText(title);
+                    TextView date = view.findViewById(R.id.listeelem_date);
+                    date.setText(String.format(getResources().getString(R.string.days_until_deadline), calcDateFromToday(bill.getDeadline())));
+                    TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
+                    if (bill.votes.size() > 0)
+                        numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
+                    else {
+                        numberOfVotes.setText("");
+                    }
                 }
                 return view;
             }
@@ -145,12 +147,11 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             step.getTypeid() == 12))
                         hasSteps = true;
                 }
-
                 if (bill.getResume() != null && !bill.getResume().isEmpty() && hasSteps)
                     this.bills.add(bill);
             }
+            adapter.notifyDataSetChanged();
         }
-        adapter.notifyDataSetChanged();
         if (getView() != null)
             getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
     }
