@@ -137,6 +137,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         this.bills.clear();
+
         for(BillDTO bill : bills){
             if(bill.getResume() != null && !bill.getResume().isEmpty())
                 this.bills.add(bill);

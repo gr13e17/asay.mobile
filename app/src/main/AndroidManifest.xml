@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".activities.MainActivity"
             android:theme="@style/AppTheme">
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable">
@@ -31,8 +32,7 @@
         <activity
             android:name=".activities.BillActivity"
             android:label="@string/title_activity_bill"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ProfileActivity"/>
     </application>
 
