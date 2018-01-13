@@ -46,6 +46,8 @@
     <string name="noCommentsAgainst">Der er ingen kommentarer som argumenterer imod forslaget endnu</string>
     <string name="dummy_date">18/01/18 10:38</string>
     <string name="add_to_favorites">Tilføj til favoritter</string>
+    <string name="app_label">Søg</string>
+    <string name="Search_hint">Søg efter forslag..</string>
 
 
 </resources>

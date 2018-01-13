@@ -43,7 +43,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     double userId = 1;
     private ArrayList<BillDTO> bills = new ArrayList<>();
     private ArrayList<Integer> savedbills = new ArrayList<>();
-    ArrayAdapter<BillDTO> adapter;
+    public ArrayAdapter<BillDTO> adapter;
     ListView listview;
     private MainActivity activity;
     private Typeface typeface;
@@ -137,9 +137,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         this.bills.clear();
         for(BillDTO bill : bills){
-            if(bill.getResume() != null && !bill.getResume().isEmpty() && (bill.getTypeId() == 87 ||
-                    bill.getTypeId() == 7 || bill.getTypeId() == 23 || bill.getTypeId() == 17 ||
-                    bill.getTypeId() == 12))
+            if(bill.getResume() != null && !bill.getResume().isEmpty() )
                 this.bills.add(bill);
         }
         adapter.notifyDataSetChanged();
@@ -208,7 +206,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
         return diffDays;
     }
-
 
 
     private class ListFilter extends Filter {
