@@ -111,7 +111,7 @@ public class BillInteractor {
                         exist = true;
                         BillDTO databillDTO = data.getValue(BillDTO.class);
                         if(!databillDTO.equals(billDTO)){
-                            updateBill(databillDTO);
+                           updateBill(databillDTO);
                         }
                     } else {
                         //do something
