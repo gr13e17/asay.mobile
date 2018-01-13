@@ -26,7 +26,7 @@ import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.ForumPresenter;
 import asay.asaymobile.presenter.UserPresenter;
 
-public class BillCommentsFragment extends Fragment implements View.OnClickListener, ForumContract.View, UserContract.View{
+public class BillOverviewFragment extends Fragment implements View.OnClickListener, ForumContract.View, UserContract.View{
 
     TextView BillDesc;
     String BillDescOrg;
@@ -49,7 +49,7 @@ public class BillCommentsFragment extends Fragment implements View.OnClickListen
     private UserDTO user;
     private UserPresenter uPresenter;
 
-    public BillCommentsFragment() {
+    public BillOverviewFragment() {
         // Required empty public constructor
     }
 
