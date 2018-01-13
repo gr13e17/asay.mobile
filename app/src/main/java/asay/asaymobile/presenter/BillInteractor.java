@@ -112,7 +112,8 @@ public class BillInteractor {
                         BillDTO databillDTO = data.getValue(BillDTO.class);
                         if(!databillDTO.equals(billDTO)){
                             DatabaseReference billref = billElementReference.child(data.getKey());
-                            billref.setValue(databillDTO);                        }
+                            billref.setValue(billDTO);
+                        }
                     } else {
                         //do something
                     }

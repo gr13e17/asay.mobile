@@ -65,7 +65,7 @@ public class BillDetailFragment extends Fragment implements OnClickListener {
         final View rootView = inflater.inflate(R.layout.fragment_bill_detail, container, false);
 
         status = (TextView) rootView.findViewById(R.id.status);
-        SpannableString statusTxt = new SpannableString(dummy3Bold + dummy3);
+        SpannableString statusTxt = new SpannableString(dummy3Bold + bill.getStatus());
         statusTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, dummy3Bold.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         status.setText(statusTxt);
 

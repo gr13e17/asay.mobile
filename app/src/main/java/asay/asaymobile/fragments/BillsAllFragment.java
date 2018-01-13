@@ -31,6 +31,7 @@ import asay.asaymobile.activities.BillActivity;
 import asay.asaymobile.activities.MainActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.model.BillDTO.CaseStep;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.BillPresenter;
 import asay.asaymobile.presenter.UserPresenter;
@@ -136,11 +137,15 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         this.bills.clear();
+        boolean hasSteps = false;
         for(BillDTO bill : bills){
-//            if(bill.getResume() != null && !bill.getResume().isEmpty() && (bill.getTypeId() == 87 ||
-//                    bill.getTypeId() == 7 || bill.getTypeId() == 23 || bill.getTypeId() == 17 ||
-//                    bill.getTypeId() == 12))
-            if(bill.getResume() != null && !bill.getResume().isEmpty())
+            for (CaseStep step : bill.getCaseSteps()){
+                if((step.getTypeid() == 87 || step.getTypeid() == 7 || step.getTypeid() == 23 || step.getTypeid() == 17 ||
+                        step.getTypeid() == 12))
+                    hasSteps = true;
+            }
+
+            if(bill.getResume() != null && !bill.getResume().isEmpty() && hasSteps)
                 this.bills.add(bill);
         }
         if(!bills.isEmpty())
@@ -177,6 +182,21 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 int actorId = 0;
 
                 for (int i = 0; i < articles.length(); i++){
+                    ArrayList<CaseStep> steps = new ArrayList<CaseStep>();
+                    if(articles.getJSONObject(i).has("Sagstrin")){
+                        JSONArray caseSteps = articles.getJSONObject(i).getJSONArray("Sagstrin");
+                        for (int k = 0; k < caseSteps.length(); k++){
+                            CaseStep step = new CaseStep(
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("id")),
+                                    caseSteps.getJSONObject(k).getString("titel"),
+                                    caseSteps.getJSONObject(k).getString("dato"),
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("typeid")),
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("statusid")),
+                                    caseSteps.getJSONObject(k).getString("opdateringsdato")
+                            );
+                            steps.add(step);
+                        }
+                    }
                     JSONArray actors = articles.getJSONObject(i).getJSONArray("SagAktør");
                     for(int j=0; j < actors.length(); j++){
                         System.out.println(actors.getJSONObject(j).getString("rolleid"));
@@ -201,7 +221,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("resume"),
                             Integer.valueOf(articles.getJSONObject(i).getString("typeid")),
                             actorId,
-                            articles.getJSONObject(i).getJSONObject("Sagsstatus").getString("status")
+                            articles.getJSONObject(i).getJSONObject("Sagsstatus").getString("status"),
+                            steps
                     );
                     billPresenter.addNewBill(bill);
                 }
