@@ -140,8 +140,8 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
         if(!bills.isEmpty()) {
             this.bills.clear();
-            boolean hasSteps = false;
             for (BillDTO bill : bills) {
+                boolean hasSteps = false;
                 for (CaseStep step : bill.getCaseSteps()) {
                     if ((step.getTypeid() == 87 || step.getTypeid() == 7 || step.getTypeid() == 23 || step.getTypeid() == 17 ||
                             step.getTypeid() == 12))

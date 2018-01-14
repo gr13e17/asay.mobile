@@ -23,6 +23,8 @@ import asay.asaymobile.R;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.BillDTO;
 
+import static asay.asaymobile.model.BillDTO.*;
+
 
 public class BillDetailFragment extends Fragment implements OnClickListener {
 
@@ -75,9 +77,16 @@ public class BillDetailFragment extends Fragment implements OnClickListener {
         //   ministryTxt.setSpan(new StyleSpan(Typeface.ITALIC), dummy4Bold.length(), dummy4Bold.length() + dummy4.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ministry.setText(ministryTxt);
 
+        StringBuilder builder = new StringBuilder();
+        for(CaseStep step : bill.caseSteps){
+            builder.append(step.getTitle());
+            builder.append(" ");
+            builder.append(step.getUpdateDate());
+            builder.append("\n");
+        }
 
         schedule = (TextView) rootView.findViewById(R.id.scheduleList);
-        schedule.setText(R.string.billSchedule);
+        schedule.setText(builder.toString());
         schedule.setMaxLines(3);
         schedule.setOnClickListener(this);
 
