@@ -31,6 +31,7 @@ import asay.asaymobile.activities.BillActivity;
 import asay.asaymobile.activities.MainActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.model.BillDTO.CaseStep;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.BillPresenter;
 import asay.asaymobile.presenter.UserPresenter;
@@ -43,7 +44,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     double userId = 1;
     private ArrayList<BillDTO> bills = new ArrayList<>();
     private ArrayList<Integer> savedbills = new ArrayList<>();
-    public ArrayAdapter<BillDTO> adapter;
+    ArrayAdapter<BillDTO> adapter;
     ListView listview;
     private MainActivity activity;
     private Typeface typeface;
@@ -78,7 +79,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
 
         } else if (isEnded) {
-            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
             billPresenter.getEndedBills();
             view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
 
@@ -103,17 +103,19 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             @Override
             public View getView(int position, View cachedView, ViewGroup parent){
                 View view = super.getView(position, cachedView, parent);
-                BillDTO bill = bills.get(position);
-                TextView titleTextView = view.findViewById(R.id.listeelem_header);
-                String title = bill.number + ": " + bill.getTitleShort();
-                titleTextView.setText(title);
-                TextView date = view.findViewById(R.id.listeelem_date);
-                date.setText(String.format(getResources().getString(R.string.days_until_deadline), calcDateFromToday(bill.getDeadline())));
-                TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
-                if(bill.votes.size() > 0)
-                    numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
-                else{
-                    numberOfVotes.setText("");
+                if(!bills.isEmpty()) {
+                    BillDTO bill = bills.get(position);
+                    TextView titleTextView = view.findViewById(R.id.listeelem_header);
+                    String title = bill.number + ": " + bill.getTitleShort();
+                    titleTextView.setText(title);
+                    TextView date = view.findViewById(R.id.listeelem_date);
+                    date.setText(String.format(getResources().getString(R.string.days_until_deadline), calcDateFromToday(bill.getDeadline())));
+                    TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
+                    if (bill.votes.size() > 0)
+                        numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
+                    else {
+                        numberOfVotes.setText("");
+                    }
                 }
                 return view;
             }
@@ -136,14 +138,20 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
-        this.bills.clear();
-
-        for(BillDTO bill : bills){
-            if(bill.getResume() != null && !bill.getResume().isEmpty())
-                this.bills.add(bill);
+        if(!bills.isEmpty()) {
+            this.bills.clear();
+            boolean hasSteps = false;
+            for (BillDTO bill : bills) {
+                for (CaseStep step : bill.getCaseSteps()) {
+                    if ((step.getTypeid() == 87 || step.getTypeid() == 7 || step.getTypeid() == 23 || step.getTypeid() == 17 ||
+                            step.getTypeid() == 12))
+                        hasSteps = true;
+                }
+                if (bill.getResume() != null && !bill.getResume().isEmpty() && hasSteps)
+                    this.bills.add(bill);
+            }
+            adapter.notifyDataSetChanged();
         }
-        adapter.notifyDataSetChanged();
-
         if (getView() != null)
             getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
     }
@@ -158,7 +166,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void refreshUser(UserDTO user) {
         savedbills = user.getbillsSaved();
-        System.out.println("number of savedbills userRefresh :" + savedbills.size());
         billPresenter.getSavedBills(savedbills);
     }
 
@@ -173,7 +180,36 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 }
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
+                int actorId = 0;
+
                 for (int i = 0; i < articles.length(); i++){
+                    ArrayList<CaseStep> steps = new ArrayList<CaseStep>();
+                    if(articles.getJSONObject(i).has("Sagstrin")){
+                        JSONArray caseSteps = articles.getJSONObject(i).getJSONArray("Sagstrin");
+                        for (int k = 0; k < caseSteps.length(); k++){
+                            CaseStep step = new CaseStep(
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("id")),
+                                    caseSteps.getJSONObject(k).getString("titel"),
+                                    caseSteps.getJSONObject(k).getString("dato"),
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("typeid")),
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("statusid")),
+                                    caseSteps.getJSONObject(k).getString("opdateringsdato")
+                            );
+                            steps.add(step);
+                        }
+                    }
+                    JSONArray actors = articles.getJSONObject(i).getJSONArray("SagAktør");
+                    for(int j=0; j < actors.length(); j++){
+                        System.out.println(actors.getJSONObject(j).getString("rolleid"));
+                        if (actors.getJSONObject(j).getString("rolleid").equals("11")){
+                            System.out.println(actors.getJSONObject(j).getString("aktørid"));
+                            actorId = Integer.valueOf(actors.getJSONObject(j).getString("aktørid"));
+                        }
+
+                    }
+                    System.out.println("ÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅ");
+                    System.out.println(actorId);
+                    System.out.println(articles.getJSONObject(i).getJSONObject("Sagsstatus").getString("status"));
                     BillDTO bill = new BillDTO(
                             " ",
                             articles.getJSONObject(i).getJSONObject("Periode").getString("slutdato"),
@@ -184,7 +220,10 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("titel"),
                             articles.getJSONObject(i).getString("titelkort"),
                             articles.getJSONObject(i).getString("resume"),
-                           Integer.valueOf(articles.getJSONObject(i).getString("typeId"))
+                            Integer.valueOf(articles.getJSONObject(i).getString("typeid")),
+                            actorId,
+                            articles.getJSONObject(i).getJSONObject("Sagsstatus").getString("status"),
+                            steps
                     );
                     billPresenter.addNewBill(bill);
                 }
