@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
@@ -168,8 +168,9 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
 
     @Override
     public void onSave(String commentContent, Double parentId, ArgumentType argumentType) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy  HH:mm");
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy  HH:mm");
         dateTime = format.format(calendar.getTime());
         CommentDTO comment = new CommentDTO(
                 argumentType,
@@ -232,7 +233,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
             cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
 
             //Set comment text
-            TextView commentText = convertView.findViewById(R.id.comment);
+            TextView commentText = convertView.findViewById(R.id.comment_text);
             commentText.setText(currentComment.getText());
 
             //Header background color based on ArgumentType
@@ -262,7 +263,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     int score = currentComment.getScore();
                     currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
-                    Toast.makeText(getActivity(), R.string.upVote,
+                    Toast.makeText(getActivity(), R.string.you_have_up_voted,
                             Toast.LENGTH_SHORT).show();
                 }
             });
@@ -275,7 +276,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                     int score = currentComment.getScore();
                     currentComment.setScore(score - 1);
                     presenter.updateComment(currentComment);
-                    Toast.makeText(getActivity(), R.string.downVote,
+                    Toast.makeText(getActivity(), R.string.you_have_down_voted,
                             Toast.LENGTH_SHORT).show();
                 }
             });

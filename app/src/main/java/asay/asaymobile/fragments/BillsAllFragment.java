@@ -120,11 +120,11 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 return view;
             }
         };
-        listview = new ListView(getActivity());
+        ListView listview = (ListView) view.findViewById(R.id.allBillsListView);
         listview.setOnItemClickListener(this);
+        listview.setDividerHeight(10);
         listview.setAdapter(adapter);
-        ViewGroup viewGroup = (ViewGroup) view;
-        viewGroup.addView(listview);
+
     }
 
     @Override
@@ -248,7 +248,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
         return diffDays;
     }
-
 
 
     private class ListFilter extends Filter {

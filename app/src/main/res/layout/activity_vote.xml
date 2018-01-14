@@ -50,7 +50,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/againstColor"
-        android:text="@string/argument_against"
+        android:text="@string/vote_against"
         app:layout_constraintBottom_toTopOf="@+id/status"
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />
@@ -63,7 +63,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/forColor"
-        android:text="@string/argument_for"
+        android:text="@string/vote_for"
         app:layout_constraintBottom_toTopOf="@+id/buttonAgainst"
         app:layout_constraintEnd_toStartOf="@+id/verticalguideline0.75"
         app:layout_constraintStart_toStartOf="@+id/verticalguideline0.25" />

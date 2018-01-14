@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="match_parent">
 
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/scroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -18,9 +16,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonVote"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -49,6 +45,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="4dp"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/add_to_favorites"
                 android:elevation="8dp"
                 android:gravity="start"
                 android:scaleType="fitCenter"
@@ -64,7 +61,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="16dp"
                 android:padding="8dp"
-                android:text="@string/BillDesc"
+                android:text="@string/bill_description"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textSize="17sp"
@@ -91,110 +88,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/argForContext"
+            <TextView
+                android:id="@+id/expandBillDesc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/text_round_corners"
-                app:layout_constraintTop_toBottomOf="@+id/argForHead"
-            app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:id="@+id/argForTxt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/text_round_corners"
-                    android:padding="10dp"
-                    android:text="@string/load"
-                    android:textAlignment="viewStart"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/argForContext"
-                    tools:layout_editor_absoluteY="2dp" />
-
-                <TextView
-                    android:id="@+id/expandArgFor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/showMore"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/argForTxt" />
-
-            </android.support.constraint.ConstraintLayout>
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/argAgainstContent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/text_round_corners"
+                android:text="@string/show_more"
+                android:textAlignment="center"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/argAgainstHead">
-
-                <TextView
-                    android:id="@+id/argAgainstTxt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="@string/load"
-                    android:textAlignment="viewStart"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/argAgainstContent"
-                    tools:layout_editor_absoluteY="1dp" />
-
-                <TextView
-                    android:id="@+id/expandArgAgainst"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/showMore"
-                    android:textAlignment="center"
-                    android:textAllCaps="false"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/argAgainstTxt" />
-
-            </android.support.constraint.ConstraintLayout>
-
-
+                app:layout_constraintTop_toBottomOf="@+id/billDesc" />
 
             <TextView
                 android:id="@+id/argForHead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/round_corners_for"
-                android:paddingEnd="20dp"
-                android:paddingStart="20dp"
-                android:text="@string/Toparg"
+                android:padding="8dp"
+                android:text="@string/top_arg_for"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textSize="17sp"
@@ -204,16 +116,60 @@
                 app:layout_constraintTop_toBottomOf="@+id/expandBillDesc" />
 
             <TextView
+                android:id="@+id/noArgForText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/no_comments_for"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/argForHead" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/argForContext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_container"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/argForHead">
+
+                <include
+                    android:id="@+id/comment_for"
+                    layout="@layout/comment_without_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/expand_for"/>
+
+                <TextView
+                    android:id="@+id/expand_for"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/show_more"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
                 android:id="@+id/argAgainstHead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/round_corners_against"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:paddingEnd="20dp"
-                android:paddingStart="20dp"
-                android:text="@string/argAgainst"
+                android:padding="8dp"
+                android:text="@string/top_arg_against"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textSize="17sp"
@@ -223,20 +179,53 @@
                 app:layout_constraintTop_toBottomOf="@+id/argForContext" />
 
             <TextView
-                android:id="@+id/expandBillDesc"
-                android:layout_width="0dp"
+                android:id="@+id/noArgAgainstText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:text="@string/showMore"
-                android:textAlignment="center"
-                android:textStyle="bold"
+                android:text="@string/no_comments_against"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/billDesc" />
+                app:layout_constraintTop_toBottomOf="@+id/argAgainstHead" />
 
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/argAgainstContext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_container"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/argAgainstHead">
 
+                <include
+                    android:id="@+id/comment_against"
+                    layout="@layout/comment_without_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/expand_against" />
 
+                <TextView
+                    android:id="@+id/expand_against"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/show_more"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
 
