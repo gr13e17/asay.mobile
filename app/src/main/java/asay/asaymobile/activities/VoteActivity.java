@@ -88,6 +88,7 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
                         bill.addVote(vote);
                         presenter.updateBill(bill);
                         finish(); // close this activity and return to previous activity
+                        overridePendingTransition( R.anim.stay, R.anim.slide_out_down);
                     }
                 })
                 .setCancelable(false)

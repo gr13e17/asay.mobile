@@ -189,6 +189,7 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
             Intent voteIntent = new Intent(this.getActivity(), VoteActivity.class);
             voteIntent.putExtra("bill", bill);
             startActivity(voteIntent);
+            getActivity().overridePendingTransition( R.anim.slide_in_up, R.anim.stay );
         } else if (v.getId() == R.id.subbtn) {
             toggleFavorite();
         }
