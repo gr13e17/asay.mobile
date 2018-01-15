@@ -133,7 +133,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         Intent switchview = new Intent(getContext(), BillActivity.class);
         switchview.putExtra("bill", (Parcelable) item);
         startActivity(switchview);
-
+        getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
     }
 
     @Override
