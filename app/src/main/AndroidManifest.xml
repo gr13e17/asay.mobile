@@ -20,20 +20,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity"
+        <activity
+            android:name=".activities.MainActivity"
             android:theme="@style/AppTheme">
-
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable">
-            </meta-data>
+                android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".activities.VoteActivity" />
         <activity
             android:name=".activities.BillActivity"
             android:label="@string/title_activity_bill"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.ProfileActivity"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.ProfileActivity" />
     </application>
 
 </manifest>

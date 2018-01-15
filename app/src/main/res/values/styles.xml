@@ -13,6 +13,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
     <style name="BillListSubTitle" parent="TextAppearance.AppCompat.Tooltip">
         <item name="android:textColor">#515151</item>
     </style>
@@ -21,28 +25,15 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="MaterialDialogSheet" parent="@android:style/Theme.Dialog">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowAnimationStyle">@style/MaterialDialogSheetAnimation</item>
+    <style name="Body" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="MaterialDialogSheetAnimation">
-        <item name="android:windowEnterAnimation">@anim/popup_show</item>
-        <item name="android:windowExitAnimation">@anim/popup_hide</item>
+    <style name="BillHeader" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="SplashTheme" parent="AppTheme" >
-        <item name="android:windowBackground">@drawable/splash_background</item>
-    </style>
 
 </resources>
