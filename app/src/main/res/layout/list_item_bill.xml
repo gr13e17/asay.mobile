@@ -25,6 +25,7 @@
         android:maxLines="1"
         android:text="@string/days_until_deadline"
         android:textAppearance="@style/BillListSubTitle"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listeelem_header" />
 
@@ -38,6 +39,7 @@
         android:maxLines="1"
         android:text="@string/number_of_votes"
         android:textAppearance="@style/BillListSubTitle"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listeelem_header" />
 </android.support.constraint.ConstraintLayout>
