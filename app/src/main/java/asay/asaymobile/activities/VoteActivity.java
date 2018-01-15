@@ -88,7 +88,6 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
                         bill.addVote(vote);
                         presenter.updateBill(bill);
                         finish(); // close this activity and return to previous activity
-                        overridePendingTransition( R.anim.stay, R.anim.slide_out_down);
                     }
                 })
                 .setCancelable(false)
@@ -125,5 +124,11 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
     @Override
     public void refreshCurrentBills(ArrayList<BillDTO> bills) {
 
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition( R.anim.stay, R.anim.slide_out_down);
     }
 }
