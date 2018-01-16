@@ -131,4 +131,9 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
         super.finish();
         overridePendingTransition( R.anim.stay, R.anim.slide_out_down);
     }
+
+    @Override
+    public void refreshEndedBills(ArrayList<BillDTO> bills){
+
+    }
 }
