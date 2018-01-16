@@ -1,20 +1,65 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    tools:context="asay.asaymobile.activities.MainActivity">
 
-    <!-- The ActionBar displayed at the top -->
-    <include
-        layout="@layout/toolbar_nav"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:paddingTop="0dp"
+        android:theme="@style/AppTheme">
 
-    <!-- The main content view where fragments are loaded -->
-    <FrameLayout
-        android:id="@+id/flContent"
+        <!-- The ActionBar displayed at the top -->
+        <include
+            layout="@layout/toolbar_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabsMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/secondaryLightColor"
+            app:tabIndicatorColor="@color/primaryColor" >
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem1Main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_move_to_inbox"
+                android:scaleType="fitCenter"
+                android:text="@string/active" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem2Main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_history"
+                android:scaleType="fitCenter"
+                android:text="@string/ended" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem3Main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_stars"
+                android:scaleType="fitCenter"
+                android:text="@string/favorites" />
+
+        </android.support.design.widget.TabLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/containerMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

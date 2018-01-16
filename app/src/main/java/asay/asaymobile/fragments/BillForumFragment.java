@@ -1,26 +1,28 @@
 package asay.asaymobile.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.TimeZone;
 
 import asay.asaymobile.ForumContract;
 import asay.asaymobile.R;
@@ -35,27 +37,19 @@ import butterknife.ButterKnife;
  * Created by Soelberg on 31-10-2017.
  */
 
-public class BillForumFragment extends Fragment implements ForumContract.View, View.OnClickListener {
-    //contains names of the one who wrote the comment. must be populated from database
+public class BillForumFragment extends Fragment implements ForumContract.View, View.OnClickListener, WriteCommentDialog.WriteCommentListener {
     @BindView(R.id.forum_list_view)
     ListView listView;
-    int billId;
-    ForumPresenter forumPresenter;
-    ArrayList<UserDTO> nameArray = new ArrayList<UserDTO>();
-    ArrayList<String> commentArray = new ArrayList<String>();
-    ArrayList<Integer> colorArray = new ArrayList<Integer>();
+    private int billId;
+    private ForumPresenter forumPresenter;
+    private ArrayList<UserDTO> nameArray = new ArrayList<>(); //contains names of the one who wrote the comment. must be populated from database
     ArrayAdapter arrayAdapter;
     UserDTO userDTO;
     private View rootView;
     private FloatingActionButton commentButtonMain;
-    private Button replyButton;
-    private View bottomSheetView;
-    private Dialog mBottomSheetDialog;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private WriteCommentDialog writeCommentDialog;
+    String dateTime;
+    CommentDTO newComment = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,7 +65,7 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
         // Inflate the layout for this fragment
-        // call AsynTask to perform network operation on separate thread
+        // call AsyncTask to perform network operation on separate thread
         forumPresenter = new ForumPresenter(this, billId);
         // get reference to the views
 
@@ -90,10 +84,12 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     }
 
     @Override
-    public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComment) {
-        if (getContext() != null) {
-            ForumAdapter commentArrayAdapter = new ForumAdapter(currentComment, nameArray, getContext(), forumPresenter);
+    public void refreshCurrentCommentList(final ArrayList<CommentDTO> currentComments) {
+        List<CommentDTO> threadedComments = toThreadedComments(currentComments);
+        ForumAdapter commentArrayAdapter = new ForumAdapter((ArrayList<CommentDTO>) threadedComments, nameArray, getContext(), forumPresenter);
+        if (listView.getAdapter() == null || newComment != null) {
             listView.setAdapter(commentArrayAdapter);
+            newComment = null;
         }
     }
 
@@ -102,87 +98,121 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
         this.nameArray = users;
     }
 
-
-    public void openBottomSheet (View v) {
-
-        bottomSheetView = getLayoutInflater ().inflate (R.layout.fragment_new_comment_dialog, null);
-
-        mBottomSheetDialog = new Dialog (getContext(), R.style.MaterialDialogSheet);
-        mBottomSheetDialog.setContentView (bottomSheetView);
-        mBottomSheetDialog.setCancelable (true);
-        mBottomSheetDialog.getWindow ().setLayout (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        mBottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        mBottomSheetDialog.show ();
-
-        replyButton = bottomSheetView.findViewById(R.id.reply_button);
-        replyButton.setOnClickListener(this);
+    private void openWriteCommentDialog(View v, final Double parentId) {
+        writeCommentDialog = WriteCommentDialog.newInstance(parentId);
+        writeCommentDialog.setCancelable(false);
+        writeCommentDialog.show(BillForumFragment.this.getChildFragmentManager(), "writeComment");
     }
 
     @Override
     public void onClick(View view) {
-        if (view == commentButtonMain){
-            openBottomSheet(rootView);
-        } else if (view == replyButton){
-            EditText editText = bottomSheetView.findViewById(R.id.content);
-            String content = editText.getText().toString();
-            content = content.trim(); //trim string for trailing and leading whitespaces
-
-            // Show error if no comment is written
-            if(content.length() == 0){
-                editText.setError(getResources().getString(R.string.error_no_text));
-                return;
-            }
-
-            CommentDTO comment = new CommentDTO(
-                    ArgumentType.FOR,
-                    billId,
-                    0,
-                    0,
-                    content,
-                    1,
-                    0
-            );
-            forumPresenter.addNewComment(comment);
-            mBottomSheetDialog.dismiss();
+        if (view == commentButtonMain) {
+            openWriteCommentDialog(rootView, 0.0);
         }
     }
 
+    private List<CommentDTO> toThreadedComments(List<CommentDTO> comments) {
+
+        //comments should be sorted first
+        Collections.sort(comments);
+
+        //The resulting array of threaded comments
+        List<CommentDTO> threaded = new ArrayList<>();
+
+        //An array used to hold processed comments which should be removed at the end of the cycle
+        List<CommentDTO> removeComments = new ArrayList<>();
+
+        //get the root comments first (comments with no parent)
+        for (int i = 0; i < comments.size(); i++) {
+            CommentDTO c = comments.get(i);
+            if (c.getParrentId() == 0) {
+                c.setCommentDepth(0); //A property of Comment to hold its depth
+                c.setChildrentCount(0); //A property of Comment to hold its child count
+                threaded.add(c);
+                removeComments.add(c);
+            }
+        }
+
+        if (removeComments.size() > 0) {
+            //clear processed comments
+            comments.removeAll(removeComments);
+            removeComments.clear();
+        }
+
+        int depth = 0;
+        //get the child comments up to a max depth of 10
+        while (comments.size() > 0 && depth <= 10) {
+            depth++;
+            for (int j = 0; j < comments.size(); j++) {
+                CommentDTO child = comments.get(j);
+                //check root comments for match
+                for (int i = 0; i < threaded.size(); i++) {
+                    CommentDTO parent = threaded.get(i);
+                    if (parent.getId() == child.getParrentId()) {
+                        parent.setChildrentCount(parent.getChildrentCount() + 1);
+                        child.setCommentDepth(depth + parent.getCommentDepth());
+                        threaded.add((int) (i + parent.getChildrentCount()), child);
+                        removeComments.add(child);
+                    }
+                }
+            }
+            if (removeComments.size() > 0) {
+                //clear processed comments
+                comments.removeAll(removeComments);
+                removeComments.clear();
+            }
+        }
+
+        return threaded;
+    }
+
+    @Override
+    public void onSave(String commentContent, Double parentId, ArgumentType argumentType) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy  HH:mm");
+        dateTime = format.format(calendar.getTime());
+        CommentDTO comment = new CommentDTO(
+                argumentType,
+                billId,
+                0,
+                0,
+                commentContent,
+                1,
+                parentId,
+                0,
+                0,
+                dateTime
+        );
+        forumPresenter.addNewComment(comment);
+        writeCommentDialog.dismiss();
+        newComment = comment;
+    }
 
 
+    public class ForumAdapter extends BaseAdapter {
+        final ArrayList<CommentDTO> currentComments;
+        final ArrayList<UserDTO> currentUsers;
+        final Context context;
+        final ForumPresenter presenter;
 
-
-    public class ForumAdapter extends BaseAdapter implements View.OnClickListener {
-        ArrayList<CommentDTO> currentComments;
-        ArrayList<UserDTO> currentUsers;
-        Context context;
-        LayoutInflater mInflater;
-        public View.OnClickListener listener;
-        ForumPresenter presenter;
-
-
-        public ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter){
+        ForumAdapter(ArrayList<CommentDTO> currentComments, ArrayList<UserDTO> currentUsers, Context context, ForumPresenter presenter) {
             this.currentComments = currentComments;
             this.currentUsers = currentUsers;
             this.context = context;
-            this.mInflater = LayoutInflater.from(context);
             this.presenter = presenter;
         }
 
-        public void setButtonListener(View.OnClickListener listener) {
-            this.listener = listener;
-        }
-
-        private Integer getColor(ArgumentType argumentType){
+        private Drawable getBackground(ArgumentType argumentType) {
             switch (argumentType) {
                 case FOR:
-                    return context.getResources().getColor(R.color.forColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_for);
                 case AGAINST:
-                    return context.getResources().getColor(R.color.againstColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_against);
                 case NEUTRAL:
-                    return context.getResources().getColor(R.color.neutralColor);
+                    return context.getResources().getDrawable(R.drawable.round_header_neutral);
                 default:
-                    return context.getResources().getColor(R.color.neutralColor);
+                    return null;
             }
         }
 
@@ -193,49 +223,73 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
                 convertView = inflater.inflate(R.layout.list_item_comment, parent, false);
             }
             final CommentDTO currentComment = currentComments.get(position);
-            TextView commentText = convertView.findViewById(R.id.comment);
+
+            //Padding for threaded comments
+            View view2 = new View(getActivity());
+            ConstraintLayout cl = convertView.findViewById(R.id.commentConstrain);
+            cl.addView(view2, new ViewGroup.LayoutParams(2, ViewGroup.LayoutParams.MATCH_PARENT));
+            //Find width of screen
+            float dpWidth = getResources().getDisplayMetrics().widthPixels;
+            cl.setPadding((int) (currentComment.getCommentDepth()*dpWidth*0.1),0,0,0);
+
+            //Set comment text
+            TextView commentText = convertView.findViewById(R.id.comment_text);
             commentText.setText(currentComment.getText());
+
+            //Header background color based on ArgumentType
+            View header = convertView.findViewById(R.id.header);
+            header.setBackground(getBackground(currentComment.getArgumentType()));
+
+            //Set name text
             TextView nameView = convertView.findViewById(R.id.nameView);
-            ImageButton upvote = (ImageButton) convertView.findViewById(R.id.up);
-            upvote.setOnClickListener(new View.OnClickListener() {
+            for (UserDTO user : currentUsers) {
+                if (user.getid() == currentComment.getUserid()) {
+                    nameView.setText(user.getname());
+                    break;
+                }
+            }
+
+            //Set datetime text
+            if (currentComment.getDateTime() != null) {
+                TextView dateTextView = convertView.findViewById(R.id.dateTextView);
+                dateTextView.setText(currentComment.getDateTime());
+            }
+
+            ImageButton upVoteButton = convertView.findViewById(R.id.up);
+            upVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("you pressed upvote");
+                    System.out.println("you pressed upVote");
                     int score = currentComment.getScore();
-                    currentComment.setScore(score +1);
+                    currentComment.setScore(score + 1);
                     presenter.updateComment(currentComment);
+                    Toast.makeText(getActivity(), R.string.you_have_up_voted,
+                            Toast.LENGTH_SHORT).show();
                 }
             });
-            ImageButton downvote = (ImageButton) convertView.findViewById(R.id.down);
-            downvote.setOnClickListener(new View.OnClickListener() {
+
+            ImageButton downVoteButton = convertView.findViewById(R.id.down);
+            downVoteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     System.out.println("you pressed downVote");
                     int score = currentComment.getScore();
-                    currentComment.setScore(score -1);
+                    currentComment.setScore(score - 1);
                     presenter.updateComment(currentComment);
+                    Toast.makeText(getActivity(), R.string.you_have_down_voted,
+                            Toast.LENGTH_SHORT).show();
                 }
             });
-            for (UserDTO user: currentUsers ){
-                if(user.getid() == currentComment.getUserid()){
-                    nameView.setText(user.getname());
-                    nameView.setBackgroundColor(getColor(currentComment.getArgumentType()));
-                }
-            }
-            Button replyToComment = convertView.findViewById(R.id.replyToComment);
+
+            ImageButton replyToComment = convertView.findViewById(R.id.replyToComment);
             replyToComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openBottomSheet(rootView);
+                    openWriteCommentDialog(rootView, currentComment.getId());
                 }
             });
 
             return convertView;
-        }
-
-        @Override
-        public void onClick(View v) {
-
         }
 
         @Override

@@ -34,10 +34,13 @@ public class UserInteractor {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 System.out.println("data has changed");
                 UserDTO userDTO = new UserDTO();
-                for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
-                    userDTO = messagesSnapshot.getValue(UserDTO.class);
+                if(dataSnapshot.getChildren() != null){
+                    for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
+                        userDTO = messagesSnapshot.getValue(UserDTO.class);
+                    }
+
+                    presenter.refreshUser(userDTO);
                 }
-                presenter.refreshUser(userDTO);
             }
 
             @Override

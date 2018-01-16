@@ -11,8 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import asay.asaymobile.R;
-import asay.asaymobile.fragments.BillForumFragment;
 import asay.asaymobile.fragments.BillOverviewFragment;
+import asay.asaymobile.fragments.BillDetailFragment;
+import asay.asaymobile.fragments.BillForumFragment;
 import asay.asaymobile.model.BillDTO;
 
 public class BillActivity extends AppCompatActivity {
@@ -36,9 +37,7 @@ public class BillActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null){
-        }
-        setContentView(R.layout.activity_bill);
+            setContentView(R.layout.activity_bill);
 
         bill = getIntent().getParcelableExtra("bill");
 
@@ -101,7 +100,7 @@ public class BillActivity extends AppCompatActivity {
                 case 0:
                     bundle.putParcelable("bill", bill);
                     bundle.putString("view", "details");
-                    BillOverviewFragment details  = new BillOverviewFragment();
+                    BillDetailFragment details  = new BillDetailFragment();
                     details.setArguments(bundle);
                     return details;
                 default:
@@ -115,17 +114,5 @@ public class BillActivity extends AppCompatActivity {
             return 3;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 1:
-                    return "Lovforslag";
-                case 2:
-                    return "Debat";
-                case 0:
-                    return "Detaljer";
-            }
-            return null;
-        }
     }
 }

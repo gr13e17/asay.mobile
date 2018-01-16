@@ -1,24 +1,13 @@
 <resources>
-    <string name="app_name">Asay</string>
+    <string name="app_name">gr13 Asay</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_bill">BillActivity</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="dummy_description">Med lovforslaget foreslås indsat en bemyndigelsesbestemmelse i dyreværnsloven til at fastsætte krav om uddannelse vedrørende dyrevelfærd. Samtidig foreslås den gældende bemyndigelsesbestemmelse i lov om hold af dyr, der indeholder en hjemmel til at fastsætte uddannelseskrav med såvel dyresundheds- som dyrevelfærdsmæssigt sigte, ændret således, at bestemmelsen fremover alene vil give hjemmel til at fastsætte krav om uddannelse vedrørende dyresundhed.  De foreslåede bemyndigelsesbestemmelser er i lighed med tilsvarende bestemmelser i en række andre love på Miljø- og Fødevareministeriets område udformet som generelle hjemler, men på nuværende tidspunkt er det alene hensigten at udarbejde regler om uddannelseskrav for den besætningsansvarlige for erhvervsmæssigt hold af svin, malkekvæg og æglæggende høner med hjemmel i bemyndigelsesbestemmelsen i dyreværnsloven. Det bemærkes, at regler udstedt med hjemmel i den gældende bemyndigelsesbestemmelse i lov om hold af dyr forbliver gældende, indtil de ophæves eller afløses af nye regler.  Derudover foreslås det, at der i dyreværnsloven indsættes en bemyndigelse til, at der administrativt kan fastsættes regler om offentliggørelse af kontrolresultater, sådan som det kendes fra bl.a. fødevareområdet. Den foreslåede bestemmelse er i lighed med tilsvarende bestemmelser i en række andre love på Miljø- og Fødevareministeriets område udformet som en generel hjemmel, men på nuværende tidspunkt påtænkes den alene anvendt til at indføre en offentliggørelsesordning på hundeområdet.</string>
-    <string name="dummy_arg1">Miljø- og fødevareministeren kan fastsætte regler om uddannelseskrav vedrørende dyrevelfærd til personer, som er ansvarlige for landbrugsmæssigt hold af dyr. Stk. 2. Ministeren kan fastsætte regler om uddannelseskrav vedrørende dyrevelfærd til andre personer end de i stk. 1 nævnte, som er beskæftiget med landbrugsmæssigt hold af pelsdyr. Stk. 3. Ministeren kan fastsætte regler om godkendelse af uddannelseskurser, uddannelsers indhold og varighed, krav til undervisere, eksamen og opnåelse af kursusbevis for gennemført uddannelse samt udformning af kursusbeviser.«</string>
-    <string name="dummy_arg2">Loven træder i kraft den 15. januar 2018. Stk. 2. Regler udstedt i medfør af § 3 a i lov om hold af dyr, jf. lovbekendtgørelse nr. 925 af 3. juli 2017, bevarer deres gyldighed, indtil de ophæves eller afløses af nye regler. Overtrædelse af reglerne straffes efter de hidtil gældende regler.</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="reply">Svar</string>
-
-    <string name="dummy_description_short">>Med lovforslaget foreslås indsat en bemyndigelsesbestemmelse i dyreværnsloven til at fastsætte krav om uddannelse vedrørende dyrevelfærd. Samtidig foreslås den gældende bemyndigelsesbestemmelse i lov om hold af dyr, der indeholder en hjemmel til at fastsætte uddannelseskrav med såvel dyresundheds...</string>
-    <string name="billSchedule">Fremsat 26-10-2017 \n1. behandlet / henvist til udvalg 07-11-2017 \nFrist for spørgsmål 13-11-2017 \nFrist for svar 20-11-2017 \nFrist for ændringsforslag 21-11-2017 \nPolitisk drøftelse 22-11-2017 \nFrist for politiske bemærkninger 24-11-2017 \nBetænkning afgivet 29-11-2017 \nSat på dagsorden til 2. behandling 05-12-2017 \nSat på dagsorden til 3. behandling 07-12-2017</string>
+    <string name="tab_text_1">Detaljer</string>
+    <string name="tab_text_2">Forslag</string>
+    <string name="tab_text_3">Debat</string>
+    <string name="reply">Send</string>
+    <string name="billSchedule">Fremsat 26–10–2017 \n1. behandlet / henvist til udvalg 07–11–2017 \nFrist for spørgsmål 13–11–2017 \nFrist for svar 20–11–2017 \nFrist for ændringsforslag 21–11–2017 \nPolitisk drøftelse 22–11–2017 \nFrist for politiske bemærkninger 24–11–2017 \nBetænkning afgivet 29–11–2017 \nSat på dagsorden til 2. behandling 05–12–2017 \nSat på dagsorden til 3. behandling 07–12–2017</string>
     <string name="BillExampleHead">L72: Forslag til lov om ændring af dyreværnsloven og lov om hold af dyr.</string>
     <string name="reply_content">Tilføj ny kommentar</string>
     <string name="title_activity_reply">reply</string>
@@ -29,13 +18,35 @@
     <string name="no">Nej</string>
     <string name="your_vote_is_registered">Din stemme er registreret</string>
     <string name="ok">OK</string>
-    <string name="showMore">Se mere</string>
-    <string name="showLess">Se mindre</string>
-    <string name="noComments">Der er ingen kommentarer til dette forum endnu</string>
+    <string name="show_more">Se mere</string>
+    <string name="show_less">Se mindre</string>
     <string name="number_of_votes">Deltagelse: %d personer</string>
     <string name="days_until_deadline">Deadline: %d dage</string>
     <string name="your_profile">Din profil</string>
     <string name="error_no_text">Du har ikke indtastet tekst i feltet</string>
-    <string name="noDesc">Der findes ingen beskrivelse til dette forslag</string>
+    <string name="there_is_no_description_for_this_bill">Der findes ingen beskrivelse til dette forslag</string>
+    <string name="load">Loading…</string>
+    <string name="top_arg_for">Bedste argument for</string>
+    <string name="top_arg_against">Bedste argument imod</string>
+    <string name="bill_description">OM FORSLAGET</string>
+    <string name="cancel">Annuller</string>
+    <string name="vote_against">imod</string>
+    <string name="vote_for">for</string>
+    <string name="neutral">neutralt</string>
+    <string name="cancel_vote">Fortryd stemme</string>
+    <string name="vote_registered">Stemme afgivet</string>
+    <string name="active">Aktive</string>
+    <string name="ended">Afsluttede</string>
+    <string name="favorites">Favoritter</string>
+    <string name="dummy_user">Hanne Olsen</string>
+    <string name="you_have_up_voted">Du har stemt kommentaren op</string>
+    <string name="you_have_down_voted">Du har stemt kommentaren ned</string>
+    <string name="no_comments_for">Der er ingen kommentarer som argumenterer for forslaget endnu</string>
+    <string name="no_comments_against">Der er ingen kommentarer som argumenterer imod forslaget endnu</string>
+    <string name="dummy_date">18/01/18 10:38</string>
+    <string name="add_to_favorites">Tilføj til favoritter</string>
+    <string name="app_label">Søg</string>
+    <string name="Search_hint">Søg efter forslag..</string>
+    <string name="asay">Asay</string>
 
 </resources>

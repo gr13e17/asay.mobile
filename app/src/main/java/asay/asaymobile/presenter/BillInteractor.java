@@ -4,9 +4,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import asay.asaymobile.model.BillDTO;
 
@@ -22,6 +25,7 @@ public class BillInteractor {
 
     BillInteractor(BillPresenter presenter) {
         this.presenter = presenter;
+        retrieveAllBills();
     }
 
     void retriveSavedBills(final ArrayList<Integer> savedbills) {
@@ -30,15 +34,17 @@ public class BillInteractor {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 BillDTO billDTO = new BillDTO();
                 mbillList.clear();
-                for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
-                    billDTO = messagesSnapshot.getValue(BillDTO.class);
-                    for (int billId : savedbills) {
-                        if (billDTO.getId() == billId) {
-                            mbillList.add(billDTO);
+                if(dataSnapshot.getChildren() != null){
+                    for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
+                        billDTO = messagesSnapshot.getValue(BillDTO.class);
+                        for (int billId : savedbills) {
+                            if (billDTO.getId() == billId) {
+                                mbillList.add(billDTO);
+                            }
                         }
                     }
+                    presenter.refreshCurrentBillDTO(mbillList);
                 }
-                presenter.refreshCurrentBillDTO(mbillList);
             }
 
             @Override
@@ -49,24 +55,50 @@ public class BillInteractor {
     }
 
     void retriveEndedBills() {
-
-    }
-
-    void retrieveAllBills() {
-        billElementReference.addValueEventListener(new ValueEventListener() {
+        Date date = new Date();
+        String str = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date);
+        Query query = billElementReference.orderByChild("deadline").endAt(str);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                BillDTO billDTO = new BillDTO();
                 mbillList.clear();
-                for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
-                    BillDTO billDTO = messagesSnapshot.getValue(BillDTO.class);
-                    mbillList.add(billDTO);
+                if(dataSnapshot.getChildren() != null) {
+                    for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
+                        billDTO = messagesSnapshot.getValue(BillDTO.class);
+                        mbillList.add(billDTO);
+                    }
                 }
                 presenter.refreshCurrentBillDTO(mbillList);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO: Handle error on presenter here.
+                presenter.refreshCurrentBillDTO(new ArrayList<BillDTO>());
+            }
+        });
+    }
+
+    void retrieveAllBills() {
+        Date date = new Date();
+        String str = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date);
+        Query query = billElementReference.orderByChild("deadline").startAt(str);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mbillList.clear();
+                if(dataSnapshot.getChildren() != null) {
+                    for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
+                        BillDTO billDTO = messagesSnapshot.getValue(BillDTO.class);
+                        mbillList.add(billDTO);
+                    }
+                }
+                presenter.refreshCurrentBillDTO(mbillList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                presenter.refreshCurrentBillDTO(new ArrayList<BillDTO>());
             }
         });
     }
@@ -80,6 +112,11 @@ public class BillInteractor {
                     Object result = data.child("id").getValue();
                     if (data.child("id").getValue().toString().equals(String.valueOf(billDTO.id))) {
                         exist = true;
+                        BillDTO databillDTO = data.getValue(BillDTO.class);
+                        if(!databillDTO.equals(billDTO)){
+                            DatabaseReference billref = billElementReference.child(data.getKey());
+                            billref.setValue(billDTO);
+                        }
                     } else {
                         //do something
                     }
@@ -91,7 +128,7 @@ public class BillInteractor {
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-
+                System.out.println(firebaseError.getMessage());
             }
         });
     }
@@ -109,7 +146,7 @@ public class BillInteractor {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                System.out.println(databaseError.getMessage());
             }
         });
     }

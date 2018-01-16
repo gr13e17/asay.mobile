@@ -2,6 +2,7 @@ package asay.asaymobile.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -13,12 +14,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,12 +28,13 @@ import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
 import asay.asaymobile.UserContract;
 import asay.asaymobile.activities.BillActivity;
+import asay.asaymobile.activities.MainActivity;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.BillDTO;
+import asay.asaymobile.model.BillDTO.CaseStep;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.BillPresenter;
 import asay.asaymobile.presenter.UserPresenter;
-import butterknife.ButterKnife;
 
 
 public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View, UserContract.View{
@@ -45,7 +46,10 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     private ArrayList<Integer> savedbills = new ArrayList<>();
     ArrayAdapter<BillDTO> adapter;
     ListView listview;
-
+    private MainActivity activity;
+    private Typeface typeface;
+    private ArrayList<BillDTO> filteredList;
+    private ListFilter listFilter;
     public BillsAllFragment() {
         // Required empty public constructor
     }
@@ -55,8 +59,35 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
-        ButterKnife.bind(this, view);
+        // ButterKnife.bind(this, view);
+        billPresenter = new BillPresenter(this);
+        userPresenter = new UserPresenter(this);
+        boolean isFavorite = false;
+        boolean isEnded = false;
+        if(getArguments() != null){
+            isFavorite = getArguments().getBoolean("isFavorite");
+            isEnded = getArguments().getBoolean("isEnded");
+        }
+
+        String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
+        String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
+        String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
+        String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
+
+        if(isFavorite){
+            userPresenter.getUser(userId);
+            view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
+
+        } else if (isEnded) {
+            billPresenter.getEndedBills();
+            view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
+
+        } else {
+            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
+            billPresenter.getAllBills();
+        }
         return view;
+
     }
 
     @Override
@@ -64,48 +95,36 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         super.onViewCreated(view, savedInstanceState);
         // Inflate the layout for this fragment
         // call AsynTask to perform network operation on separate thread
-        boolean isFavorite = false;
-        if(getArguments() != null){
-            isFavorite = getArguments().getBoolean("isFavorite");
-        }
-        String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
-        String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
-        String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
-        String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
-        billPresenter = new BillPresenter(this);
-        userPresenter = new UserPresenter(this);
-        if(!isFavorite){
-            new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
-            billPresenter.getAllBills();
-        } else{
-            userPresenter.getUser(userId);
-        }
-            // get reference to the views
+        // TODO: Use isEnded to show only ended bills
+        getFilter();
+        // get reference to the views
         adapter = new ArrayAdapter<BillDTO>(getActivity(), R.layout.list_item_bill,R.id.listeelem_header,bills){
             @SuppressLint("DefaultLocale")
             @Override
             public View getView(int position, View cachedView, ViewGroup parent){
                 View view = super.getView(position, cachedView, parent);
-                BillDTO bill = bills.get(position);
+                if(!bills.isEmpty()) {
+                    BillDTO bill = bills.get(position);
                     TextView titleTextView = view.findViewById(R.id.listeelem_header);
                     String title = bill.number + ": " + bill.getTitleShort();
                     titleTextView.setText(title);
                     TextView date = view.findViewById(R.id.listeelem_date);
-                    date.setText(String.format(getResources().getString(R.string.days_until_deadline), CalcDateFromToday(bill.getDeadline())));
+                    date.setText(String.format(getResources().getString(R.string.days_until_deadline), calcDateFromToday(bill.getDeadline())));
                     TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
-                    if(bill.votes.size() > 0)
+                    if (bill.votes.size() > 0)
                         numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
-                    else{
+                    else {
                         numberOfVotes.setText("");
                     }
+                }
                 return view;
             }
         };
-        listview = new ListView(getActivity());
+        ListView listview = (ListView) view.findViewById(R.id.allBillsListView);
         listview.setOnItemClickListener(this);
+        listview.setDividerHeight(10);
         listview.setAdapter(adapter);
-        ViewGroup viewGroup = (ViewGroup) view;
-        viewGroup.addView(listview);
+
     }
 
     @Override
@@ -119,17 +138,34 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
-        this.bills.clear();
-        for(BillDTO bill : bills){
-            this.bills.add(bill);
+        if(!bills.isEmpty()) {
+            this.bills.clear();
+            for (BillDTO bill : bills) {
+                boolean hasSteps = false;
+                for (CaseStep step : bill.getCaseSteps()) {
+                    if ((step.getTypeid() == 87 || step.getTypeid() == 7 || step.getTypeid() == 23 || step.getTypeid() == 17 ||
+                            step.getTypeid() == 12))
+                        hasSteps = true;
+                }
+                if (bill.getResume() != null && !bill.getResume().isEmpty() && hasSteps)
+                    this.bills.add(bill);
+            }
+            adapter.notifyDataSetChanged();
         }
-        adapter.notifyDataSetChanged();
+        if (getView() != null)
+            getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
+    }
+
+    public Filter getFilter() {
+        if (listFilter == null) {
+            listFilter = new ListFilter();
+        }
+        return listFilter;
     }
 
     @Override
     public void refreshUser(UserDTO user) {
         savedbills = user.getbillsSaved();
-        System.out.println("number of savedbills userRefresh :" + savedbills.size());
         billPresenter.getSavedBills(savedbills);
     }
 
@@ -144,7 +180,36 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 }
                 Log.d("OnTaskComplete", "onTaskComplete: " + result);
                 JSONArray articles = result.getJSONArray("value"); // get articles array
+                int actorId = 0;
+
                 for (int i = 0; i < articles.length(); i++){
+                    ArrayList<CaseStep> steps = new ArrayList<CaseStep>();
+                    if(articles.getJSONObject(i).has("Sagstrin")){
+                        JSONArray caseSteps = articles.getJSONObject(i).getJSONArray("Sagstrin");
+                        for (int k = 0; k < caseSteps.length(); k++){
+                            CaseStep step = new CaseStep(
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("id")),
+                                    caseSteps.getJSONObject(k).getString("titel"),
+                                    caseSteps.getJSONObject(k).getString("dato"),
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("typeid")),
+                                    Double.valueOf(caseSteps.getJSONObject(k).getString("statusid")),
+                                    caseSteps.getJSONObject(k).getString("opdateringsdato")
+                            );
+                            steps.add(step);
+                        }
+                    }
+                    JSONArray actors = articles.getJSONObject(i).getJSONArray("SagAktør");
+                    for(int j=0; j < actors.length(); j++){
+                        System.out.println(actors.getJSONObject(j).getString("rolleid"));
+                        if (actors.getJSONObject(j).getString("rolleid").equals("11")){
+                            System.out.println(actors.getJSONObject(j).getString("aktørid"));
+                            actorId = Integer.valueOf(actors.getJSONObject(j).getString("aktørid"));
+                        }
+
+                    }
+                    System.out.println("ÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅ");
+                    System.out.println(actorId);
+                    System.out.println(articles.getJSONObject(i).getJSONObject("Sagsstatus").getString("status"));
                     BillDTO bill = new BillDTO(
                             " ",
                             articles.getJSONObject(i).getJSONObject("Periode").getString("slutdato"),
@@ -154,7 +219,11 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                             articles.getJSONObject(i).getString("nummer"),
                             articles.getJSONObject(i).getString("titel"),
                             articles.getJSONObject(i).getString("titelkort"),
-                            articles.getJSONObject(i).getString("resume")
+                            articles.getJSONObject(i).getString("resume"),
+                            Integer.valueOf(articles.getJSONObject(i).getString("typeid")),
+                            actorId,
+                            articles.getJSONObject(i).getJSONObject("Sagsstatus").getString("status"),
+                            steps
                     );
                     billPresenter.addNewBill(bill);
                 }
@@ -162,22 +231,59 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                 Log.d("JSON Exception", "onTaskComplete: " + excep.getMessage());
             }
         }
+
     }
 
-    private long CalcDateFromToday(String date) {
+    private long calcDateFromToday(String date) {
         long diffDays = 0;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date d = sdf.parse(date);
             Date today = new Date();
-            long diff = Math.abs(d.getTime() - today.getTime());
+            long diff = d.getTime() - today.getTime();
             diffDays = diff / (24 * 60 * 60 * 1000);
-            String formattedTime = output.format(d);
         } catch (ParseException ex){
             System.out.println(ex.getMessage());
         }
 
         return diffDays;
     }
+
+
+    private class ListFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            if (constraint != null && constraint.length() > 0) {
+                ArrayList<BillDTO> tempList = new ArrayList<>();
+
+                // search content in friend list
+                for (BillDTO bill : bills) {
+                    if (bill.getNumber().toLowerCase().contains(constraint.toString().toLowerCase()) ||
+                            bill.getTitleShort().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        tempList.add(bill);
+                    }
+                }
+                filterResults.count = tempList.size();
+                filterResults.values = tempList;
+            } else {
+                filterResults.count = bills.size();
+                filterResults.values = bills;
+            }
+            System.out.println(bills.size());
+            System.out.println("qq: " + filterResults.values.toString());
+            return filterResults;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredList = (ArrayList<BillDTO>) results.values;
+            adapter.notifyDataSetChanged();
+            System.out.println("n: " + filteredList.size());
+
+        }
+
+    }
+
 }
