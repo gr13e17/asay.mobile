@@ -48,5 +48,10 @@
     <string name="app_label">Søg</string>
     <string name="Search_hint">Søg efter forslag..</string>
     <string name="asay">Asay</string>
+    <string name="details">Forslags Detaljer</string>
+    <string name="result">Resultat</string>
+    <string name="status">Status</string>
+    <string name="noVotes">Der er ikke stemt på dette forslag</string>
+    <string name="voteResult">Resultat af afstemningen</string>
 
 </resources>

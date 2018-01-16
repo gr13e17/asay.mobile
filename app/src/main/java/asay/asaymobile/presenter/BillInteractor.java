@@ -69,12 +69,12 @@ public class BillInteractor {
                         mbillList.add(billDTO);
                     }
                 }
-                presenter.refreshCurrentBillDTO(mbillList);
+                presenter.refreshEndedBillDTO(mbillList);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                presenter.refreshCurrentBillDTO(new ArrayList<BillDTO>());
+                presenter.refreshEndedBillDTO(new ArrayList<BillDTO>());
             }
         });
     }

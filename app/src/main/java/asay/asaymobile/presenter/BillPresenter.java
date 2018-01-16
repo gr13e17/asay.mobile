@@ -24,6 +24,11 @@ public class BillPresenter implements BillContract.Presenter {
     }
 
     @Override
+    public void refreshEndedBillDTO(ArrayList<BillDTO> bills){
+        mView.refreshEndedBills(bills);
+    }
+
+    @Override
     public void getSavedBills(ArrayList<Integer> ids) {
         interactor.retriveSavedBills(ids);
     }

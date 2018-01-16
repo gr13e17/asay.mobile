@@ -71,12 +71,6 @@ public class BillDetailFragment extends Fragment implements OnClickListener {
         statusTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, dummy3Bold.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         status.setText(statusTxt);
 
-        ministry = (TextView) rootView.findViewById(R.id.ministry);
-        SpannableString ministryTxt = new SpannableString(dummy4Bold + dummy4);
-        ministryTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, dummy4Bold.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        //   ministryTxt.setSpan(new StyleSpan(Typeface.ITALIC), dummy4Bold.length(), dummy4Bold.length() + dummy4.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ministry.setText(ministryTxt);
-
         StringBuilder builder = new StringBuilder();
         for(CaseStep step : bill.caseSteps){
             builder.append(step.getTitle());
