@@ -11,9 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import asay.asaymobile.R;
-import asay.asaymobile.fragments.BillOverviewFragment;
 import asay.asaymobile.fragments.BillDetailFragment;
+import asay.asaymobile.fragments.BillEndedFragment;
 import asay.asaymobile.fragments.BillForumFragment;
+import asay.asaymobile.fragments.BillOverviewFragment;
 import asay.asaymobile.model.BillDTO;
 
 public class BillActivity extends AppCompatActivity {
@@ -88,11 +89,15 @@ public class BillActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             switch (position) {
                 case 1:
+                    Fragment fragment;
+                    if (getIntent().getExtras().getBoolean("isEnded")){
+                        fragment = new BillEndedFragment();
+                    } else {
+                        fragment = new BillOverviewFragment();
+                    }
                     bundle.putParcelable("bill", bill);
-                    BillOverviewFragment overview = new BillOverviewFragment();
-                    bundle.putString("view", "comments");
-                    overview.setArguments(bundle);
-                    return overview;
+                    fragment.setArguments(bundle);
+                    return fragment;
                 case 2:
                     bundle.putInt("billId", bill.getId());
                     BillForumFragment debat = new BillForumFragment();

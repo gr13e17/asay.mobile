@@ -35,11 +35,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.ProfileActivity" />
-        <activity
-        android:name=".activities.BillEndedActivity"
-        android:label="@string/title_activity_bill"
-        android:theme="@style/AppTheme.NoActionBar"
-        android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

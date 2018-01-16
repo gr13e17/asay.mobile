@@ -1,33 +1,34 @@
-package asay.asaymobile.activities;
+package asay.asaymobile.fragments;
 
+import android.animation.ObjectAnimator;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.view.MenuItem;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
-
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+
 import java.util.ArrayList;
+
 import asay.asaymobile.R;
 import asay.asaymobile.model.BillDTO;
 
-
-/**
- * Created by Andreas on 15-01-2018.
- */
-
-public class BillEndedActivity extends AppCompatActivity{
+public class BillEndedFragment extends Fragment {
     private BillDTO bill;
     private double userId = 1;
     private int nFor = 0;
@@ -36,36 +37,53 @@ public class BillEndedActivity extends AppCompatActivity{
     TextView billHeader;
     TextView status;
     String statusTxt;
+    private View rootView;
+    private boolean isExpandedBillDesc;
 
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_ended_bill);
-        bill = getIntent().getParcelableExtra("bill");
+        View view = inflater.inflate(R.layout.fragment_ended_bill, container, false);
+        bill = getArguments().getParcelable("bill");
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("bill", bill);
+        setArguments(bundle);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(rootView, savedInstanceState);
+        this.rootView = rootView;
+        String billTitle = bill.getNumber().concat(": ").concat(bill.getTitleShort());
 
-        PieChart pieChart = (PieChart) findViewById(R.id.pieChart);
+        // Actionbar
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setTitle(billTitle);
+
+        // Header
+        billHeader = rootView.findViewById(R.id.headerBill);
+        billHeader.setText(billTitle);
+
+        // Pie Chart
+        PieChart pieChart = rootView.findViewById(R.id.pieChart);
         pieChart.setUsePercentValues(true);
         pieChart.setTransparentCircleRadius(15f);
         pieChart.setHoleRadius(15f);
 
-        for(int i = 0; i < bill.getVotes().size(); i++){
-            if (bill.getVotes().get(i).getVote().toString().equals("For")){
+        for (int i = 0; i < bill.getVotes().size(); i++) {
+            if (bill.getVotes().get(i).getVote().toString().equals("For")) {
                 nFor++;
             }
-            if (bill.getVotes().get(i).getVote().toString().equals("Againt")){
+            if (bill.getVotes().get(i).getVote().toString().equals("Againt")) {
                 nAgainst++;
             }
         }
 
-        if(nFor == 0 && nAgainst == 0){
+        if (nFor == 0 && nAgainst == 0) {
             pieChart.setCenterText(getResources().getString(R.string.noVotes));
             pieChart.setTransparentCircleRadius(65f);
             pieChart.setHoleRadius(65f);
@@ -94,30 +112,6 @@ public class BillEndedActivity extends AppCompatActivity{
         data.setValueTextSize(16);
         data.setValueTextColor(getResources().getColor(R.color.primaryTextColor));
         pieChart.animateXY(1300, 1300);
-
-        status = findViewById(R.id.status2);
-        SpannableString statusTxt = new SpannableString(getResources().getString(R.string.status) + ": " + bill.getStatus());
-        statusTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, getResources().getString(R.string.status).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        status.setText(statusTxt);
-
-        billHeader = findViewById(R.id.headerBill2);
-        String billTitle = bill.getNumber().concat(": ").concat(bill.getTitleShort());
-        TextView header = findViewById(R.id.headerBill);
-        billHeader.setText(billTitle);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(billTitle);
-        }
-
-    }
-    // add back arrow to toolbar
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle arrow click here
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // close this activity and return to preview activity (if there is any)
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

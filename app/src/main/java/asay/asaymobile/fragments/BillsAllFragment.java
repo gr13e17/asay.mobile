@@ -7,18 +7,15 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,15 +25,12 @@ import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
 import asay.asaymobile.UserContract;
 import asay.asaymobile.activities.BillActivity;
-import asay.asaymobile.activities.BillEndedActivity;
 import asay.asaymobile.activities.MainActivity;
-import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.model.BillDTO.CaseStep;
 import asay.asaymobile.model.UserDTO;
 import asay.asaymobile.presenter.BillPresenter;
 import asay.asaymobile.presenter.UserPresenter;
-import butterknife.ButterKnife;
 
 
 public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View, UserContract.View{
@@ -123,17 +117,16 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         BillDTO item = bills.get(position);
         Intent switchview = new Intent(getContext(), BillActivity.class);
-        Intent switchviewEnded = new Intent(getContext(), BillEndedActivity.class);
         if(calcDateFromToday(item.getDeadline()) < 0) {
-            switchviewEnded.putExtra("bill", (Parcelable) item);
-            startActivity(switchviewEnded);
-            getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+            switchview.putExtra("isEnded", true);
         }
         else {
-            switchview.putExtra("bill", (Parcelable) item);
-            startActivity(switchview);
-            getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+            switchview.putExtra("isEnded", false);
         }
+
+        switchview.putExtra("bill", (Parcelable) item);
+        startActivity(switchview);
+        getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
     }
 
     @Override
