@@ -11,15 +11,11 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -33,6 +29,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import asay.asaymobile.BillContract;
 import asay.asaymobile.R;
 import asay.asaymobile.fetch.HttpAsyncTask;
 import asay.asaymobile.fragments.BillsAllFragment;
@@ -40,7 +37,7 @@ import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.presenter.BillPresenter;
 
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,BillContract.View {
     EditText etResponse;
     private Toolbar toolbar;
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -59,12 +56,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        billPresenter = new BillPresenter(this,false);
         String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
         String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
-      new HttpAsyncTask(this, new AsyncTaskCompleteListener()).execute(urlAsString);
+        new HttpAsyncTask(this, new AsyncTaskCompleteListener()).execute(urlAsString);
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = findViewById(R.id.toolbar);
@@ -111,6 +108,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void refreshCurrentBills(ArrayList<BillDTO> bills) {
+
+    }
+
+    @Override
+    public void refreshEndedBills(ArrayList<BillDTO> bills) {
+
     }
 
 

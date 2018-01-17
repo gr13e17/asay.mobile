@@ -72,6 +72,10 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         } else if (isEnded) {
             billPresenter.getEndedBills();
         } else {
+            String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
+            String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
+            String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
+            String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
             billPresenter.getAllBills();
         }
         return view;
