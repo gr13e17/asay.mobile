@@ -15,11 +15,11 @@ import asay.asaymobile.model.UserDTO;
  * Created by s123725 on 15/12/2017.
  */
 
-public class UserInteractor {
+class UserInteractor {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference userElement = database.getReference("users");
     private UserPresenter presenter;
-    private ArrayList<UserDTO> mUsersList = new ArrayList<UserDTO>();
+    private ArrayList<UserDTO> mUsersList = new ArrayList<>();
 
     public UserInteractor(UserPresenter presenter){
         this.presenter = presenter;

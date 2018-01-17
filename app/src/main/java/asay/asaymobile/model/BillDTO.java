@@ -16,7 +16,7 @@ public class BillDTO implements Parcelable{
     private int forumId;
     public int id;
     public String number;
-    public String title;
+    private String title;
     private String titleShort;
     private String resume;
     public ArrayList<Vote> votes = new ArrayList<>();

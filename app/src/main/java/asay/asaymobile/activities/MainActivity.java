@@ -1,9 +1,6 @@
 package asay.asaymobile.activities;
 
 
-
-
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -11,15 +8,11 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -41,19 +34,12 @@ import asay.asaymobile.presenter.BillPresenter;
 
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-    EditText etResponse;
-    private Toolbar toolbar;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private EditText etResponse;
     private BillsAllFragment billAll;
-    private MenuItem searchMenuItem;
-    private SearchView searchView;
     private BillPresenter billPresenter;
     //Default user
     private int userId = 1;
-    private boolean loggedIn = true;
 
-
-    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +49,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         String baseUrl = "http://oda.ft.dk/api/Sag?$orderby=id%20desc";
         String proposalExpand = "&$expand=Sagsstatus,Periode,Sagstype,SagAkt%C3%B8r,Sagstrin";
         String proposalFilter = "&$filter=(typeid%20eq%203%20or%20typeid%20eq%205)%20and%20periodeid%20eq%20146";
-        String urlAsString = new StringBuilder().append(baseUrl).append(proposalExpand).append(proposalFilter).toString();
+        String urlAsString = baseUrl + proposalExpand + proposalFilter;
       new HttpAsyncTask(this, new AsyncTaskCompleteListener()).execute(urlAsString);
 
         // Set a Toolbar to replace the ActionBar.
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeButtonEnabled(true);
@@ -75,10 +61,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.containerMain);
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = findViewById(R.id.containerMain);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsMain);
+        TabLayout tabLayout = findViewById(R.id.tabsMain);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         mViewPager.setCurrentItem(0,true);
         tabLayout.getTabAt(0).getIcon().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
@@ -133,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     return Ended;
                 case 2:
                     System.out.println("hej3");
+                    boolean loggedIn = true;
                     if(loggedIn){
                         bundle.putBoolean("isFavorite",true);
                         BillsAllFragment Favorites = new BillsAllFragment();
@@ -170,8 +157,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         inflater.inflate(R.menu.search_menu, menu);
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchMenuItem = menu.findItem(R.id.search);
-        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        MenuItem searchMenuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setQueryHint(getResources().getString(R.string.Search_hint));
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);
@@ -206,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 int actorId = 0;
 
                 for (int i = 0; i < articles.length(); i++){
-                    ArrayList<BillDTO.CaseStep> steps = new ArrayList<BillDTO.CaseStep>();
+                    ArrayList<BillDTO.CaseStep> steps = new ArrayList<>();
                     if(articles.getJSONObject(i).has("Sagstrin")){
                         JSONArray caseSteps = articles.getJSONObject(i).getJSONArray("Sagstrin");
                         for (int k = 0; k < caseSteps.length(); k++){

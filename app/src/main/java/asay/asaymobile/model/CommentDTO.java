@@ -1,9 +1,5 @@
 package asay.asaymobile.model;
 
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-
 import android.support.annotation.NonNull;
 
 /**
@@ -25,7 +21,7 @@ public class CommentDTO implements Comparable<CommentDTO> {
         //empty constructor
     }
 
-    String dateTime;
+    private String dateTime;
     public CommentDTO(final CommentDTO commentDTO) {
         argumentType = commentDTO.getArgumentType();
         billId = commentDTO.billId;

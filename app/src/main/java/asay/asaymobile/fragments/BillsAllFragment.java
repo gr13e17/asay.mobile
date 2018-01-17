@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,17 +34,14 @@ import asay.asaymobile.presenter.UserPresenter;
 
 public class BillsAllFragment extends Fragment implements AdapterView.OnItemClickListener, BillContract.View, UserContract.View{
     private BillPresenter billPresenter;
-    private UserPresenter userPresenter;
-    double userId = 1;
+    private double userId = 1;
     private ArrayList<BillDTO> bills = new ArrayList<>();
-    private ArrayList<Integer> savedbills = new ArrayList<>();
-    ArrayAdapter<BillDTO> adapter;
+    private ArrayAdapter<BillDTO> adapter;
     private MainActivity activity;
     private Typeface typeface;
-    private ArrayList<BillDTO> filteredList;
     private ListFilter listFilter;
-    boolean isFavorite = false;
-    boolean isEnded = false;
+    private boolean isFavorite = false;
+    private boolean isEnded = false;
 
     public BillsAllFragment() {
 
@@ -59,7 +55,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
         //ButterKnife.bind(this, view);
         billPresenter = new BillPresenter(this);
-        userPresenter = new UserPresenter(this);
+        UserPresenter userPresenter = new UserPresenter(this);
 
         if(getArguments() != null){
             isFavorite = getArguments().getBoolean("isFavorite");
@@ -96,10 +92,10 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
                     String title = bill.number + ": " + bill.getTitleShort();
                     titleTextView.setText(title);
                     TextView date = view.findViewById(R.id.listeelem_date);
-                    date.setText(String.format(getResources().getString(R.string.days_until_deadline), calcDateFromToday(bill.getDeadline())));
+                    date.setText(getResources().getQuantityString(R.plurals.days_until_deadline, (int) calcDateFromToday(bill.getDeadline()), calcDateFromToday(bill.getDeadline())));
                     TextView numberOfVotes = view.findViewById(R.id.listeelem_number_of_votes);
                     if (bill.votes.size() > 0)
-                        numberOfVotes.setText(String.format(getResources().getString(R.string.number_of_votes), bill.votes.size()));
+                        numberOfVotes.setText(getResources().getQuantityString(R.plurals.number_of_votes, bill.votes.size(), bill.votes.size()));
                     else {
                         numberOfVotes.setText("");
                     }
@@ -123,7 +119,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
             switchview.putExtra("isEnded", false);
         }
 
-        switchview.putExtra("bill", (Parcelable) item);
+        switchview.putExtra("bill", item);
         startActivity(switchview);
         getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
     }
@@ -178,7 +174,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void refreshUser(UserDTO user) {
-        savedbills = user.getbillsSaved();
+        ArrayList<Integer> savedbills = user.getbillsSaved();
         billPresenter.getSavedBills(savedbills);
     }
 
@@ -226,7 +222,7 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredList = (ArrayList<BillDTO>) results.values;
+            ArrayList<BillDTO> filteredList = (ArrayList<BillDTO>) results.values;
             adapter.notifyDataSetChanged();
             System.out.println("n: " + filteredList.size());
 

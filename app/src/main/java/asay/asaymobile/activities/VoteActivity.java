@@ -1,9 +1,5 @@
 package asay.asaymobile.activities;
 
-/**
- * Created by Ber on 02/11/2017.
- */
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
