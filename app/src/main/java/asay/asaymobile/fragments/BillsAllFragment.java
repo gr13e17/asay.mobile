@@ -109,7 +109,6 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         };
         ListView listview = view.findViewById(R.id.allBillsListView);
         listview.setOnItemClickListener(this);
-        listview.setDividerHeight(10);
         listview.setAdapter(adapter);
     }
 

@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme">
-
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable">
