@@ -114,6 +114,8 @@ public class BillInteractor {
                         exist = true;
                         BillDTO databillDTO = data.getValue(BillDTO.class);
                         if(!databillDTO.equals(billDTO)){
+                            if(!databillDTO.getVotes().isEmpty())
+                                billDTO.setVotes(databillDTO.getVotes());
                             DatabaseReference billref = billElementReference.child(data.getKey());
                             billref.setValue(billDTO);
                         }
