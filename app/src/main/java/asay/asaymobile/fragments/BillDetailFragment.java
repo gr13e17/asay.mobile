@@ -28,29 +28,17 @@ import static asay.asaymobile.model.BillDTO.*;
 
 public class BillDetailFragment extends Fragment implements OnClickListener {
 
-    TextView status;
-    TextView prpBy;
-    TextView committee;
-    TextView ministry;
-    TextView pdf;
-    TextView schedule;
-    TextView expList;
-    boolean isExpanded = false;
-    String dummy1 = "Miljø- og fødevareminister Esben Lunde Larsen";
-    String dummy1Bold = "Fremsat af: ";
-
-    String dummy2 = "Miljø- og Fødevareudvalget";
-    String dummy2Bold = "Udvalg: ";
-
-    String dummy3 = "Betænkning afgivet";
-    String dummy3Bold = "Status: ";
-
-    String dummy4 = "Miljø- og Fødevareministeriet";
-    String dummy4Bold = "Ministerområde: ";
-
+    private View rootView;
+    private TextView scheduleTV;
+    private TextView expListTV;
+    private boolean isExpanded = false;
+    private String prpByTitle;
+    private String committeeTitle;
     private BillDTO bill;
+
     public BillDetailFragment() {
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,46 +48,65 @@ public class BillDetailFragment extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        String urlAsString ="http://oda.ft.dk/api/Akt%C3%B8r?$filter=id%20eq%20"+bill.getActorId();
+        String urlAsString = "http://oda.ft.dk/api/Akt%C3%B8r?$filter=id%20eq%20" + bill.getActorId();
         new HttpAsyncTask(getActivity(), new AsyncTaskCompleteListener()).execute(urlAsString);
 
         super.onCreate(savedInstanceState);
-        final View rootView = inflater.inflate(R.layout.fragment_bill_detail, container, false);
+        rootView = inflater.inflate(R.layout.fragment_bill_detail, container, false);
 
-        status = (TextView) rootView.findViewById(R.id.status);
-        SpannableString statusTxt = new SpannableString(dummy3Bold + bill.getStatus());
-        statusTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, dummy3Bold.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        status.setText(statusTxt);
+        // Status
+        String statusTitle = getResources().getString(R.string.status) + ": ";
+        TextView statusTV = rootView.findViewById(R.id.status);
+        SpannableString statusTxt = new SpannableString(statusTitle + bill.getStatus());
+        statusTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, statusTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        statusTV.setText(statusTxt);
 
+        // Proposed by
+        prpByTitle = getResources().getString(R.string.proposed_by) + ": ";
+
+        // Committee
+        committeeTitle = getResources().getString(R.string.committee) + ": ";
+
+        // Link
+        String billID = bill.getNumber().replaceAll("\\s+", "");
+        String fthtml = "http://www.ft.dk/samling/20171/lovforslag/" + billID + "/index.htm";
+        String link = "<a href=\"" + fthtml + "\"> " + getResources().getString(R.string.see_bill_on_ft) + "</a>";
+        System.out.println(fthtml);
+
+        TextView linkTV = rootView.findViewById(R.id.pdf);
+        linkTV.setClickable(true);
+        linkTV.setMovementMethod(LinkMovementMethod.getInstance());
+        linkTV.setText(Html.fromHtml(link));
+
+        // Case steps
         StringBuilder builder = new StringBuilder();
-        for(CaseStep step : bill.caseSteps){
+        for (CaseStep step : bill.caseSteps) {
             builder.append(step.getTitle());
             builder.append(" ");
-            builder.append(step.getUpdateDate());
+            builder.append(formatDateTime(step.getUpdateDate()));
             builder.append("\n");
         }
 
-        schedule = (TextView) rootView.findViewById(R.id.scheduleList);
-        schedule.setText(builder.toString());
-        schedule.setMaxLines(3);
-        schedule.setOnClickListener(this);
+        scheduleTV = rootView.findViewById(R.id.scheduleList);
+        scheduleTV.setText(builder.toString());
+        scheduleTV.setMaxLines(3);
+        scheduleTV.setOnClickListener(this);
 
-        expList = (TextView) rootView.findViewById(R.id.expandSchedule);
-        expList.setOnClickListener(this);
-
-        String billID = bill.getNumber().replaceAll("\\s+","");
-        String fthtml = "http://www.ft.dk/samling/20171/lovforslag/"+billID+"/index.htm";
-        String link = "<a href=\"" +fthtml+ "\"> Se fulde Lovforslag</a>";
-        System.out.println(fthtml);
-
-
-        pdf = (TextView) rootView.findViewById(R.id.pdf);
-        pdf.setClickable(true);
-        pdf.setMovementMethod(LinkMovementMethod.getInstance());
-        pdf.setText(Html.fromHtml(link));
+        expListTV = rootView.findViewById(R.id.expandSchedule);
+        expListTV.setOnClickListener(this);
 
         return rootView;
+    }
 
+    private String formatDateTime(String dateTime) {
+        return ""
+                .concat(dateTime.substring(8, 10)) //day
+                .concat("/")
+                .concat(dateTime.substring(5, 7)) //month
+                .concat("/")
+                .concat(dateTime.substring(0, 4)) //year
+                .concat(" ")
+                .concat(dateTime.substring(11, 16)); //time
     }
 
     @Override
@@ -107,29 +114,27 @@ public class BillDetailFragment extends Fragment implements OnClickListener {
         switch (v.getId()) {
 
             case R.id.scheduleList:
-                if (isExpanded == true) {
-                    collapseTextView(schedule, 3);
-                    expList.setText("Se mere");
+                if (isExpanded) {
+                    collapseTextView(scheduleTV, 3);
+                    expListTV.setText(getResources().getString(R.string.show_more));
                     isExpanded = false;
                 } else {
-                    expandTextView(schedule);
-                    expList.setText("Se mindre");
+                    expandTextView(scheduleTV);
+                    expListTV.setText(getResources().getString(R.string.show_less));
                     isExpanded = true;
                 }
-
                 break;
 
             case R.id.expandSchedule:
-                if (isExpanded == true) {
-                    collapseTextView(schedule, 3);
-                    expList.setText("Se mere");
+                if (isExpanded) {
+                    collapseTextView(scheduleTV, 3);
+                    expListTV.setText(getResources().getString(R.string.show_more));
                     isExpanded = false;
                 } else {
-                    expandTextView(schedule);
-                    expList.setText("Se mindre");
+                    expandTextView(scheduleTV);
+                    expListTV.setText(getResources().getString(R.string.show_less));
                     isExpanded = true;
                 }
-
                 break;
 
         }
@@ -147,33 +152,29 @@ public class BillDetailFragment extends Fragment implements OnClickListener {
 
     private class AsyncTaskCompleteListener implements asay.asaymobile.fetch.AsyncTaskCompleteListener<JSONObject> {
         @Override
-        public void onTaskComplete(JSONObject result)
-        {
-            try{
+        public void onTaskComplete(JSONObject result) {
+            try {
                 JSONArray articles = result.getJSONArray("value"); // get articles array
-                for (int i = 0; i < articles.length(); i++){
-                    if(articles.getJSONObject(i).has("gruppenavnkort")) {
-                        dummy1 = articles.getJSONObject(i).get("gruppenavnkort").toString();
-                        prpBy = (TextView) getView().findViewById(R.id.proposedBy);
-                        SpannableString prpByTxt = new SpannableString(dummy1Bold + dummy1);
-                        prpByTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, dummy1Bold.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        prpBy.setText(prpByTxt);
+                for (int i = 0; i < articles.length(); i++) {
+                    if (articles.getJSONObject(i).has("gruppenavnkort")) {
+                        String prpBy = articles.getJSONObject(i).get("gruppenavnkort").toString();
+                        TextView prpByTV = rootView.findViewById(R.id.proposedBy);
+                        SpannableString prpByTxt = new SpannableString(prpByTitle + prpBy);
+                        prpByTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, prpByTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        prpByTV.setText(prpByTxt);
                     }
 
-                    if(articles.getJSONObject(i).has("gruppenavnkort")){
-                        dummy2 = articles.getJSONObject(i).get("navn").toString();
-                        committee = (TextView) getView().findViewById(R.id.committee);
-                        SpannableString committeeTxt = new SpannableString(dummy2Bold + dummy2);
-                        committeeTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, dummy2Bold.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        //    committeeTxt.setSpan(new StyleSpan(Typeface.ITALIC), dummy2Bold.length(), dummy2Bold.length() + dummy2.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        committee.setText(committeeTxt);
-
+                    if (articles.getJSONObject(i).has("gruppenavnkort")) {
+                        String committee = articles.getJSONObject(i).get("navn").toString();
+                        TextView committeeTV = rootView.findViewById(R.id.committee);
+                        SpannableString committeeTxt = new SpannableString(committeeTitle + committee);
+                        committeeTxt.setSpan(new StyleSpan(Typeface.BOLD), 0, committeeTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        //    committeeTxt.setSpan(new StyleSpan(Typeface.ITALIC), committeeTitle.length(), committeeTitle.length() + committee.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        committeeTV.setText(committeeTxt);
                     }
-
-
                 }
-            } catch (Exception excep){
-                Log.d("JSON Exception", "onTaskComplete: " + excep.getMessage());
+            } catch (Exception e) {
+                Log.d("JSON Exception", "onTaskComplete: " + e.getMessage());
             }
         }
 
