@@ -43,9 +43,7 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
     private boolean isExpandedAgainst = false;
     private BillDTO bill;
     private double userId = 1;
-    private ForumPresenter presenter;
     private ImageButton sub;
-    private Button vote;
     private boolean isSub = false;
     private UserDTO user;
     private UserPresenter uPresenter;
@@ -59,7 +57,7 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bill = getArguments().getParcelable("bill");
-        presenter = new ForumPresenter(this, bill.getId());
+        ForumPresenter presenter = new ForumPresenter(this, bill.getId());
     }
 
     @Override
@@ -143,7 +141,7 @@ public class BillOverviewFragment extends Fragment implements View.OnClickListen
         sub.setOnClickListener(this);
 
         // Vote button
-        vote = rootView.findViewById(R.id.buttonVote);
+        Button vote = rootView.findViewById(R.id.buttonVote);
         vote.setOnClickListener(this);
     }
 

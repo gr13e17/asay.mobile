@@ -17,28 +17,25 @@ import java.io.InputStreamReader;
 
 
 public class HttpAsyncTask extends AsyncTask<String, Void, String> {
-    private Context context;
     private AsyncTaskCompleteListener<JSONObject> listener;
 
     public  HttpAsyncTask(Context ctx, AsyncTaskCompleteListener<JSONObject> listener){
         this.listener = listener;
-        this.context = ctx;
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
+        String line;
+        StringBuilder result = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null)
-            result += line;
+            result.append(line);
 
         inputStream.close();
-        return result;
-
+        return result.toString();
     }
 
-    public static String GET(String url) {
-        InputStream inputStream = null;
+    private static String GET(String url) {
+        InputStream inputStream;
         String result = "";
         try {
 

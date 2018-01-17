@@ -17,7 +17,7 @@ import asay.asaymobile.model.BillDTO;
  * Created by s123725 on 15/12/2017.
  */
 
-public class BillInteractor {
+class BillInteractor {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private BillPresenter presenter;
     private DatabaseReference billElementReference = database.getReference("bills");
@@ -35,7 +35,7 @@ public class BillInteractor {
         billElementReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                BillDTO billDTO = new BillDTO();
+                BillDTO billDTO;
                 mbillList.clear();
                 if(dataSnapshot.getChildren() != null){
                     for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {
@@ -64,7 +64,7 @@ public class BillInteractor {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                BillDTO billDTO = new BillDTO();
+                BillDTO billDTO;
                 mbillList.clear();
                 if(dataSnapshot.getChildren() != null) {
                     for (DataSnapshot messagesSnapshot : dataSnapshot.getChildren()) {

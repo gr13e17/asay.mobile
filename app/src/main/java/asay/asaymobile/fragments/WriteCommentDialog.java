@@ -1,7 +1,6 @@
 package asay.asaymobile.fragments;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,7 +25,7 @@ import asay.asaymobile.model.ArgumentType;
  */
 
 public class WriteCommentDialog extends DialogFragment {
-    ArgumentType argumentType;
+    private ArgumentType argumentType;
 
     public interface WriteCommentListener {
         void onSave(String comment, Double parentId, ArgumentType argumentType);
@@ -41,11 +40,6 @@ public class WriteCommentDialog extends DialogFragment {
         dialog.setArguments(args);
 
         return dialog;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
     @Override

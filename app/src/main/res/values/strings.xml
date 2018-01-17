@@ -7,10 +7,8 @@
     <string name="tab_text_2">Forslag</string>
     <string name="tab_text_3">Debat</string>
     <string name="reply">Send</string>
-    <string name="billSchedule">Fremsat 26–10–2017 \n1. behandlet / henvist til udvalg 07–11–2017 \nFrist for spørgsmål 13–11–2017 \nFrist for svar 20–11–2017 \nFrist for ændringsforslag 21–11–2017 \nPolitisk drøftelse 22–11–2017 \nFrist for politiske bemærkninger 24–11–2017 \nBetænkning afgivet 29–11–2017 \nSat på dagsorden til 2. behandling 05–12–2017 \nSat på dagsorden til 3. behandling 07–12–2017</string>
     <string name="BillExampleHead">L72: Forslag til lov om ændring af dyreværnsloven og lov om hold af dyr.</string>
     <string name="reply_content">Tilføj ny kommentar</string>
-    <string name="title_activity_reply">reply</string>
     <string name="vote">Gå til stemmeboks</string>
     <string name="voting_booth">Stemmeboks</string>
     <string name="are_you_sure_you_want_to_cancel_vote">Er du sikker på at du vil fortryde din stemme?</string>
@@ -20,8 +18,6 @@
     <string name="ok">OK</string>
     <string name="show_more">Se mere</string>
     <string name="show_less">Se mindre</string>
-    <string name="number_of_votes">Deltagelse: %d personer</string>
-    <string name="days_until_deadline">Deadline: %d dage</string>
     <string name="your_profile">Din profil</string>
     <string name="error_no_text">Du har ikke indtastet tekst i feltet</string>
     <string name="there_is_no_description_for_this_bill">Der findes ingen beskrivelse til dette forslag</string>
@@ -48,10 +44,14 @@
     <string name="app_label">Søg</string>
     <string name="Search_hint">Søg efter forslag..</string>
     <string name="asay">Asay</string>
-    <string name="details">Forslags Detaljer</string>
+    <string name="details">Detaljer om forslaget</string>
     <string name="result">Resultat</string>
     <string name="status">Status</string>
     <string name="noVotes">Der er ikke stemt på dette forslag</string>
     <string name="voteResult">Resultat af afstemningen</string>
+    <string name="see_bill_on_ft">Se forslaget på Folketingets hjemmeside</string>
+    <string name="proposed_by">Fremsat af</string>
+    <string name="committee">Udvalg</string>
+    <string name="case_steps">Sagsgang</string>
 
 </resources>

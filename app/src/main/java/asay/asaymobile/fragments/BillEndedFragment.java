@@ -1,20 +1,13 @@
 package asay.asaymobile.fragments;
 
-import android.animation.ObjectAnimator;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -34,11 +27,7 @@ public class BillEndedFragment extends Fragment {
     private int nFor = 0;
     private int nAgainst = 0;
 
-    TextView billHeader;
-    TextView status;
-    String statusTxt;
-    private View rootView;
-    private boolean isExpandedBillDesc;
+    private TextView billHeader;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +45,6 @@ public class BillEndedFragment extends Fragment {
     @Override
     public void onViewCreated(final View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
-        this.rootView = rootView;
         String billTitle = bill.getNumber().concat(": ").concat(bill.getTitleShort());
 
         // Actionbar
@@ -88,12 +76,12 @@ public class BillEndedFragment extends Fragment {
             pieChart.setTransparentCircleRadius(65f);
             pieChart.setHoleRadius(65f);
         }
-        ArrayList<Entry> votes = new ArrayList<Entry>();
+        ArrayList<Entry> votes = new ArrayList<>();
         votes.add(new Entry(nFor, 0));
         votes.add(new Entry(nAgainst, 1));
         PieDataSet dataSet = new PieDataSet(votes, "");
 
-        ArrayList<String> labels = new ArrayList<String>();
+        ArrayList<String> labels = new ArrayList<>();
         labels.add("For");
         labels.add("Imod");
         PieData data = new PieData(labels, dataSet);

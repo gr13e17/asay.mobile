@@ -11,10 +11,9 @@ public enum ArgumentType{
     NEUTRAL("Neutral", 2);
 
     private String stringValue;
-    private int intValue;
-    private ArgumentType(String toString, int value) {
+
+    ArgumentType(String toString, int value) {
         stringValue = toString;
-        intValue = value;
     }
 
     @Override
