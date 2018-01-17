@@ -58,23 +58,21 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
         //ButterKnife.bind(this, view);
-        billPresenter = new BillPresenter(this);
-        userPresenter = new UserPresenter(this);
 
         if(getArguments() != null){
             isFavorite = getArguments().getBoolean("isFavorite");
             isEnded = getArguments().getBoolean("isEnded");
         }
+        billPresenter = new BillPresenter(this,isEnded);
+        userPresenter = new UserPresenter(this);
 
         if(isFavorite){
             userPresenter.getUser(userId);
             view.findViewById(R.id.loadingBill).setVisibility(View.GONE);
-
         } else if (isEnded) {
             billPresenter.getEndedBills();
         } else {
             billPresenter.getAllBills();
-
         }
         return view;
 
@@ -130,23 +128,23 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void refreshCurrentBills(final ArrayList<BillDTO> bills) {
-            if (!bills.isEmpty()) {
-                this.bills.clear();
-                for (BillDTO bill : bills) {
-                    boolean hasSteps = false;
-                    for (CaseStep step : bill.getCaseSteps()) {
-                        if ((step.getTypeid() == 87 || step.getTypeid() == 7 || step.getTypeid() == 23 || step.getTypeid() == 17 ||
-                                step.getTypeid() == 12))
-                            hasSteps = true;
-                    }
-                    if (bill.getResume() != null && !bill.getResume().isEmpty() && hasSteps)
-                        this.bills.add(bill);
+        this.bills.clear();
+        if (!bills.isEmpty()) {
+            for (BillDTO bill : bills) {
+                boolean hasSteps = false;
+                for (CaseStep step : bill.getCaseSteps()) {
+                    if ((step.getTypeid() == 87 || step.getTypeid() == 7 || step.getTypeid() == 23 || step.getTypeid() == 17 ||
+                            step.getTypeid() == 12))
+                        hasSteps = true;
                 }
-                adapter.notifyDataSetChanged();
+                if (bill.getResume() != null && !bill.getResume().isEmpty() && hasSteps)
+                    this.bills.add(bill);
             }
-            if (getView() != null)
-                getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
-            System.out.println("done");
+            adapter.notifyDataSetChanged();
+        }
+        if (getView() != null)
+            getView().findViewById(R.id.loadingBill).setVisibility(View.GONE);
+        System.out.println("done");
 
         }
 

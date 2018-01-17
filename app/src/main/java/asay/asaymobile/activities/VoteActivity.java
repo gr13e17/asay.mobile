@@ -79,7 +79,7 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
      */
     private void vote(ArgumentType argumentType) {
         vote.setVote(argumentType);
-        final BillPresenter presenter = new BillPresenter(this);
+        final BillPresenter presenter = new BillPresenter(this,false);
         new AlertDialog.Builder(this)
                 .setMessage(R.string.your_vote_is_registered)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

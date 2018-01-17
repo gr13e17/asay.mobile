@@ -23,9 +23,12 @@ public class BillInteractor {
     private DatabaseReference billElementReference = database.getReference("bills");
     private final ArrayList<BillDTO> mbillList = new ArrayList<>();
 
-    BillInteractor(BillPresenter presenter) {
+    BillInteractor(BillPresenter presenter, boolean isEnded) {
         this.presenter = presenter;
-        retrieveAllBills();
+        if(!isEnded)
+            retrieveAllBills();
+        else
+            retriveEndedBills();
     }
 
     void retriveSavedBills(final ArrayList<Integer> savedbills) {
@@ -74,7 +77,6 @@ public class BillInteractor {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                presenter.refreshEndedBillDTO(new ArrayList<BillDTO>());
             }
         });
     }
@@ -95,10 +97,8 @@ public class BillInteractor {
                 }
                 presenter.refreshCurrentBillDTO(mbillList);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                presenter.refreshCurrentBillDTO(new ArrayList<BillDTO>());
             }
         });
     }
