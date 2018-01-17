@@ -7,8 +7,7 @@
     <ListView
         android:id="@+id/allBillsListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="4dp"/>
+        android:layout_height="match_parent" />
     <RelativeLayout
         android:id="@+id/loadingBill"
         android:layout_width="match_parent"
