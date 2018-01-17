@@ -54,13 +54,14 @@ public class BillsAllFragment extends Fragment implements AdapterView.OnItemClic
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills_all, container, false);
         //ButterKnife.bind(this, view);
-        billPresenter = new BillPresenter(this);
-        UserPresenter userPresenter = new UserPresenter(this);
 
         if(getArguments() != null){
             isFavorite = getArguments().getBoolean("isFavorite");
             isEnded = getArguments().getBoolean("isEnded");
         }
+        billPresenter = new BillPresenter(this,isEnded);
+        UserPresenter userPresenter = new UserPresenter(this);
+
 
         if(isFavorite){
             userPresenter.getUser(userId);

@@ -34,7 +34,7 @@ import asay.asaymobile.model.BillDTO;
 import asay.asaymobile.presenter.BillPresenter;
 
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, BillContract.View {
     private EditText etResponse;
     private BillsAllFragment billAll;
     private BillPresenter billPresenter;
