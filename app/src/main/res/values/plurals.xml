@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="number_of_votes">
+        <item quantity="one">Deltagelse: %d person</item>
+        <item quantity="other">Deltagelse: %d personer</item>
+    </plurals>
+    <plurals name="days_until_deadline">
+        <item quantity="one">Deadline: %d dag</item>
+        <item quantity="other">Deadline: %d dage</item>
+    </plurals>
+</resources>

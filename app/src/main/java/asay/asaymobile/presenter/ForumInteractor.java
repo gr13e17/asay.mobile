@@ -16,7 +16,7 @@ import asay.asaymobile.model.UserDTO;
  * Created by s123725 on 15/12/2017.
  */
 
-public class ForumInteractor {
+class ForumInteractor {
     private static final String TAG = ForumInteractor.class.getSimpleName();
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -35,7 +35,7 @@ public class ForumInteractor {
         retrieveCurrentForum(billId);
     }
 
-    void retriveUsers(){
+    private void retriveUsers(){
         userElement.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -82,7 +82,7 @@ public class ForumInteractor {
     void addNewComment(CommentDTO comment) {
         DatabaseReference postRef = forumElementReference.child("comments");
         String key = postRef.push().getKey();
-        comment.setId((double) key.hashCode());;
+        comment.setId((double) key.hashCode());
         postRef.push().setValue(comment);
 
     }

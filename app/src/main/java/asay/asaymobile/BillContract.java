@@ -11,10 +11,12 @@ import asay.asaymobile.model.BillDTO;
 public interface BillContract {
     interface View {
         void refreshCurrentBills(ArrayList<BillDTO> bills);
+        void refreshEndedBills(ArrayList<BillDTO> bills);
     }
 
     interface Presenter{
         void refreshCurrentBillDTO(ArrayList<BillDTO> bills);
+        void refreshEndedBillDTO(ArrayList<BillDTO> bills);
         void getSavedBills(ArrayList<Integer> ids);
         void getAllBills();
         void getEndedBills();

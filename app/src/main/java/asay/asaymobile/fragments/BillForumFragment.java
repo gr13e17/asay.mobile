@@ -48,8 +48,8 @@ public class BillForumFragment extends Fragment implements ForumContract.View, V
     private View rootView;
     private FloatingActionButton commentButtonMain;
     private WriteCommentDialog writeCommentDialog;
-    String dateTime;
-    CommentDTO newComment = null;
+    private String dateTime;
+    private CommentDTO newComment = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

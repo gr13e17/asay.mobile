@@ -1,6 +1,7 @@
 package asay.asaymobile.presenter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import asay.asaymobile.BillContract;
 import asay.asaymobile.model.BillDTO;
@@ -13,14 +14,20 @@ public class BillPresenter implements BillContract.Presenter {
     private BillInteractor interactor;
     private BillContract.View mView;
 
-    public BillPresenter(final BillContract.View view) {
+    public BillPresenter(final BillContract.View view, boolean isEnded) {
         mView = view;
-        interactor = new BillInteractor(this);
+        interactor = new BillInteractor(this, isEnded);
     }
 
     @Override
     public void refreshCurrentBillDTO(ArrayList<BillDTO> bills) {
         mView.refreshCurrentBills(bills);
+    }
+
+    @Override
+    public void refreshEndedBillDTO(ArrayList<BillDTO> bills){
+        Collections.reverse(bills);
+        mView.refreshEndedBills(bills);
     }
 
     @Override

@@ -1,9 +1,5 @@
 package asay.asaymobile.activities;
 
-/**
- * Created by Ber on 02/11/2017.
- */
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -79,7 +75,7 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
      */
     private void vote(ArgumentType argumentType) {
         vote.setVote(argumentType);
-        final BillPresenter presenter = new BillPresenter(this);
+        final BillPresenter presenter = new BillPresenter(this,false);
         new AlertDialog.Builder(this)
                 .setMessage(R.string.your_vote_is_registered)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -123,6 +119,17 @@ public class VoteActivity extends AppCompatActivity implements BillContract.View
 
     @Override
     public void refreshCurrentBills(ArrayList<BillDTO> bills) {
+
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition( R.anim.stay, R.anim.slide_out_down);
+    }
+
+    @Override
+    public void refreshEndedBills(ArrayList<BillDTO> bills){
 
     }
 }

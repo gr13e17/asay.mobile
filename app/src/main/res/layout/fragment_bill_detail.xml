@@ -4,12 +4,23 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/headerDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/details"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/proposedBy"
@@ -17,7 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Af:"
+            android:text="@string/proposed_by"
+            android:textAppearance="@style/Body"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/status" />
 
@@ -27,30 +39,21 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Udvalg:"
+            android:text="@string/committee"
+            android:textAppearance="@style/Body"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/proposedBy" />
-
-        <TextView
-            android:id="@+id/ministry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Ministerområde:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/committee" />
 
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Status:"
-            android:typeface="normal"
+            android:layout_marginTop="8dp"
+            android:text="@string/status"
+            android:textAppearance="@style/Body"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/headerBill" />
+            app:layout_constraintTop_toBottomOf="@+id/headerDetails" />
 
         <TextView
             android:id="@+id/schedule"
@@ -60,9 +63,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:background="@color/secondaryDarkColor"
-            android:text="Sagsgang"
+            android:text="@string/case_steps"
             android:textAlignment="center"
-            android:textColor="@color/primaryTextColor"
+            android:textAppearance="@style/Body"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,10 +77,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Fuld version af lovforslag:"
+            android:text="@string/see_bill_on_ft"
+            android:textAppearance="@style/Body"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ministry" />
+            app:layout_constraintTop_toBottomOf="@+id/committee" />
 
         <TextView
             android:id="@+id/scheduleList"
@@ -86,11 +90,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:background="@color/secondaryColor"
-            android:lineSpacingExtra="8sp"
-            android:text="3LinesHere"
             android:paddingTop="8dp"
-            android:paddingHorizontal="8dp"
-            android:textColor="@color/primaryTextColor"
+            android:textAppearance="@style/Body"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/schedule" />
@@ -104,10 +105,10 @@
             android:background="@color/secondaryColor"
             android:paddingBottom="8dp"
             android:paddingTop="2dp"
-            android:text="Se Mere"
+            android:text="@string/show_more"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/primaryTextColor"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/scheduleList" />
